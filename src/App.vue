@@ -1,13 +1,20 @@
 <script>
-import HelloWorld from './components/HelloWorld.vue';
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
+import RegisterInfo from './views/RegisterInfo/RegisterInfo.vue';
+import Home from './views/Home/Home.vue';
 
 export default {
   components: {
-    HelloWorld,
     AppFooter,
     AppHeader,
+    RegisterInfo,
+    Home,
+  },
+  data() {
+    return {
+      view: 'Home',
+    };
   },
 };
 </script>
@@ -19,22 +26,10 @@ export default {
       <div class="main__background">
         <img src="/main_bg.jpg" alt="">
       </div>
-      <HelloWorld />
 
-      <!-- <div class="container">
-          <section class="section">
-            <div class="container">
-              <div class="section__head">
-                {% block section_header %}
-                {% endblock %}
-              </div>
-              <div class="section__body">
-                {% block content %}
-                {% endblock %}
-              </div>
-            </div>
-          </section>
-        </div> -->
+      <div class="container">
+        <component :is="view" />
+      </div>
     </main>
     <AppFooter />
   </div>

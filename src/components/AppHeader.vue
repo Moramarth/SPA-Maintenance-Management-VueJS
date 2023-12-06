@@ -35,10 +35,6 @@ export default {
     padding: 1.2rem 0;
 }
 
-.header + * {
-    padding-top: 8.5rem;
-}
-
 .header .container {
     display: flex;
     align-items: center;

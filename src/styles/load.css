@@ -4,6 +4,8 @@
 
 @import url(./wrapper.css);
 
+@import url(./section.css);
+
 @import url(./bootstrap-overwrite.css);
 
 @import url(./font-awesome.css);
