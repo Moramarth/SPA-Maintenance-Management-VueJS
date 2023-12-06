@@ -5,6 +5,7 @@ import RegisterInfo from './views/RegisterInfo/RegisterInfo.vue';
 import Home from './views/Home/Home.vue';
 import ListView from './views/ListView/ListView.vue';
 import DetailsView from './views/DetailsView/DetailsView.vue';
+import DeleteView from './views/DeleteView/DeleteView.vue';
 
 export default {
   components: {
@@ -14,10 +15,11 @@ export default {
     Home,
     ListView,
     DetailsView,
+    DeleteView,
   },
   data() {
     return {
-      view: 'DetailsView',
+      view: 'DeleteView',
     };
   },
 };
