@@ -3,6 +3,7 @@ import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import RegisterInfo from './views/RegisterInfo/RegisterInfo.vue';
 import Home from './views/Home/Home.vue';
+import ListView from './views/ListView/ListView.vue';
 
 export default {
   components: {
@@ -10,10 +11,11 @@ export default {
     AppHeader,
     RegisterInfo,
     Home,
+    ListView,
   },
   data() {
     return {
-      view: 'Home',
+      view: 'ListView',
     };
   },
 };
