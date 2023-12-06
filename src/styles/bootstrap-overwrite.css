@@ -130,3 +130,92 @@
 .carousel-control-prev:hover {
     opacity: 0.5;
 }
+
+/*
+    - Tables
+*/
+
+.table a.btn {
+    white-space: nowrap;
+}
+.table {
+    background-color: #dce4e8;
+}
+
+th {
+
+    font-size: 1.6rem;
+    line-height: 1.33;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav-tabs {
+    justify-content: center;
+    border: 0;
+}
+
+.nav-tabs button.nav-link {
+    padding: 1.0rem 2.0rem !important;
+    color: black;
+}
+.nav-tabs button.nav-link.active {
+    border-color: black;
+    border-bottom: 0;
+    border-radius: 0.6rem 0.6rem 0 0;
+    background: rgba(255,255,255,0.4);
+    color: black;
+}
+
+.nav-tabs button.nav-link:not(.active):hover {
+    border-color: transparent;
+}
+
+.navbar-toggler {
+    padding: 1.0rem;
+}
+
+.navbar-toggler-icon {
+    width: 2.0rem;
+    height: 2.0rem;
+}
+
+/*
+    - Buttons
+*/
+
+.btn {
+    padding: 1.3rem 2.0rem;
+    font-size: 1.6rem;
+    line-height: 1.1rem;
+    border-radius: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-dark {
+    background-color: black;
+    border-color: black;
+}
+
+/*
+Sliders
+*/
+
+@media (max-width: 767.98px) {
+    .carousel {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 2.0rem;
+        justify-content: center;
+    }
+
+    .carousel-control-next,
+    .carousel-control-prev {
+        position: relative;
+        width: auto;
+    }
+}

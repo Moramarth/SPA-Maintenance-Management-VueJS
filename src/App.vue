@@ -4,6 +4,7 @@ import AppFooter from './components/AppFooter.vue';
 import RegisterInfo from './views/RegisterInfo/RegisterInfo.vue';
 import Home from './views/Home/Home.vue';
 import ListView from './views/ListView/ListView.vue';
+import DetailsView from './views/DetailsView/DetailsView.vue';
 
 export default {
   components: {
@@ -12,10 +13,11 @@ export default {
     RegisterInfo,
     Home,
     ListView,
+    DetailsView,
   },
   data() {
     return {
-      view: 'ListView',
+      view: 'DetailsView',
     };
   },
 };

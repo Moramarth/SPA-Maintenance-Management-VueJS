@@ -6,6 +6,10 @@
 
 @import url(./section.css);
 
+@import url(./block-testimonial.css);
+
+@import url(./block-review.css);
+
 @import url(./bootstrap-overwrite.css);
 
 @import url(./font-awesome.css);
