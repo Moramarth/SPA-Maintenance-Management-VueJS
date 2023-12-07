@@ -6,6 +6,7 @@ import Home from './views/Home/Home.vue';
 import ListView from './views/ListView/ListView.vue';
 import DetailsView from './views/DetailsView/DetailsView.vue';
 import DeleteView from './views/DeleteView/DeleteView.vue';
+import CreateView from './views/CreateView/CreateView.vue';
 
 export default {
   components: {
@@ -16,10 +17,11 @@ export default {
     ListView,
     DetailsView,
     DeleteView,
+    CreateView,
   },
   data() {
     return {
-      view: 'DeleteView',
+      view: 'CreateView',
     };
   },
 };

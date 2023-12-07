@@ -59,6 +59,10 @@
     margin-bottom: 0.5rem;
 }
 
+.form-main label.clear-image {
+    display: inline-block;
+  }
+
 .form-main button {
     padding: 1.0rem 2.0rem;
     font-size: 1.6rem;
