@@ -3,9 +3,10 @@ export default {
   props: {
     building: {
       type: Object,
-      required: false,
+      required: true,
       default: () => {
         return {
+          id: -1,
           name: 'Building Name',
           file: 'default_building_picture.png',
           city: 'Building City',
@@ -19,7 +20,9 @@ export default {
 <template>
   <div class="col">
     <div class="card card--box">
-      <a href="#">See Details</a>
+      <router-link :to="{ name: 'building-details', params: { id: building.id } }">
+        See Details
+      </router-link>
       <img
         v-if="building.file"
         :src="building.file"

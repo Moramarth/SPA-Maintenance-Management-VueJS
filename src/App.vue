@@ -1,29 +1,13 @@
 <script>
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
-import RegisterInfo from './views/RegisterInfo/RegisterInfo.vue';
-import Home from './views/Home/Home.vue';
-import ListView from './views/ListView/ListView.vue';
-import DetailsView from './views/DetailsView/DetailsView.vue';
-import DeleteView from './views/DeleteView/DeleteView.vue';
-import CreateView from './views/CreateView/CreateView.vue';
 
 export default {
   components: {
     AppFooter,
     AppHeader,
-    RegisterInfo,
-    Home,
-    ListView,
-    DetailsView,
-    DeleteView,
-    CreateView,
   },
-  data() {
-    return {
-      view: 'CreateView',
-    };
-  },
+
 };
 </script>
 
@@ -36,7 +20,7 @@ export default {
       </div>
 
       <div class="container">
-        <component :is="view" />
+        <router-view />
       </div>
     </main>
     <AppFooter />

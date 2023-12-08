@@ -13,9 +13,18 @@ export default {
     ReviewsList,
     ServiceReportsList,
   },
+  props: {
+    listType: {
+      type: String,
+      required: true,
+    },
+    array: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      list: 'MeetingsList',
       headingText: {
         AssignmentsList: 'Assignments',
         BuildingsList: 'Our Buildings',
@@ -37,7 +46,7 @@ export default {
         <h1>{{ headingText[list] }}</h1>
       </div>
       <div class="section__body">
-        <component :is="list" />
+        <component :is="listType" :array="array" />
       </div>
     </div>
   </section>

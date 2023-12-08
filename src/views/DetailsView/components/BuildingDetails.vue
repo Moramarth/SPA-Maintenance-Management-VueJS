@@ -2,13 +2,13 @@
 // TODO: Integrate Google Maps API
 export default {
   props: {
-
     object: {
       type: Object,
-      required: false,
+      required: true,
       default: () => {
         return {
           name: 'Building name',
+          file: 'default_building_picture.png',
           city: 'City name',
           address: 'address',
           tenantsCount: 5,
@@ -23,11 +23,8 @@ export default {
   <div class="section__body-group">
     <div class="block-review">
       <div class="block__image">
-        <!-- {% if object.file %}
-        <img src="{{ object.file.url }}" alt="Building Picture">
-        {% else %} -->
-        <img src="default_building_picture.png" alt="Building Picture">
-        <!-- {% endif %} -->
+        <img v-if="object.file" :src="object.file" alt="Building Picture">
+        <img v-else src="default_building_picture.png" alt="Building Picture">
       </div>
       <div class="block__content">
         <div class="block__content-bg">

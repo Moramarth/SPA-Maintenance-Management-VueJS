@@ -13,9 +13,18 @@ export default {
     ReviewDetails,
     ServiceReportDetails,
   },
+  props: {
+    objectType: {
+      type: String,
+      required: true,
+    },
+    object: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      objectDetails: 'ServiceReportDetails',
       headingText: {
         AssignmentDetails: 'Assignment Details',
         BuildingDetails: 'Building Details',
@@ -34,10 +43,10 @@ export default {
   <section class="section">
     <div class="container">
       <div class="section__head">
-        <h1>{{ headingText[objectDetails] }}</h1>
+        <h1>{{ headingText[objectType] }}</h1>
       </div>
       <div class="section__body">
-        <component :is="objectDetails" />
+        <component :is="objectType" :object="object" />
       </div>
     </div>
   </section>

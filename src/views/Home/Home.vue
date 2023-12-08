@@ -32,7 +32,9 @@ export default {
           <div class="section__body-group-head">
             <h4>Our Buildings</h4>
 
-            <a class="btn btn-dark" href="#"> See all buildings</a>
+            <router-link class="btn btn-dark" :to="{ name: 'show-all-buildings' }">
+              See all buildings
+            </router-link>
           </div>
 
           <div class="row row-cols-1 row-cols-md-3 g-4">

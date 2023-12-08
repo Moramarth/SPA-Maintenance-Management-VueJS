@@ -1,17 +1,16 @@
 <script>
 import AccountDropdown from './components/AccountDropdown.vue';
 import ClientActions from './components/ClientActions.vue';
-import ContractorActions from './components/ContractorActions.vue';
-import EngineerActions from './components/EngineerActions.vue';
-import SupervisorActions from './components/SupervisorActions.vue';
 
 export default {
   components: {
     AccountDropdown,
     ClientActions,
-    ContractorActions,
-    EngineerActions,
-    SupervisorActions,
+  },
+  data() {
+    return {
+      isAuthenticated: true,
+    };
   },
 };
 </script>
@@ -32,47 +31,49 @@ export default {
 
     <div id="navbarSupportedContent" class="navbar-collapse collapse">
       <ul class="navbar-nav">
-        <!-- if user_is_staff  -->
-        <li><a class="nav-link" href="{% url 'admin page' %}">Go to Administration</a></li>
-        <!-- {% endif %} -->
+        <template v-if="isAuthenticated">
+          <li class="nav-item dropdown">
+            <a
+              id="navbarDropdown"
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Actions
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <ClientActions />
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="nav-link" href="#">Show Buildings</a></li>
+              <li><a class="nav-link" href="#">Show Partners</a></li>
+              <li><a class="nav-link" href="#">Show Reviews</a></li>
+            </ul>
+          </li>
 
-        <!-- if user_is_authenticated -->
-        <li class="nav-item dropdown">
-          <a
-            id="navbarDropdown"
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Actions
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <!-- if viewer_group.name == 'Clients' -->
-            <ClientActions />
-            <!-- elif viewer_group.name == "Contractors" -->
-            <ContractorActions />
-            <!-- elif viewer_group.name == "Engineering"  -->
-            <EngineerActions />
-            <!-- elif viewer_group.name == "Supervisor" -->
-            <SupervisorActions />
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="nav-link" href="#">Show Buildings</a></li>
-            <li><a class="nav-link" href="#">Show Partners</a></li>
-            <li><a class="nav-link" href="#">Show Reviews</a></li>
-          </ul>
-        </li>
+          <li class="nav-item dropdown">
+            <AccountDropdown />
+          </li>
+        </template>
 
-        <li class="nav-item dropdown">
-          <AccountDropdown />
-        </li>
-        <!-- {% else %} -->
-        <li><a class="nav-link" href="#">Login</a></li>
-        <li><a class="nav-link" href="#">Registration</a></li>
-        <!-- {% endif %} -->
+        <template v-else>
+          <li>
+            <router-link class="nav-link" :to="{ name: 'login-page' }">
+              Login
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              class="nav-link"
+              :to="{ name: 'register-info-page' }"
+            >
+              Registration
+            </router-link>
+          </li>
+        </template>
       </ul>
     </div>
   </nav>

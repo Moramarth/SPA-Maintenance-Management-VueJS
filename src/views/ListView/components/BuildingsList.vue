@@ -6,18 +6,9 @@ export default {
     BuildingCard,
   },
   props: {
-    buildings: {
+    array: {
       type: Array,
-      required: false,
-      default: () => {
-        return [{
-          id: -1,
-          name: 'Build',
-          city: 'Assigned city info',
-
-        }, {}, { }];
-      },
-
+      required: true,
     },
   },
 };
@@ -28,11 +19,11 @@ export default {
     filters
   </div>
   <div class="section__body-group">
-    <h1 v-if="buildings.length === 0">
+    <h1 v-if="array.length === 0">
       No Buildings to show
     </h1>
     <div v-else class="row row-cols-1 row-cols-md-3 g-4">
-      <template v-for="building in buildings" :key="building.id">
+      <template v-for="building in array" :key="building.id">
         <BuildingCard :building="building" />
       </template>
     </div>
