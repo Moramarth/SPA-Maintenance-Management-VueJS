@@ -48,8 +48,16 @@ export default {
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="nav-link" href="#">Show Buildings</a></li>
-              <li><a class="nav-link" href="#">Show Partners</a></li>
+              <li>
+                <router-link class="nav-link" :to="{ name: 'show-all-buildings' }">
+                  Show Buildings
+                </router-link>
+              </li>
+              <li>
+                <router-link class="nav-link" :to="{ name: 'show-all-companies' }">
+                  Show Partners
+                </router-link>
+              </li>
               <li><a class="nav-link" href="#">Show Reviews</a></li>
             </ul>
           </li>

@@ -6,7 +6,7 @@ export default {
     CompanyCard,
   },
   props: {
-    companies: {
+    array: {
       type: Array,
       required: false,
       default: () => {
@@ -31,11 +31,11 @@ export default {
     filters
   </div>
   <div class="section__body-group">
-    <h1 v-if="companies.length === 0">
+    <h1 v-if="array.length === 0">
       No Partners to show
     </h1>
     <div v-else class="row row-cols-1 row-cols-md-3 g-4">
-      <template v-for="company in companies" :key="company.id">
+      <template v-for="company in array" :key="company.id">
         <CompanyCard company:company />
       </template>
     </div>

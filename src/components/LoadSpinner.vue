@@ -5,7 +5,9 @@ export default {
 </script>
 
 <template>
-  <h2>This is the loading spinner</h2>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </template>
 
 <style lang="scss" scoped>

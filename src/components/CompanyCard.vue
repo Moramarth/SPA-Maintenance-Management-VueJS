@@ -3,9 +3,10 @@ export default {
   props: {
     company: {
       type: Object,
-      required: false,
+      required: true,
       default: () => {
         return {
+          id: -1,
           name: 'Company Name',
           file: 'default_company_logo.jpg',
           businessField: 'Compnay Business Field',
@@ -19,7 +20,9 @@ export default {
 <template>
   <div class="col">
     <div class="card card--box">
-      <a href="#">See Details</a>
+      <router-link :to="{ name: 'company-details', params: { id: company.id } }">
+        See Details
+      </router-link>
       <img
         v-if="company.file"
         :src="company.file"

@@ -43,7 +43,7 @@ export default {
   <section class="section">
     <div class="container">
       <div class="section__head">
-        <h1>{{ headingText[list] }}</h1>
+        <h1>{{ headingText[listType] }}</h1>
       </div>
       <div class="section__body">
         <component :is="listType" :array="array" />

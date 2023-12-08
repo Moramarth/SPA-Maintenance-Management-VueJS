@@ -13,7 +13,7 @@ export default {
     <div class="container">
       <router-link class="logo" :to="{ name: 'home-page' }">
         <img
-          src="navbar_logo.png"
+          src="../../public/navbar_logo.png"
           alt="logo"
           width=""
           height=""
