@@ -2,8 +2,6 @@
 import AssignmentDetails from './components/AssignmentDetails.vue';
 import BuildingDetails from './components/BuildingDetails.vue';
 import CompanyDetails from './components/CompanyDetails.vue';
-import MeetingDetails from './components/MeetingDetails.vue';
-import OfferDetails from './components/OfferDetails.vue';
 import ReviewDetails from './components/ReviewDetails.vue';
 import ServiceReportDetails from './components/ServiceReportDetails.vue';
 
@@ -12,8 +10,6 @@ export default {
     AssignmentDetails,
     BuildingDetails,
     CompanyDetails,
-    MeetingDetails,
-    OfferDetails,
     ReviewDetails,
     ServiceReportDetails,
   },

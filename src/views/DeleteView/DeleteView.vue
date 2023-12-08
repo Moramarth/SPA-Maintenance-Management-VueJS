@@ -1,17 +1,11 @@
 <script>
 import DeleteFormFooter from './components/DeleteFormFooter.vue';
-import DeleteAssignment from './components/DeleteAssignment.vue';
-import DeleteMeeting from './components/DeleteMeeting.vue';
-import DeleteOffer from './components/DeleteOffer.vue';
 import DeleteReview from './components/DeleteReview.vue';
 import DeleteServiceReport from './components/DeleteServiceReport.vue';
 
 export default {
   components: {
     DeleteFormFooter,
-    DeleteAssignment,
-    DeleteMeeting,
-    DeleteOffer,
     DeleteReview,
     DeleteServiceReport,
   },

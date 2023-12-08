@@ -2,8 +2,6 @@
 import AssignmentsList from './components/AssignmentsList.vue';
 import BuildingsList from './components/BuildingsList.vue';
 import CompaniesList from './components/CompaniesList.vue';
-import MeetingsList from './components/MeetingsList.vue';
-import OffersList from './components/OffersList.vue';
 import ReviewsList from './components/ReviewsList.vue';
 import ServiceReportsList from './components/ServiceReportsList.vue';
 
@@ -12,8 +10,6 @@ export default {
     AssignmentsList,
     BuildingsList,
     CompaniesList,
-    MeetingsList,
-    OffersList,
     ReviewsList,
     ServiceReportsList,
   },
