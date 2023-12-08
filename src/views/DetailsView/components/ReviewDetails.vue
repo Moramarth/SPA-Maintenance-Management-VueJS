@@ -4,22 +4,9 @@ export default {
     object: {
       type: Object,
       required: false,
-      default: () => {
-        return {
-          user: 'User full name',
-          createdBy: 'Created By user',
-          assignment: 'Assignment title',
-          description: 'Some description here',
-          meetingDate: 'Meeting date',
-          file: '',
-          company: 'Company name',
-          serviceReport: 'service report title',
-          rating: 4,
-          comment: 'this is details review comment',
-        };
-      },
     },
   },
+
 };
 </script>
 
@@ -28,8 +15,12 @@ export default {
   <div class="form-main form-main--filters">
     <div class="form__wrap">
       <div class="form__foot">
-        <a class="btn btn-warning" href="{% url 'edit review' object.pk %}">Edit</a>
-        <a class="btn btn-danger" href="{% url 'delete review' object.pk %}">Delete</a>
+        <router-link class="btn btn-warning" :to="{ name: 'edit-review', params: { id: object.id } }">
+          Edit
+        </router-link>
+        <router-link class="btn btn-danger" :to="{ name: 'delete-review', params: { id: object.id } }">
+          Delete
+        </router-link>
       </div>
     </div>
   </div>
@@ -47,7 +38,7 @@ export default {
         {% else %} -->
         <img
           class="img-fluid rounded-start"
-          src="default_profile_picture.png"
+          src="../../../../public/default_profile_picture.png"
           alt=""
         >
         <!-- {% endif %} -->
@@ -89,7 +80,7 @@ export default {
         {% else %} -->
         <img
           class="img-fluid rounded-start"
-          src="default_company_logo.jpg"
+          src="../../../../public/default_company_logo.jpg"
           alt=""
         >
         <!-- {% endif %} -->

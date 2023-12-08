@@ -1,5 +1,4 @@
 <script>
-import AssignmentsList from './components/AssignmentsList.vue';
 import BuildingsList from './components/BuildingsList.vue';
 import CompaniesList from './components/CompaniesList.vue';
 import ReviewsList from './components/ReviewsList.vue';
@@ -7,7 +6,6 @@ import ServiceReportsList from './components/ServiceReportsList.vue';
 
 export default {
   components: {
-    AssignmentsList,
     BuildingsList,
     CompaniesList,
     ReviewsList,

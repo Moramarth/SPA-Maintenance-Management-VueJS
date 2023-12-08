@@ -10,18 +10,21 @@ export default {
       required: true,
     },
   },
+  emits: ['isEdited', 'isCreated'],
 };
 </script>
 
 <template>
   <div class="form__foot">
-    <button v-if="isEditing" class="btn btn-success">
+    <button v-if="isEditing" class="btn btn-success" @click.prevent="$emit('isEdited')">
       Save
     </button>
-    <button v-else class="btn btn-primary">
+    <button v-else class="btn btn-primary" @click.prevent="$emit('isCreated')">
       Create
     </button>
-    <a :href="fallbackURL">Cancel</a>
+    <router-link :to="fallbackURL">
+      Cancel
+    </router-link>
   </div>
 </template>
 

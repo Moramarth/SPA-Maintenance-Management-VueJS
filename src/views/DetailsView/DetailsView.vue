@@ -1,5 +1,4 @@
 <script>
-import AssignmentDetails from './components/AssignmentDetails.vue';
 import BuildingDetails from './components/BuildingDetails.vue';
 import CompanyDetails from './components/CompanyDetails.vue';
 import ReviewDetails from './components/ReviewDetails.vue';
@@ -7,7 +6,6 @@ import ServiceReportDetails from './components/ServiceReportDetails.vue';
 
 export default {
   components: {
-    AssignmentDetails,
     BuildingDetails,
     CompanyDetails,
     ReviewDetails,
@@ -23,6 +21,7 @@ export default {
       required: true,
     },
   },
+  emits: ['editRequest', 'deleteRequest'],
   data() {
     return {
       headingText: {
@@ -46,7 +45,10 @@ export default {
         <h1>{{ headingText[objectType] }}</h1>
       </div>
       <div class="section__body">
-        <component :is="objectType" :object="object" />
+        <component
+          :is="objectType"
+          :object="object"
+        />
       </div>
     </div>
   </section>

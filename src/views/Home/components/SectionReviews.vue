@@ -22,7 +22,9 @@ export default {
     <div class="section__body-group-head">
       <h4>Feedback</h4>
 
-      <a class="btn btn-dark" href="#"> See all reviews</a>
+      <router-link class="btn btn-dark" :to="{ name: 'show-all-reviews' }">
+        See all reviews
+      </router-link>
     </div>
     <h2 v-if="reviews.length === 0">
       No reviews available

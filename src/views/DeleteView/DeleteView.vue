@@ -9,9 +9,19 @@ export default {
     DeleteReview,
     DeleteServiceReport,
   },
+  props: {
+    deleteType: {
+      type: String,
+      required: true,
+    },
+    objectID: {
+      type: Number,
+      required: true,
+    },
+  },
+  emits: ['confirmDelete'],
   data() {
     return {
-      deleteObject: 'DeleteServiceReport',
       headingText: {
         DeleteAssignment: 'Delete Assignment',
         DeleteMeeting: 'Delete Meeting',
@@ -23,7 +33,7 @@ export default {
         DeleteAssignment: '#',
         DeleteMeeting: '#',
         DeleteOffer: '#',
-        DeleteReview: '#',
+        DeleteReview: { name: 'review-details', params: { id: this.objectID } },
         DeleteServiceReport: '#',
       },
     };
@@ -35,15 +45,18 @@ export default {
   <section class="section">
     <div class="container">
       <div class="section__head">
-        <h1>{{ headingText[deleteObject] }}</h1>
+        <h1>{{ headingText[deleteType] }}</h1>
       </div>
       <div class="section__body">
         <div class="form-main form-main--login">
           <form action="" method="post">
             <div class="form__fields">
-              <component :is="deleteObject" />
+              <component :is="deleteType" />
             </div>
-            <DeleteFormFooter :fallback-u-r-l="fallbackURL[deleteObject]" />
+            <DeleteFormFooter
+              :fallback-u-r-l="fallbackURL[deleteType]"
+              @confirm-delete="$emit('confirmDelete')"
+            />
           </form>
         </div>
       </div>

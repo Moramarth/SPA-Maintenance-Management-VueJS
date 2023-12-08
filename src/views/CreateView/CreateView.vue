@@ -9,11 +9,19 @@ export default {
     CreateFormFooter,
     CreateReview,
   },
-  data() {
-    return {
-      createObject: 'CreateReview',
-      isEditing: true,
-    };
+  props: {
+    createObject: {
+      type: String,
+      required: true,
+    },
+    isEditing: {
+      type: Boolean,
+      required: true,
+    },
+    object: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     headingText() {
@@ -33,10 +41,20 @@ export default {
         EditCompany: this.isEditing ? '#edit' : '#',
         CreateMeeting: this.isEditing ? '#edit' : '#',
         CrateOffer: this.isEditing ? '#edit' : '#',
-        CreateReview: this.isEditing ? '#edit' : '#',
+        CreateReview: this.isEditing ? { name: 'edit-review', params: { id: this.object.id } } : { name: 'show-all-reviews' },
         CreateServiceReport: this.isEditing ? '#edit' : '#',
       };
       return urlMap[this.createObject];
+    },
+  },
+  methods: {
+    handleEdit() {
+      console.log('review is edited');
+      this.$router.push({ name: 'home-page' });
+    },
+    handleCreation() {
+      console.log('review is created');
+      this.$router.push({ name: 'home-page' });
     },
   },
 };
@@ -54,7 +72,12 @@ export default {
             <div class="form__fields">
               <component :is="createObject" :is-editing="isEditing" />
             </div>
-            <CreateFormFooter :is-editing="isEditing" :fallback-u-r-l="fallbackURL" />
+            <CreateFormFooter
+              :is-editing="isEditing"
+              :fallback-u-r-l="fallbackURL"
+              @is-edited="handleEdit"
+              @is-created="handleCreation"
+            />
           </form>
         </div>
       </div>

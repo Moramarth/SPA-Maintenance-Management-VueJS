@@ -6,7 +6,7 @@ export default {
     Testimonial,
   },
   props: {
-    reviews: {
+    array: {
       type: Array,
       required: false,
       default: () => {
@@ -30,10 +30,10 @@ export default {
     filters
   </div>
   <div class="section__body-group">
-    <h1 v-if="reviews.length === 0">
+    <h1 v-if="array.length === 0">
       No Reviews to show
     </h1>
-    <template v-for="review in reviews" :key="review.id">
+    <template v-for="review in array" :key="review.id">
       <Testimonial
         :testimonial="review"
       />

@@ -7,7 +7,7 @@ export default {
       default: () => {
         return {
           user: 'User',
-          userImage: 'default_profile_picture.png',
+
           comment: 'this is a comment',
           submitted: 'Date time',
         };
@@ -28,7 +28,7 @@ export default {
       >
       <img
         v-else
-        src="default_profile_picture.png"
+        src="../../public/default_profile_picture.png"
         class="img-fluid rounded-start"
         alt=""
       >
@@ -62,6 +62,13 @@ export default {
           class="text-muted"
         > Submitted at {{ testimonial.submitted }}</small>
       </p>
+      <router-link :to="{ name: 'review-details', params: { id: testimonial.id } }">
+        <i
+          class="fa-solid fa-arrow-right-to-bracket"
+          data-toggle="tooltip"
+          title="See Details"
+        />
+      </router-link>
     </div>
   </div>
 </template>

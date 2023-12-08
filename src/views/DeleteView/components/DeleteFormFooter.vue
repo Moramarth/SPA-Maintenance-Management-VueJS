@@ -2,19 +2,22 @@
 export default {
   props: {
     fallbackURL: {
-      type: String,
+      type: Object,
       required: true,
     },
   },
+  emits: ['confirmDelete'],
 };
 </script>
 
 <template>
   <div class="form__foot">
-    <button class="btn btn-danger">
+    <button class="btn btn-danger" @click.prevent="$emit('confirmDelete')">
       Confirm
     </button>
-    <a :href="fallbackURL">Cancel</a>
+    <router-link :to="fallbackURL">
+      Cancel
+    </router-link>
   </div>
 </template>
 
