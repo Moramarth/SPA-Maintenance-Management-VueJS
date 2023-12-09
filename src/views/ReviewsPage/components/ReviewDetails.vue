@@ -12,7 +12,7 @@ export default {
   <section class="section">
     <div class="container">
       <div class="section__head">
-        <h1>ReviewDetails</h1>
+        <h1>Review Details</h1>
       </div>
       <div class="section__body">
         <!-- {% if user_is_authenticated and request.user == object.user %} -->
