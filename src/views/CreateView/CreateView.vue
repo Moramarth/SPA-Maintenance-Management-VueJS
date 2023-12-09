@@ -1,13 +1,11 @@
 <script>
 import CreateServiceReport from './components/CreateServiceReport.vue';
 import CreateFormFooter from './components/CreateFormFooter.vue';
-import CreateReview from './components/CreateReview.vue';
 
 export default {
   components: {
     CreateServiceReport,
     CreateFormFooter,
-    CreateReview,
   },
   props: {
     createObject: {

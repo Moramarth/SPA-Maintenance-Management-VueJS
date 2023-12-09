@@ -1,10 +1,8 @@
 <script>
-import ReviewDetails from './components/ReviewDetails.vue';
 import ServiceReportDetails from './components/ServiceReportDetails.vue';
 
 export default {
   components: {
-    ReviewDetails,
     ServiceReportDetails,
   },
   props: {

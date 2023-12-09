@@ -1,9 +1,18 @@
-import Reviews from '../views/ComponentContainers/Reviews.vue';
+import Reviews from '../views/ReviewsPage/Reviews.vue';
+import ReviewsList from '../views/ReviewsPage/components/ReviewsList.vue';
+import CreateReview from '../views/ReviewsPage/components/CreateReview.vue';
+import ReviewDetails from '../views/ReviewsPage/components/ReviewDetails.vue';
+import EditReview from '../views/ReviewsPage/components/EditReview.vue';
+import DeleteReview from '../views/ReviewsPage/components/DeleteReview.vue';
 
 export const reviewsRoutes = [
-  { path: '/reviews', component: Reviews, name: 'show-all-reviews', props: { loadAll: true } },
-  { path: '/reviews/create', component: Reviews, name: 'create-review', props: { isCreating: true } },
-  { path: '/reviews/details/:id', component: Reviews, name: 'review-details' },
-  { path: '/reviews/edit/:id', component: Reviews, name: 'edit-review', props: { isEditing: true } },
-  { path: '/reviews/delete/:id', component: Reviews, name: 'delete-review', props: { isDeleting: true } },
+  { path: '/reviews',
+component: Reviews, children: [
+    { path: '', component: ReviewsList, name: 'show-all-reviews' },
+    { path: 'create', component: CreateReview, name: 'create-review' },
+    { path: 'details/:id', component: ReviewDetails, name: 'review-details' },
+    { path: 'edit/:id', component: EditReview, name: 'edit-review' },
+    { path: 'delete/:id', component: DeleteReview, name: 'delete-review' },
+  ] },
+
 ];

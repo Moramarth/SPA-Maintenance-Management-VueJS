@@ -1,12 +1,10 @@
 <script>
 import DeleteFormFooter from './components/DeleteFormFooter.vue';
-import DeleteReview from './components/DeleteReview.vue';
 import DeleteServiceReport from './components/DeleteServiceReport.vue';
 
 export default {
   components: {
     DeleteFormFooter,
-    DeleteReview,
     DeleteServiceReport,
   },
   props: {
