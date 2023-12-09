@@ -1,12 +1,10 @@
 <script>
-import BuildingDetails from './components/BuildingDetails.vue';
 import CompanyDetails from './components/CompanyDetails.vue';
 import ReviewDetails from './components/ReviewDetails.vue';
 import ServiceReportDetails from './components/ServiceReportDetails.vue';
 
 export default {
   components: {
-    BuildingDetails,
     CompanyDetails,
     ReviewDetails,
     ServiceReportDetails,

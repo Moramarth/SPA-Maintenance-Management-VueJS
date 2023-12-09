@@ -7,7 +7,7 @@ export default {
       default: () => {
         return {
           user: 'User',
-
+          userImage: '',
           comment: 'this is a comment',
           submitted: 'Date time',
         };
