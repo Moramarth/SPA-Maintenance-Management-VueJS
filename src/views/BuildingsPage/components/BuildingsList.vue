@@ -1,5 +1,6 @@
 <script>
 import BuildingCard from '../../../components/BuildingCard.vue';
+import { getBuildings } from '../../../dataProviders/buildings';
 
 export default {
   components: {
@@ -9,6 +10,9 @@ export default {
     return {
       array: [],
     };
+  },
+  async created() {
+    this.array = await getBuildings();
   },
 };
 </script>

@@ -1,4 +1,5 @@
 <script>
+import { getHomePage } from '../../dataProviders/homePage';
 import SectionBuildings from './components/SectionBuildings.vue';
 import SectionPartners from './components/SectionPartners.vue';
 import SectionReviews from './components/SectionReviews.vue';
@@ -8,6 +9,22 @@ export default {
     SectionBuildings,
     SectionPartners,
     SectionReviews,
+  },
+  data() {
+    return {
+      buildings: [],
+      companies: [],
+      reviews: [],
+      isLoading: true,
+    };
+  },
+  async created() {
+    const randomData = await getHomePage();
+    console.log(randomData);
+    this.buildings = randomData.buildings;
+    this.companies = randomData.tenants;
+    this.reviews = randomData.reviews;
+    this.isLoading = false;
   },
 };
 </script>
@@ -22,15 +39,15 @@ export default {
       </div>
       <div class="section__body">
         <div class="section__body-group">
-          <SectionBuildings />
+          <SectionBuildings :is-loading="isLoading" :buildings="buildings" />
         </div>
 
         <div class="section__body-group">
-          <SectionPartners />
+          <SectionPartners :is-loading="isLoading" :companies="companies" />
         </div>
 
         <div class="section__body-group">
-          <SectionReviews />
+          <SectionReviews :is-loading="isLoading" :reviews="reviews" />
         </div>
       </div>
     </div>

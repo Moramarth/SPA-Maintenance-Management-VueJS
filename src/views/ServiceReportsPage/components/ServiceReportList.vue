@@ -1,4 +1,6 @@
 <script>
+import { getServiceReports } from '../../../dataProviders/serviceReports';
+
 export default {
   data() {
     return {
@@ -6,17 +8,21 @@ export default {
         {
           id: -1,
           title: 'Service Report Title',
-          createdBy: 'Created by full name',
+          user: 'Created by full name',
           company: 'Company name',
-          reportStatus: 'Assignment status',
-          reportType: 'Report Type',
-          submitDate: 'data submited',
-          assignedTo: 'Assigned to full name',
+          report_status: 'Assignment status',
+          report_type: 'Report Type',
+          submit_date: 'data submited',
+          assigned_to: 'Assigned to full name',
           details: 'details',
 
         },
       ],
     };
+  },
+  async created() {
+    this.serviceReports = await getServiceReports();
+    console.log(this.serviceReports);
   },
 };
 </script>
@@ -58,21 +64,21 @@ export default {
                     <!-- {% if request.user == object.user %}
             <td>You</td>
             {% else %} -->
-                    <td>{{ object.createdBy }}</td>
+                    <td>{{ object.user }}</td>
                     <!-- {% endif %} -->
                     <td>{{ object.company }}</td>
-                    <td>{{ object.reportStatus }}</td>
-                    <td>{{ object.reportType }}</td>
-                    <td>{{ object.submitDate }}</td>
+                    <td>{{ object.report_status }}</td>
+                    <td>{{ object.report_type }}</td>
+                    <td>{{ object.submit_date }}</td>
 
-                    <td v-if="!object.assignedTo">
+                    <td v-if="!object.assigned_to">
                       None
                     </td>
                     <!-- {% elif request.user == object.assigned_to %}
             <td>You</td>
             {% else %} -->
                     <td v-else>
-                      {{ object.assignedTo }}
+                      {{ object.assigned_to }}
                     </td>
 
                     <td>

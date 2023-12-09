@@ -3,7 +3,7 @@ export default {
   props: {
     testimonial: {
       type: Object,
-      required: false,
+      required: true,
       default: () => {
         return {
           user: 'User',

@@ -7,11 +7,16 @@ export default {
     BuildingCard,
     LoadSpinner,
   },
-  data() {
-    return {
-      buildings: [],
-      isLoading: false,
-    };
+  props: {
+    buildings: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+    isLoading: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>

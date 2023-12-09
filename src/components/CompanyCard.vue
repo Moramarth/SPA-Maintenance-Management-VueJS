@@ -9,7 +9,7 @@ export default {
           id: -1,
           name: 'Company Name',
           file: 'default_company_logo.jpg',
-          businessField: 'Compnay Business Field',
+          business_field: 'Compnay Business Field',
         };
       },
     },
@@ -39,8 +39,8 @@ export default {
         <h5 class="card-title">
           {{ company.name }}
         </h5>
-        <p v-if="company.businessField" class="card-text">
-          {{ company.businessField }}
+        <p v-if="company.business_field" class="card-text">
+          {{ company.business_field }}
         </p>
       </div>
     </div>

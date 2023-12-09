@@ -1,5 +1,6 @@
 <script>
 import CompanyCard from '../../../components/CompanyCard.vue';
+import { getCompanies } from '../../../dataProviders/companies';
 
 export default {
   components: {
@@ -9,6 +10,9 @@ export default {
     return {
       array: [],
     };
+  },
+  async created() {
+    this.array = await getCompanies();
   },
 };
 </script>
@@ -29,7 +33,7 @@ export default {
           </h1>
           <div v-else class="row row-cols-1 row-cols-md-3 g-4">
             <template v-for="company in array" :key="company.id">
-              <CompanyCard company:company />
+              <CompanyCard :company="company" />
             </template>
           </div>
         </div>

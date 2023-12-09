@@ -1,5 +1,6 @@
 <script>
 import LoadSpinner from '../../../components/LoadSpinner.vue';
+import { getProfiles } from '../../../dataProviders/profile';
 
 export default {
   components: {
@@ -21,6 +22,11 @@ export default {
         },
       },
     };
+  },
+  async created() {
+    const response = await getProfiles();
+    console.log(response);
+    this.object = response[8];
   },
 
 };
@@ -98,7 +104,7 @@ export default {
                   <img v-else src="../../../../public/default_profile_picture.png" alt="">
                 </div>
                 <div class="block__content">
-                  <h1>{{ object.full_name }}</h1>
+                  <h1>{{ object.first_name }} {{ object.last_name }}</h1>
                   <div class="form-main form-main--filters">
                     <div class="form__label">
                       <label>Phone number:</label> {{ object.phone_number }}
@@ -108,7 +114,7 @@ export default {
                       <!-- {% if request.user == appuserprofile.user %} -->
                       <router-link
                         class="btn btn-warning"
-                        :to="{ name: 'edit-profile', params: { id: object.id } }"
+                        :to="{ name: 'edit-profile', params: { id: object.user } }"
                       >
                         Edit
                         Profile

@@ -7,11 +7,16 @@ export default {
     Testimonial,
     LoadSpinner,
   },
-  data() {
-    return {
-      reviews: [],
-      isLoading: false,
-    };
+  props: {
+    reviews: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+    isLoading: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>
@@ -41,7 +46,7 @@ export default {
           :key="review.id"
           :class="review === reviews[0] ? 'carousel-item active' : 'carousel-item'"
         >
-          <Testimonial />
+          <Testimonial :testimonial="review" />
         </div>
       </div>
       <button

@@ -7,11 +7,16 @@ export default {
     CompanyCard,
     LoadSpinner,
   },
-  data() {
-    return {
-      companies: [],
-      isLoading: false,
-    };
+  props: {
+    companies: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+    isLoading: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>

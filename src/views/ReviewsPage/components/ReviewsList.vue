@@ -1,5 +1,6 @@
 <script>
 import Testimonial from '../../../components/Testimonial.vue';
+import { getReviews } from '../../../dataProviders/reviews';
 
 export default {
   components: {
@@ -10,6 +11,9 @@ export default {
     return {
       array: [{ id: 1 }, { id: 2 }, { id: 3 }],
     };
+  },
+  async created() {
+    this.array = await getReviews();
   },
 };
 </script>
