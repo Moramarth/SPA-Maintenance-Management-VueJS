@@ -1,6 +1,11 @@
-import Companies from '../views/ComponentContainers/Companies.vue';
+import Companies from '../views/CompaniesPage/Companies.vue';
+import CompaniesList from '../views/CompaniesPage/components/CompaniesList.vue';
+import CompanyDetails from '../views/CompaniesPage/components/CompanyDetails.vue';
 
 export const companiesRoutes = [
-  { path: '/partners', component: Companies, name: 'show-all-companies' },
-  { path: '/partners/details/:id', component: Companies, name: 'company-details' },
+  { path: '/partners', component: Companies, children: [
+    { path: '', component: CompaniesList, name: 'show-all-companies' },
+    { path: 'details/:id', component: CompanyDetails, name: 'company-details' },
+  ] },
+
 ];
