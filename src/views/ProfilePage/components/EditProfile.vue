@@ -9,15 +9,15 @@ export default {
     return {
       object: {
         id: -1,
-        title: 'Service report title',
-        description: 'Service report description',
-        file: 'Service report attachments if any',
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
       },
     };
   },
   methods: {
     handleEdit() {
-      this.$router.push({ name: 'service-report-details', params: { id: this.object.id } });
+      this.$router.push({ name: 'profile-details', params: { id: this.object.id } });
     },
   },
 };
@@ -27,27 +27,37 @@ export default {
   <section class="section">
     <div class="container">
       <div class="section__head">
-        <h1>Edit Service Report</h1>
+        <h1>Edit Profile</h1>
       </div>
       <div class="section__body">
         <div class="form-main form-main--login">
           <form action="" method="post" enctype="multipart/form-data">
             <div class="form__fields">
-              <label for="report-title">Title:</label>
+              <label for="first-name">First Name:</label>
               <input
-                id="report-title"
+                id="first-name"
                 type="text"
-                :value="object.title"
+                :value="object.firstName"
+                placeholder="Jhon"
                 required
               >
-              <label for="report-description">Description:</label>
-              <textarea
-                id="report-description"
+              <label for="last-name">Last Name:</label>
+              <input
+                id="last-name"
                 type="text"
-                :value="object.description"
+                :value="object.lastName"
+                placeholder="Doe"
                 required
-              />
-              <label for="report-file">Image:</label>
+              >
+              <label for="phone-number">Phone Number:</label>
+              <input
+                id="phone-number"
+                type="text"
+                :value="object.phoneNumber"
+                placeholder="+359123456789"
+                required
+              >
+              <label for="image">Profile Picture:</label>
               <template v-if="object.file">
                 Currently:
                 <a href="#">{{ object.file }}</a>
@@ -56,11 +66,11 @@ export default {
                   <label class="clear-image" for="file-clear">Clear Current</label>
                 </p>
               </template>
-              <input type="file">
+              <input id="limage" type="file">
             </div>
             <CreateFormFooter
               :is-editing="true"
-              :fallback-u-r-l="{ name: 'service-report-details', params: { id: object.id } }"
+              :fallback-u-r-l="{ name: 'profile-details', params: { id: object.id } }"
               @is-edited="handleEdit"
             />
           </form>
@@ -70,6 +80,6 @@ export default {
   </section>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

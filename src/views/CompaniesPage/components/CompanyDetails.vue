@@ -23,6 +23,7 @@ export default {
         required: false,
         default: () => {
           return {
+            buildingID: -1,
             buildingCity: 'City',
             buildingAddress: 'Building address',
             buildingName: 'Building Name',
@@ -116,7 +117,7 @@ export default {
                   <!-- {% if object.file %} -->
                   <!-- <img src="{{ object.file.url }}" alt="">
             {% else %} -->
-                  <img src="default_company_logo.jpg" alt="">
+                  <img src="../../../../public/default_company_logo.jpg" alt="">
                   <!-- {% endif %} -->
                 </div>
                 <div class="block__content">
@@ -142,8 +143,10 @@ export default {
                       </p>
 
                       <!-- {% if request.user.appuserprofile in company.appuserprofile_set.all %} -->
-                      <a class="btn btn-danger" href="#">Edit
-                        Company Info</a>
+                      <router-link class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
+                        Edit
+                        Company Info
+                      </router-link>
                       <!-- {% endif %} -->
                     </div>
                   </div>
@@ -170,13 +173,13 @@ export default {
                     <label>Building:</label>
                   </div>
                   {{ address.buildingName }}
-                  <a href="#" target="_blank">
+                  <router-link :to="{ name: 'building-details', params: { id: address.buildingID } }" target="_blank">
                     <i
                       class="fa-solid fa-arrow-right-to-bracket"
                       data-toggle="tooltip"
                       title="See Details"
                     />
-                  </a>
+                  </router-link>
 
                   <div class="form__label">
                     <label>Location:</label>

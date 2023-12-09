@@ -5,8 +5,16 @@ export default {
 </script>
 
 <template>
-  <li><a class="nav-link" href="#">Create Report</a></li>
-  <li><a class="nav-link" href="#">Show My Reports</a></li>
+  <li>
+    <router-link class="nav-link" :to="{ name: 'create-service-report' }">
+      Create Report
+    </router-link>
+  </li>
+  <li>
+    <router-link class="nav-link" :to="{ name: 'show-all-service-reports' }">
+      Show My Reports
+    </router-link>
+  </li>
   <li>
     <hr class="dropdown-divider">
   </li>

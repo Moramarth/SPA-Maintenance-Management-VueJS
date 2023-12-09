@@ -9,7 +9,7 @@ export default {
   },
   data() {
     return {
-      isAuthenticated: false,
+      isAuthenticated: true,
     };
   },
 };
@@ -58,7 +58,11 @@ export default {
                   Show Partners
                 </router-link>
               </li>
-              <li><a class="nav-link" href="#">Show Reviews</a></li>
+              <li>
+                <router-link class="nav-link" :to="{ name: 'show-all-reviews' }">
+                  Show Reviews
+                </router-link>
+              </li>
             </ul>
           </li>
 

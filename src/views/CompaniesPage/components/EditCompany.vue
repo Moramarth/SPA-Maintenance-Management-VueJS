@@ -9,15 +9,16 @@ export default {
     return {
       object: {
         id: -1,
-        title: 'Service report title',
-        description: 'Service report description',
-        file: 'Service report attachments if any',
+        name: 'company name',
+        businessField: 'Product company',
+        additionalInformation: 'More info about the company',
+        file: '',
       },
     };
   },
   methods: {
     handleEdit() {
-      this.$router.push({ name: 'service-report-details', params: { id: this.object.id } });
+      this.$router.push({ name: 'company-details', params: { id: this.object.id } });
     },
   },
 };
@@ -27,27 +28,24 @@ export default {
   <section class="section">
     <div class="container">
       <div class="section__head">
-        <h1>Edit Service Report</h1>
+        <h1>Edit Company</h1>
       </div>
       <div class="section__body">
         <div class="form-main form-main--login">
           <form action="" method="post" enctype="multipart/form-data">
             <div class="form__fields">
-              <label for="report-title">Title:</label>
+              <label for="name">Name:</label>
               <input
-                id="report-title"
+                id="name"
                 type="text"
-                :value="object.title"
+                :value="object.name"
                 required
               >
-              <label for="report-description">Description:</label>
-              <textarea
-                id="report-description"
-                type="text"
-                :value="object.description"
-                required
-              />
-              <label for="report-file">Image:</label>
+              <label for="business-field">Business Field:</label>
+              <input id="business-field" type="text" :value="object.businessField">
+              <label for="more-info">Additional Information:</label>
+              <textarea id="more-info" :value="object.additionalInformation" />
+              <label for="logo">Company Logo</label>
               <template v-if="object.file">
                 Currently:
                 <a href="#">{{ object.file }}</a>
@@ -56,11 +54,11 @@ export default {
                   <label class="clear-image" for="file-clear">Clear Current</label>
                 </p>
               </template>
-              <input type="file">
+              <input id="logo" type="file">
             </div>
             <CreateFormFooter
               :is-editing="true"
-              :fallback-u-r-l="{ name: 'service-report-details', params: { id: object.id } }"
+              :fallback-u-r-l="{ name: 'company-details', params: { id: object.id } }"
               @is-edited="handleEdit"
             />
           </form>
@@ -70,6 +68,6 @@ export default {
   </section>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

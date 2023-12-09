@@ -5,7 +5,7 @@ export default {
     return {
       object: {
         name: 'Building name',
-        file: 'default_building_picture.png',
+        file: '',
         city: 'City name',
         address: 'address',
         tenantsCount: 5,
@@ -26,7 +26,7 @@ export default {
           <div class="block-review">
             <div class="block__image">
               <img v-if="object.file" :src="object.file" alt="Building Picture">
-              <img v-else src="default_building_picture.png" alt="Building Picture">
+              <img v-else src="../../../../public/default_building_picture.png" alt="Building Picture">
             </div>
             <div class="block__content">
               <div class="block__content-bg">
