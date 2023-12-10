@@ -1,24 +1,31 @@
 <script>
+import { getServiceReportById } from '../../../dataProviders/serviceReports';
+
 export default {
   data() {
     return {
       object: {
-        user: 'user full name',
-        title: 'report title',
-        description: 'Some description here',
-        meetingDate: 'Meeting date',
-        file: '',
-        reportStatus: 'Pending',
-        reportType: 'report type',
-        companyName: 'company name',
-        assignedTo: {
-          name: 'Person name',
-          companyName: 'Company name assigned to',
-        },
-        dateAssigned: 'Date assigned',
+
       },
 
     };
+  },
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.loadObject();
+      },
+
+      { immediate: true },
+    );
+  },
+  methods: {
+    async loadObject() {
+      const id = this.$route.params.id;
+      this.object = await getServiceReportById(id);
+      console.log(this.object);
+    },
   },
 };
 </script>
@@ -34,6 +41,7 @@ export default {
           <div class="form__wrap">
             <div class="form__foot">
               <!-- {% if request.user == object.user %} -->
+              <!-- TODO: clean btn available logic -->
               <template v-if="object.reportStatus === 'Pending'">
                 <router-link class="btn btn-warning" :to="{ name: 'edit-service-report', params: { id: object.id } }">
                   Edit Report
@@ -82,28 +90,30 @@ export default {
                   <td>
                     {{ object.user }}
                     Employee at
-                    {{ object.companyName }}
-                    <a href="#" target="_blank">
+                    {{ object.company }}
+
+                    <!-- TODO: if time left make this modal -->
+                    <router-link :to="{ name: 'profile-details', params: { id: object.user } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"
                         title="Contact Info"
                       />
-                    </a>
+                    </router-link>
                   </td>
                 </tr>
                 <tr>
                   <th>Report Type:</th>
-                  <td>{{ object.reportType }}</td>
+                  <td>{{ object.report_type }}</td>
                 </tr>
                 <tr>
                   <th>Report Status:</th>
-                  <td>{{ object.reportStatus }}</td>
+                  <td>{{ object.report_status }}</td>
                 </tr>
                 <tr v-if="object.file">
                   <th>Image:</th>
                   <td>
-                    <a href="#" target="_blank">
+                    <a :href="object.file" target="_blank">
                       <i
                         class="fa-regular fa-image"
                         data-toggle="tooltip"
@@ -113,21 +123,19 @@ export default {
                   </td>
                 </tr>
 
-                <!-- {% if object.assigned_to %}  -->
-                <tr>
+                <tr v-if="object.assigned_to">
                   <th>Assigned to:</th>
                   <td>
-                    {{ object.assignedTo.name }}
-                    Employee at {{ object.assignedTo.companyName }}
+                    {{ object.assigned_to }}
+                    Employee at {{ object.assigned_to }}
 
-                    <a href="{% url 'profile details' object.assigned_to.pk %}" target="_blank">
-
+                    <router-link :to="{ name: 'profile-details', params: { id: object.assigned_to } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"
                         title="Contact Info"
                       />
-                    </a>
+                    </router-link>
                   </td>
                 </tr>
 
@@ -150,15 +158,12 @@ export default {
 
           <div class="form-main form-main--filters">
             <div class="form__foot">
-              <!-- {% if object.report_status == "Done" and request.user == object.user %} -->
-              <router-link class="btn btn-success" :to="{ name: 'create-review' }">
+              <router-link v-if="object.report_status === 'Done' && getCurrentUser.id === object.user" class="btn btn-success" :to="{ name: 'create-review' }">
                 Create Review
               </router-link>
-              <!-- {% endif %} -->
             </div>
           </div>
         </div>
-        <!-- {% endblock %} -->
       </div>
     </div>
   </section>

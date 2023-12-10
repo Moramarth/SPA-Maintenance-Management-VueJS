@@ -1,29 +1,46 @@
 <script>
+import { mapActions, mapState } from 'pinia';
 import { getServiceReports } from '../../../dataProviders/serviceReports';
+import { useUsersStore } from '../../../stores/usersStore';
+import { getCompanies } from '../../../dataProviders/companies';
+import { formatDate } from '../../../helpers/formatDate';
 
 export default {
   data() {
     return {
-      serviceReports: [
-        {
-          id: -1,
-          title: 'Service Report Title',
-          user: 'Created by full name',
-          company: 'Company name',
-          report_status: 'Assignment status',
-          report_type: 'Report Type',
-          submit_date: 'data submited',
-          assigned_to: 'Assigned to full name',
-          details: 'details',
-
-        },
-      ],
+      serviceReports: [],
+      companies: [],
+      format: formatDate,
     };
   },
-  async created() {
-    this.serviceReports = await getServiceReports();
-    console.log(this.serviceReports);
+  computed: {
+    ...mapState(useUsersStore, ['getProfiles', 'getCurrentUser']),
   },
+  async created() {
+    // TODO: better API calls for performance
+    this.serviceReports = await getServiceReports();
+    this.companies = await getCompanies();
+    this.loadProfiles();
+  },
+  methods: {
+    ...mapActions(useUsersStore, ['loadProfiles']),
+    createdBy(id) {
+      const profile = this.getProfiles.filter(profile => profile.user === id)[0];
+      if (profile)
+        return `${profile.first_name} ${profile.last_name}`;
+    },
+    assignedTo(id) {
+      const profile = this.getProfiles.filter(profile => profile.user === id)[0];
+      if (profile)
+        return `${profile.first_name} ${profile.last_name}`;
+    },
+    atCompany(id) {
+      const company = this.companies.filter(company => company.id === id)[0];
+      if (company)
+        return company.name;
+    },
+  },
+
 };
 </script>
 
@@ -61,24 +78,23 @@ export default {
                 <template v-else>
                   <tr v-for="object in serviceReports" :key="object.id">
                     <td>{{ object.title }} </td>
-                    <!-- {% if request.user == object.user %}
-            <td>You</td>
-            {% else %} -->
-                    <td>{{ object.user }}</td>
+                    <td v-if="getCurrentUser && (getCurrentuser.id === object.user)">
+                      You
+                    </td>
+                    <td v-else>
+                      {{ createdBy(object.user) }}
+                    </td>
                     <!-- {% endif %} -->
-                    <td>{{ object.company }}</td>
+                    <td>{{ atCompany(object.company) }}</td>
                     <td>{{ object.report_status }}</td>
                     <td>{{ object.report_type }}</td>
-                    <td>{{ object.submit_date }}</td>
+                    <td>{{ format(object.submit_date) }}</td>
 
                     <td v-if="!object.assigned_to">
                       None
                     </td>
-                    <!-- {% elif request.user == object.assigned_to %}
-            <td>You</td>
-            {% else %} -->
                     <td v-else>
-                      {{ object.assigned_to }}
+                      {{ assignedTo(object.assigned_to) }}
                     </td>
 
                     <td>
