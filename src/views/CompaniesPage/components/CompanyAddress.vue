@@ -52,9 +52,7 @@ export default {
       <div class="form__label">
         <label>Location:</label>
       </div>
-      <!-- {% if address.section %} -->
       <span v-if="address.section">{{ address.section }},</span>
-      <!-- {% endif %} -->
       floor {{ address.floor }},
       office {{ address.office_number }}
     </div>
