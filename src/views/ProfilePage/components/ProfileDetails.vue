@@ -1,6 +1,8 @@
 <script>
+import { mapState } from 'pinia';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { getProfiles } from '../../../dataProviders/profile';
+import { useUsersStore } from '../../../stores/usersStore';
 
 export default {
   components: {
@@ -8,13 +10,8 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
-      object: {
-        id: -1,
-        company: {
-          id: -1,
-        },
-      },
+      isLoading: true,
+      object: {},
       address: {
         building: {
           id: -1,
@@ -23,10 +20,31 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(useUsersStore, ['getCurrentUser']),
+  },
   async created() {
-    const response = await getProfiles();
-    console.log(response);
-    this.object = response[8];
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.loadObject();
+      },
+
+      { immediate: true },
+    );
+  },
+  methods: {
+    async loadObject() {
+      const profiles = await getProfiles();
+      const id = Number(this.$route.params.id);
+      const profile = profiles.find(value => value.user === id);
+      if (!profile)
+        this.$router.push({ name: 'NotFound' });
+      else {
+        this.object = profile;
+        this.isLoading = false;
+      }
+    },
   },
 
 };

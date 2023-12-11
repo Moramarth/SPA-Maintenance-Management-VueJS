@@ -24,7 +24,6 @@ export default {
     async loadObject() {
       const id = this.$route.params.id;
       this.object = await getServiceReportById(id);
-      console.log(this.object);
     },
   },
 };

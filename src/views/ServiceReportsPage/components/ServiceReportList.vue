@@ -78,7 +78,7 @@ export default {
                 <template v-else>
                   <tr v-for="object in serviceReports" :key="object.id">
                     <td>{{ object.title }} </td>
-                    <td v-if="getCurrentUser && (getCurrentuser.id === object.user)">
+                    <td v-if="getCurrentUser && (getCurrentUser.id === object.user)">
                       You
                     </td>
                     <td v-else>
