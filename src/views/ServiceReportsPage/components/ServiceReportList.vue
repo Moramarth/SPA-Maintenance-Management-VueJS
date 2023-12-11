@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapState } from 'pinia';
+import { mapState } from 'pinia';
 import { getServiceReports } from '../../../dataProviders/serviceReports';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getCompanies } from '../../../dataProviders/companies';
@@ -20,10 +20,8 @@ export default {
     // TODO: better API calls for performance
     this.serviceReports = await getServiceReports();
     this.companies = await getCompanies();
-    this.loadProfiles();
   },
   methods: {
-    ...mapActions(useUsersStore, ['loadProfiles']),
     createdBy(id) {
       const profile = this.getProfiles.filter(profile => profile.user === id)[0];
       if (profile)

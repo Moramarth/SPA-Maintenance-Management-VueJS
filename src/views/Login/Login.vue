@@ -1,7 +1,7 @@
 <script>
 import { mapActions } from 'pinia';
 import LoadSpinner from '../../components/LoadSpinner.vue';
-import { loginUser } from '../../dataProviders/profile';
+import { loginUser } from '../../dataProviders/auth';
 import { useUsersStore } from '../../stores/usersStore';
 
 export default {

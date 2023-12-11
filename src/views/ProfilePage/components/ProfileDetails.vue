@@ -1,12 +1,17 @@
 <script>
 import { mapState } from 'pinia';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
-import { getProfiles } from '../../../dataProviders/profile';
+import { getProfileById } from '../../../dataProviders/profile';
+import { getUserById } from '../../../dataProviders/auth';
 import { useUsersStore } from '../../../stores/usersStore';
+import ProfileCompany from '../components/ProfileCompany.vue';
+import ProfileAddress from './profileAddress.vue';
 
 export default {
   components: {
     LoadSpinner,
+    ProfileCompany,
+    ProfileAddress,
   },
   data() {
     return {
@@ -18,6 +23,8 @@ export default {
           city: 'Varna',
         },
       },
+      company: {},
+      user: {},
     };
   },
   computed: {
@@ -35,14 +42,14 @@ export default {
   },
   methods: {
     async loadObject() {
-      const profiles = await getProfiles();
       const id = Number(this.$route.params.id);
-      const profile = profiles.find(value => value.user === id);
-      if (!profile)
+      const profile = await getProfileById(id);
+      if (Object.keys(profile).length === 0)
         this.$router.push({ name: 'NotFound' });
       else {
         this.object = profile;
         this.isLoading = false;
+        this.user = await getUserById(id);
       }
     },
   },
@@ -59,8 +66,6 @@ export default {
         <h1>Profile Details</h1>
       </div>
       <div class="section__body">
-        <!-- {% address_display_for_profile object as address %}
-        {% profile_group_info object.user as owner_group %} -->
         <ul id="myTab" class="nav nav-tabs" role="tablist">
           <li class="nav-item" role="presentation">
             <button
@@ -90,7 +95,6 @@ export default {
               Company Details
             </button>
           </li>
-          <!-- {% if address %} -->
           <li class="nav-item" role="presentation">
             <button
               id="contact-tab"
@@ -105,7 +109,6 @@ export default {
               Current Address
             </button>
           </li>
-          <!-- {% endif %} -->
         </ul>
         <div class="section__body-group">
           <div id="myTabContent" class="tab-content">
@@ -126,10 +129,9 @@ export default {
                   <div class="form-main form-main--filters">
                     <div class="form__label">
                       <label>Phone number:</label> {{ object.phone_number }}
-                      <label>Email:</label> {{ object.email }}
+                      <label>Email:</label> {{ user.email }}
                     </div>
-                    <div class="form__foot">
-                      <!-- {% if request.user == appuserprofile.user %} -->
+                    <div v-if="getCurrentUser.id === object.user" class="form__foot">
                       <router-link
                         class="btn btn-warning"
                         :to="{ name: 'edit-profile', params: { id: object.user } }"
@@ -142,7 +144,6 @@ export default {
                         href="#change-password"
                       >Change
                         Password</a>
-                      <!-- {% endif %} -->
                     </div>
                   </div>
                 </div>
@@ -154,43 +155,8 @@ export default {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              <div class="block-testimonial">
-                <div class="block__image">
-                  <img v-if="object.company.file" :src="object.company.file" alt="Company Logo">
-
-                  <img v-else src="../../../../public/default_company_logo.jpg" alt="">
-                </div>
-                <div class="block__content">
-                  <h1>
-                    {{ object.company.name }}
-                    <router-link :to="{ name: 'company-details', params: { id: object.company.id } }" target="_blank">
-                      <i
-                        class="fa-solid fa-arrow-right-to-bracket"
-                        data-toggle="tooltip"
-                        title="See Details"
-                      />
-                    </router-link>
-                  </h1>
-                  <div class="form-main form-main--filters">
-                    <div v-if="object.company.businessField" class="form__label">
-                      <label>Business Field:</label>
-                      {{ object.company.businessField }}
-                    </div>
-                    <div class="form__label">
-                      <router-link
-                        class="btn btn-danger"
-                        :to="{ name: 'edit-company', params: { id: object.company.id } }"
-                      >
-                        Edit
-                        Company
-                        Info
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProfileCompany :profile-object="object" />
             </div>
-
             <div
               v-if="address"
               id="contact"
@@ -198,32 +164,7 @@ export default {
               role="tabpanel"
               aria-labelledby="contact-tab"
             >
-              <div class="container">
-                <div class="form-main form-main--login">
-                  <div class="form__label">
-                    <label>Address:</label>
-                  </div>
-                  <p> {{ address.building.city }}, {{ address.building.address }}</p>
-                  <div class="form__label">
-                    <label>Building:</label>
-                  </div>
-                  {{ address.building.name }}
-                  <router-link :to="{ name: 'building-details', params: { id: address.building.id } }" target="_blank">
-                    <i
-                      class="fa-solid fa-arrow-right-to-bracket"
-                      data-toggle="tooltip"
-                      title="See Details"
-                    />
-                  </router-link>
-
-                  <div class="form__label">
-                    <label>Location:</label>
-                  </div>
-                  <span v-if="address.section">{{ address.section }}, </span>
-                  floor {{ address.floor }},
-                  office {{ address.office_number }}
-                </div>
-              </div>
+              <ProfileAddress :company-id="object.company" />
             </div>
           </div>
         </div>

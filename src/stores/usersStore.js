@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
-import { getProfiles, getUserById } from '../dataProviders/profile';
+import { getProfiles } from '../dataProviders/profile';
+import { getUserById } from '../dataProviders/auth';
 
 export const useUsersStore = defineStore('users', {
   state: () => ({
     profiles: [],
     currentUser: null,
+    currentUserProfile: null,
     isAuthenticated: false,
   }),
   getters: {

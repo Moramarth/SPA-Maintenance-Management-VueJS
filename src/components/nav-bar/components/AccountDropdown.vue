@@ -1,6 +1,7 @@
 <script>
 import { mapActions, mapState } from 'pinia';
-import { getProfileById, logoutUser } from '../../../dataProviders/profile';
+import { getProfileById } from '../../../dataProviders/profile';
+import { logoutUser } from '../../../dataProviders/auth';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getCompanyById } from '../../../dataProviders/companies';
 import LoadSpinner from '../../LoadSpinner.vue';
