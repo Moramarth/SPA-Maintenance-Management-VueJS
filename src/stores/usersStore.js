@@ -22,6 +22,7 @@ export const useUsersStore = defineStore('users', {
       this.currentUser = JSON.stringify(await getUserById(id));
       localStorage.setItem('user', this.currentUser);
       this.isAuthenticated = true;
+      this.getPersistedUser();
     },
     getPersistedUser() {
       const persisted = localStorage.getItem('user');
