@@ -1,11 +1,18 @@
 <script>
+import ImageModal from './ImageModal.vue';
+
 export default {
+  components: {
+    ImageModal,
+  },
 
 };
 </script>
 
 <template>
-  <section class="section">
+  <section
+    class="section"
+  >
     <div class="container">
       <div class="section__head">
         <h1>Registration info and tutorial</h1>
@@ -23,11 +30,11 @@ export default {
                   Follow the link to start the registration process for our system.
                 </p>
               </div>
-              <div class="info-page-img">
-                <a class="image-popup-link" href="register_page_normal_size/email_invite.png">
-                  <img src="register_page_tiny_png/Email_Invite_192x120.png" alt="">
-                </a>
-              </div>
+              <ImageModal
+                tiny-img-u-r-l="register_page_tiny_png/Email_Invite_192x120.png"
+                original-img-u-r-l="register_page_normal_size/email_invite.png"
+                :is-landscape="true"
+              />
             </li>
             <li>
               <div class="info-page-text">
@@ -38,14 +45,11 @@ export default {
                   Enter a strong password and submit the form.
                 </p>
               </div>
-              <div class="info-page-img">
-                <a
-                  class="image-popup-link"
-                  href="register_page_normal_size/registration form.PNG"
-                >
-                  <img src="register_page_tiny_png/registration_form_105x120.png" alt="">
-                </a>
-              </div>
+              <ImageModal
+                tiny-img-u-r-l="register_page_tiny_png/registration_form_105x120.png"
+                original-img-u-r-l="register_page_normal_size/registration form.PNG"
+                :is-landscape="false"
+              />
             </li>
             <li>
               <div class="info-page-text">
@@ -56,14 +60,11 @@ export default {
                   Please press the EDIT PROFILE button to fill the next form.
                 </p>
               </div>
-              <div class="info-page-img">
-                <a
-                  class="image-popup-link"
-                  href="register_page_normal_size/empty_profile.png"
-                >
-                  <img src="register_page_tiny_png/Empty_Profile_263x120.png" alt="">
-                </a>
-              </div>
+              <ImageModal
+                tiny-img-u-r-l="register_page_tiny_png/Empty_Profile_263x120.png"
+                original-img-u-r-l="register_page_normal_size/empty_profile.png"
+                :is-landscape="true"
+              />
             </li>
             <li>
               <div class="info-page-text">
@@ -74,30 +75,21 @@ export default {
                   Profile picture field is optional.
                 </p>
               </div>
-              <div class="info-page-img">
-                <a
-                  class="image-popup-link"
-                  href="register_page_normal_size/edit_profile_with_data.png"
-                >
-                  <img
-                    src="register_page_tiny_png/edit_profile_with_data_91x120.png"
-                    alt=""
-                  >
-                </a>
-              </div>
+              <ImageModal
+                tiny-img-u-r-l="register_page_tiny_png/edit_profile_with_data_91x120.png"
+                original-img-u-r-l="register_page_normal_size/edit_profile_with_data.png"
+                :is-landscape="false"
+              />
             </li>
             <li>
               <div class="info-page-text">
                 <p>You are ready to use our services as intended.</p>
               </div>
-              <div class="info-page-img">
-                <a
-                  class="image-popup-link"
-                  href="register_page_normal_size/profile with data.PNG"
-                >
-                  <img src="register_page_tiny_png/profile_with_data_244x120.png" alt="">
-                </a>
-              </div>
+              <ImageModal
+                tiny-img-u-r-l="register_page_tiny_png/profile_with_data_244x120.png"
+                original-img-u-r-l="register_page_normal_size/profile with data.PNG"
+                :is-landscape="true"
+              />
             </li>
           </ul>
         </div>
