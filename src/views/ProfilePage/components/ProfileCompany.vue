@@ -21,9 +21,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['getCurrentUser', 'getProfiles']),
+    ...mapState(useUsersStore, ['getCurrentUser', 'getStoreProfiles']),
     profileCompany() {
-      return this.getProfiles.filter(profile => profile.user === this.getCurrentUser.id)[0].company;
+      return this.getStoreProfiles.filter(profile => profile.user === this.getCurrentUser.id)[0].company;
     },
   },
   async created() {

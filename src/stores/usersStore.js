@@ -11,7 +11,7 @@ export const useUsersStore = defineStore('users', {
   }),
   getters: {
     getCurrentUser: state => state.currentUser,
-    getProfiles: state => state.profiles,
+    getStoreProfiles: state => state.profiles,
     authenticationStatus: state => state.isAuthenticated,
   },
   actions: {

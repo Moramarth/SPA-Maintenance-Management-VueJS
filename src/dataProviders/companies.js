@@ -13,7 +13,7 @@ async function getCompanies() {
 }
 
 async function getCompanyById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/companies/${id}`;
+  const apiURL = `http://127.0.0.1:8000/api/companies/${id}/`;
   try {
     const response = await axios.get(apiURL);
     return response.data;
@@ -36,4 +36,16 @@ async function getCompanyAddress(id) {
   }
 }
 
-export { getCompanies, getCompanyById, getCompanyAddress };
+async function editCompany(id, companyData) {
+  const apiURL = `http://127.0.0.1:8000/api/companies/${id}/`;
+  try {
+    const response = await axios.patch(apiURL, companyData);
+    return response.data;
+  }
+  catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+}
+
+export { getCompanies, getCompanyById, getCompanyAddress, editCompany };

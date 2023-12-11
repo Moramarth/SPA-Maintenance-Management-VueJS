@@ -1,31 +1,56 @@
 <script>
+import LoadSpinner from '../../../components/LoadSpinner.vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
+import { editCompany, getCompanyById } from '../../../dataProviders/companies';
+import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 
 export default {
   components: {
     CreateFormFooter,
+    LoadSpinner,
   },
   data() {
     return {
-      object: {
-        id: -1,
-        name: 'company name',
-        businessField: 'Product company',
-        additionalInformation: 'More info about the company',
-        file: '',
-      },
+      object: {},
+      isLoading: true,
+      format: formatImageLink,
+      formatShort,
     };
+  },
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.loadObject();
+      },
+
+      { immediate: true },
+    );
   },
   methods: {
     handleEdit() {
+      const companyData = {
+        name: this.object.name,
+        business_field: this.object.business_field,
+        additional_information: this.object.additional_information,
+        withCredentials: true,
+      };
+      const response = editCompany(this.object.id, companyData);
+      console.log(response);
       this.$router.push({ name: 'company-details', params: { id: this.object.id } });
+    },
+    async loadObject() {
+      const id = this.$route.params.id;
+      this.object = await getCompanyById(id);
+      this.isLoading = false;
     },
   },
 };
 </script>
 
 <template>
-  <section class="section">
+  <LoadSpinner v-if="isLoading" />
+  <section v-else class="section">
     <div class="container">
       <div class="section__head">
         <h1>Edit Company</h1>
@@ -37,18 +62,18 @@ export default {
               <label for="name">Name:</label>
               <input
                 id="name"
+                v-model="object.name"
                 type="text"
-                :value="object.name"
                 required
               >
               <label for="business-field">Business Field:</label>
-              <input id="business-field" type="text" :value="object.businessField">
+              <input id="business-field" v-model="object.business_field" type="text">
               <label for="more-info">Additional Information:</label>
-              <textarea id="more-info" :value="object.additionalInformation" />
+              <textarea id="more-info" v-model="object.additional_information" />
               <label for="logo">Company Logo</label>
               <template v-if="object.file">
                 Currently:
-                <a href="#">{{ object.file }}</a>
+                <a :href="format(object.file)" target="_blank">{{ formatShort(object.file) }}</a>
                 <p>
                   <input id="file-clear" type="checkbox">
                   <label class="clear-image" for="file-clear">Clear Current</label>
