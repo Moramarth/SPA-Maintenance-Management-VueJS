@@ -1,8 +1,18 @@
+import { testToken } from '../dataProviders/auth';
 import { useUsersStore } from '../stores/usersStore';
 
-function validateUser() {
+async function validateUser() {
   const userStore = useUsersStore();
-  return userStore.isAuthenticated ? userStore.isAuthenticated : { name: 'login-page' };
+  const token = userStore.getCurrentToken;
+
+  const isLoggedIn = await testToken(token);
+  console.log(isLoggedIn);
+
+  if (!isLoggedIn) {
+    userStore.storeLogoutUser();
+    return { name: 'login-page' };
+  }
+  return true;
 };
 
 export { validateUser };

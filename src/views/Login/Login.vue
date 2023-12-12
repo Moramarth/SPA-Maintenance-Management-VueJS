@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import LoadSpinner from '../../components/LoadSpinner.vue';
 import { loginUser } from '../../dataProviders/auth';
 import { useUsersStore } from '../../stores/usersStore';
@@ -13,6 +13,9 @@ export default {
       password: '',
     };
   },
+  computed: {
+    ...mapState(useUsersStore, ['authenticationStatus']),
+  },
   methods: {
     ...mapActions(useUsersStore, ['storeLoginUser']),
     async handleSubmit() {
@@ -23,9 +26,10 @@ export default {
         withCredentials: true,
       };
       const response = await loginUser(userData);
-      await this.storeLoginUser(response.user_id);
+      await this.storeLoginUser(response.user_id, response.jwt);
       this.isLoading = false;
-      this.$router.push({ name: 'profile-details', params: { id: response.user_id } });
+      if (this.authenticationStatus !== null)
+        this.$router.push({ name: 'profile-details', params: { id: response.user_id } });
     },
   },
 };

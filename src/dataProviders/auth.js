@@ -29,7 +29,6 @@ async function logoutUser() {
   const apiURL = `http://127.0.0.1:8000/api/accounts/logout/`;
   try {
     const response = await axios.post(apiURL, { withCredentials: true });
-    console.log(response);
     return response.data;
   }
   catch (error) {
@@ -38,4 +37,17 @@ async function logoutUser() {
   }
 }
 
-export { getUserById, loginUser, logoutUser };
+async function testToken(token) {
+  const apiURL = `http://127.0.0.1:8000/api/accounts/test-token/`;
+  try {
+    const response = await axios.post(apiURL, { token, withCredentials: true });
+    console.log(response);
+    return true;
+  }
+  catch (error) {
+    console.error('Error fetching data:', error);
+    return false;
+  }
+}
+
+export { getUserById, loginUser, logoutUser, testToken };
