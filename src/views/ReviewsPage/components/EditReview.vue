@@ -1,5 +1,7 @@
 <script>
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
+import { editReview, getReviewById } from '../../../dataProviders/reviews';
+import { getServiceReportById } from '../../../dataProviders/serviceReports';
 
 export default {
   components: {
@@ -7,15 +9,8 @@ export default {
   },
   data() {
     return {
-      object: {
-        id: -1,
-        comment: 'Some comment here',
-        rating: 2,
-        serviceReport: {
-          id: -1,
-          title: 'title',
-        },
-      },
+      object: {},
+      serviceReport: {},
       rating: [
         [1, 'Very Bad'],
         [2, 'Bad'],
@@ -23,10 +18,37 @@ export default {
         [4, 'Very good'],
         [5, 'Excellent'],
       ],
+      selected: '',
     };
   },
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.loadObject();
+      },
+
+      { immediate: true },
+    );
+  },
   methods: {
-    handleEdit() {
+    async loadObject() {
+      const id = Number(this.$route.params.id);
+      const review = await getReviewById(id);
+      if (Object.keys(review).length === 0)
+        this.$router.push({ name: 'NotFound' });
+      else {
+        this.object = review;
+        this.serviceReport = await getServiceReportById(this.object.service_report);
+      }
+    },
+    async handleEdit() {
+      const reviewData = {
+        rating: Number(document.querySelector('#review-rating').value),
+        comment: this.object.comment,
+        withCredentials: true,
+      };
+      await editReview(this.object.id, reviewData);
       this.$router.push({ name: 'review-details', params: { id: this.object.id } });
     },
   },
@@ -43,8 +65,8 @@ export default {
         <div class="form-main form-main--login">
           <form action="" method="post" enctype="multipart/form-data">
             <div class="form__fields">
-              <p v-if="object.serviceReport">
-                Your Review for {{ object.serviceReport.title }}
+              <p v-if="serviceReport">
+                Your Review for {{ serviceReport.title }}
               </p>
               <label for="review-rating">Rating:</label>
               <select
@@ -54,7 +76,7 @@ export default {
                 <option
                   v-for="rate in rating"
                   :key="rate"
-                  value="rate[0]"
+                  :value="rate[0]"
                   :selected="object.rating === rate[0]"
                 >
                   {{ rate[1] }}
@@ -63,9 +85,9 @@ export default {
               <label for="review-comment">Comment:</label>
               <textarea
                 id="review-comment"
+                v-model="object.comment"
                 type="text"
                 required
-                :value="object.comment"
               />
             </div>
             <CreateFormFooter

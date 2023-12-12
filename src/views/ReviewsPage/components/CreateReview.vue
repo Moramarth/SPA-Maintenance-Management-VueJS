@@ -1,5 +1,9 @@
 <script>
+import { mapActions, mapState } from 'pinia';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
+import { useTempObjectStore } from '../../../stores/tempObjectsStore';
+import { createReview } from '../../../dataProviders/reviews';
+import { useUsersStore } from '../../../stores/usersStore';
 
 // TODO: handle creation only with report presented
 export default {
@@ -8,14 +12,37 @@ export default {
   },
   data() {
     return {
-      serviceReport: {
-        id: -1,
-        title: 'title',
+      serviceReport: {},
+      object: {
+        comment: '',
       },
+
+      rating: [
+        [1, 'Very Bad'],
+        [2, 'Bad'],
+        [3, 'Good'],
+        [4, 'Very good'],
+        [5, 'Excellent'],
+      ],
+
     };
   },
+  computed: {
+    ...mapState(useTempObjectStore, ['getTempObject']),
+    ...mapState(useUsersStore, ['getCurrentUser']),
+  },
   methods: {
-    handleCreation() {
+    ...mapActions(useTempObjectStore, ['clearTempObject']),
+    async handleCreation() {
+      const reviewData = {
+        user: this.getCurrentUser.id,
+        service_report_id: this.getTempObject.id,
+        rating: 4,
+        comment: this.object.comment,
+        withCredentials: true,
+      };
+      await createReview(reviewData);
+      this.clearTempObject();
       this.$router.push({ name: 'show-all-reviews' });
     },
   },
@@ -32,9 +59,6 @@ export default {
         <div class="form-main form-main--login">
           <form action="" method="post" enctype="multipart/form-data">
             <div class="form__fields">
-              <p v-if="serviceReport">
-                Your Review for {{ serviceReport.title }}
-              </p>
               <label for="review-rating">Rating:</label>
               <select
                 id="review-rating"
@@ -45,7 +69,12 @@ export default {
                 </option>
               </select>
               <label for="review-comment">Comment:</label>
-              <textarea id="review-comment" type="text" required />
+              <textarea
+                id="review-comment"
+                v-model="object.comment"
+                type="text"
+                required
+              />
             </div>
             <CreateFormFooter
               :is-editing="false"

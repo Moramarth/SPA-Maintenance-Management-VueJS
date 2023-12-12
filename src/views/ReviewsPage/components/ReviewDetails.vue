@@ -1,9 +1,44 @@
 <script>
+import { mapState } from 'pinia';
+import { useUsersStore } from '../../../stores/usersStore';
+import { getReviewById } from '../../../dataProviders/reviews';
+import { getCompanyById } from '../../../dataProviders/companies';
+
 export default {
   data() {
     return {
       object: {},
+      profile: {},
+      company: {},
     };
+  },
+  computed: {
+    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser', 'getStoreProfiles']),
+  },
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.loadObject();
+      },
+
+      { immediate: true },
+    );
+  },
+  methods: {
+    async loadObject() {
+      const id = Number(this.$route.params.id);
+      const review = await getReviewById(id);
+      if (Object.keys(review).length === 0)
+        this.$router.push({ name: 'NotFound' });
+      else {
+        this.object = review;
+        if (this.object.user) {
+          this.profile = this.getStoreProfiles.filter(profile => profile.user === this.object.user)[0];
+          this.company = await getCompanyById(this.profile.company);
+        }
+      }
+    },
   },
 };
 </script>
@@ -15,9 +50,8 @@ export default {
         <h1>Review Details</h1>
       </div>
       <div class="section__body">
-        <!-- {% if user_is_authenticated and request.user == object.user %} -->
         <div class="form-main form-main--filters">
-          <div class="form__wrap">
+          <div v-if="authenticationStatus && (getCurrentUser.id === object.user)" class="form__wrap">
             <div class="form__foot">
               <router-link class="btn btn-warning" :to="{ name: 'edit-review', params: { id: object.id } }">
                 Edit
@@ -28,30 +62,28 @@ export default {
             </div>
           </div>
         </div>
-        <!-- {% endif %} -->
 
         <div class="section__body-group">
           <div class="block-review">
             <div class="block__image">
-              <!-- {% if object.user.appuserprofile.file %} -->
-              <!-- <img
-          class="img-fluid rounded-start"
-          src="{{ object.user.appuserprofile.file.url }}"
-          alt=""
-        >
-        {% else %} -->
               <img
+                v-if="profile.file"
+                class="img-fluid rounded-start"
+                :src="profile.file"
+                alt=""
+              >
+              <img
+                v-else
                 class="img-fluid rounded-start"
                 src="../../../../public/default_profile_picture.png"
                 alt=""
               >
-              <!-- {% endif %} -->
             </div>
 
             <div class="block__content">
               <div class="block__content-bg">
                 <p v-if="object.user">
-                  <strong>From:</strong> {{ object.user }}
+                  <strong>From:</strong> {{ profile.first_name }} {{ profile.last_name }}
                 </p>
                 <p v-else>
                   <strong>From:</strong> Ex tenant
@@ -75,19 +107,18 @@ export default {
             </div>
 
             <div class="block__logo">
-              <!-- {% if object.user.appuserprofile.company.logo %}
-        <img
-          class="img-fluid rounded-start"
-          src="{{ object.user.appuserprofile.company.logo.url }}"
-          alt=""
-        >
-        {% else %} -->
               <img
+                v-if="company.file"
+                class="img-fluid rounded-start"
+                :src="company.file"
+                alt=""
+              >
+              <img
+                v-else
                 class="img-fluid rounded-start"
                 src="../../../../public/default_company_logo.jpg"
                 alt=""
               >
-              <!-- {% endif %} -->
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['getProfiles', 'getCurrentUser']),
+    ...mapState(useUsersStore, ['getStoreProfiles', 'getCurrentUser']),
   },
   async created() {
     // TODO: better API calls for performance
@@ -23,12 +23,12 @@ export default {
   },
   methods: {
     createdBy(id) {
-      const profile = this.getProfiles.filter(profile => profile.user === id)[0];
+      const profile = this.getStoreProfiles.filter(profile => profile.user === id)[0];
       if (profile)
         return `${profile.first_name} ${profile.last_name}`;
     },
     assignedTo(id) {
-      const profile = this.getProfiles.filter(profile => profile.user === id)[0];
+      const profile = this.getStoreProfiles.filter(profile => profile.user === id)[0];
       if (profile)
         return `${profile.first_name} ${profile.last_name}`;
     },

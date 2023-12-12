@@ -1,14 +1,23 @@
 <script>
+import { mapActions, mapState } from 'pinia';
 import { getServiceReportById } from '../../../dataProviders/serviceReports';
+import { useUsersStore } from '../../../stores/usersStore';
+import { getCompanyById } from '../../../dataProviders/companies';
+import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 
 export default {
   data() {
     return {
-      object: {
-
-      },
+      object: {},
+      userProfile: {},
+      userCompany: {},
+      assignedProfile: {},
+      assignedCompany: {},
 
     };
+  },
+  computed: {
+    ...mapState(useUsersStore, ['getCurrentUser', 'getStoreProfiles']),
   },
   async created() {
     this.$watch(
@@ -21,9 +30,20 @@ export default {
     );
   },
   methods: {
+    ...mapActions(useTempObjectStore, ['setTempObject']),
     async loadObject() {
       const id = this.$route.params.id;
       this.object = await getServiceReportById(id);
+      if (Object.keys(this.object).lenght !== 0) {
+        this.userProfile = this.getStoreProfiles.filter(profile => profile.user === this.object.user)[0];
+        this.userCompany = await getCompanyById(this.userProfile.company);
+        this.assignedProfile = this.getStoreProfiles.filter(profile => profile.user === this.object.assigned_to)[0];
+        this.assignedCompany = await getCompanyById(this.assignedProfile.company);
+      }
+    },
+    async handleReviewCreation() {
+      await this.setTempObject(this.object.id);
+      this.$router.push({ name: 'create-review' });
     },
   },
 };
@@ -39,26 +59,24 @@ export default {
         <div class="form-main form-main--filters">
           <div class="form__wrap">
             <div class="form__foot">
-              <!-- {% if request.user == object.user %} -->
-              <!-- TODO: clean btn available logic -->
-              <template v-if="object.reportStatus === 'Pending'">
-                <router-link class="btn btn-warning" :to="{ name: 'edit-service-report', params: { id: object.id } }">
-                  Edit Report
-                </router-link>
-                <router-link class="btn btn-danger" :to="{ name: 'delete-service-report', params: { id: object.id } }">
-                  Delete Report
-                </router-link>
+              <template v-if="getCurrentUser.id === object.user">
+                <template v-if="object.report_status === 'Pending'">
+                  <router-link class="btn btn-warning" :to="{ name: 'edit-service-report', params: { id: object.id } }">
+                    Edit Report
+                  </router-link>
+                  <router-link class="btn btn-danger" :to="{ name: 'delete-service-report', params: { id: object.id } }">
+                    Delete Report
+                  </router-link>
+                </template>
+                <template v-else>
+                  <router-link class="btn btn-warning disabled" :to="{ name: 'edit-service-report', params: { id: object.id } }">
+                    Edit Report
+                  </router-link>
+                  <router-link class="btn btn-danger disabled" :to="{ name: 'delete-service-report', params: { id: object.id } }">
+                    Delete Report
+                  </router-link>
+                </template>
               </template>
-              <template v-else>
-                <router-link class="btn btn-warning disabled" :to="{ name: 'edit-service-report', params: { id: object.id } }">
-                  Edit Report
-                </router-link>
-                <router-link class="btn btn-danger disabled" :to="{ name: 'delete-service-report', params: { id: object.id } }">
-                  Delete Report
-                </router-link>
-              </template>
-              <!-- endif -->
-
               <router-link class="btn btn-primary" :to="{ name: 'show-all-service-reports' }">
                 View Service Reports
               </router-link>
@@ -87,11 +105,10 @@ export default {
                 <tr>
                   <th>From:</th>
                   <td>
-                    {{ object.user }}
+                    {{ userProfile.first_name }} {{ userProfile.last_name }}
                     Employee at
-                    {{ object.company }}
+                    {{ userCompany.name }}
 
-                    <!-- TODO: if time left make this modal -->
                     <router-link :to="{ name: 'profile-details', params: { id: object.user } }">
                       <i
                         class="fa-solid fa-circle-info"
@@ -125,8 +142,8 @@ export default {
                 <tr v-if="object.assigned_to">
                   <th>Assigned to:</th>
                   <td>
-                    {{ object.assigned_to }}
-                    Employee at {{ object.assigned_to }}
+                    {{ assignedProfile.first_name }} {{ assignedProfile.last_name }}
+                    Employee at {{ assignedCompany.name }}
 
                     <router-link :to="{ name: 'profile-details', params: { id: object.assigned_to } }">
                       <i
@@ -137,14 +154,6 @@ export default {
                     </router-link>
                   </td>
                 </tr>
-
-                <tr>
-                  <th>Related Assignment: </th>
-                  <td>
-                    {{ object.dateAssigned }}
-                  </td>
-                </tr>
-                <!-- {% endif %} -->
               </tbody>
               <thead>
                 <tr class="table table-light">
@@ -157,9 +166,9 @@ export default {
 
           <div class="form-main form-main--filters">
             <div class="form__foot">
-              <router-link v-if="object.report_status === 'Done' && getCurrentUser.id === object.user" class="btn btn-success" :to="{ name: 'create-review' }">
+              <button v-if="object.report_status === 'Done' && getCurrentUser.id === object.user" class="btn btn-success" @click.prevent="handleReviewCreation">
                 Create Review
-              </router-link>
+              </button>
             </div>
           </div>
         </div>

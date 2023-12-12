@@ -1,5 +1,7 @@
 <script>
 import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
+import { deleteReview, getReviewById } from '../../../dataProviders/reviews';
+import { getServiceReportById } from '../../../dataProviders/serviceReports';
 
 export default {
   components: {
@@ -7,12 +9,34 @@ export default {
   },
   data() {
     return {
-      object: { id: -1 },
+      object: {},
+      serviceReport: {},
     };
   },
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.loadObject();
+      },
+
+      { immediate: true },
+    );
+  },
   methods: {
-    deleteObject() {
+    async deleteObject() {
+      await deleteReview(this.object.id);
       this.$router.push({ name: 'show-all-reviews' });
+    },
+    async loadObject() {
+      const id = Number(this.$route.params.id);
+      const review = await getReviewById(id);
+      if (Object.keys(review).length === 0)
+        this.$router.push({ name: 'NotFound' });
+      else {
+        this.object = review;
+        this.serviceReport = await getServiceReportById(this.object.service_report);
+      }
     },
   },
 };
@@ -29,7 +53,7 @@ export default {
           <form action="" method="post">
             <div class="form__fields">
               <h2>Are you sure you want to delete your Review?</h2>
-              <p>Report: {{ object.serviceReport }}</p>
+              <p>Report: {{ serviceReport.title }}</p>
               <p>Rated: {{ object.rating }}</p>
               <p>Your comment: {{ object.comment }}</p>
             </div>

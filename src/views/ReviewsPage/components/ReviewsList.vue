@@ -9,7 +9,7 @@ export default {
 
   data() {
     return {
-      array: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      array: [],
     };
   },
   async created() {
