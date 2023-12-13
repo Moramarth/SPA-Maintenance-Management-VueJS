@@ -17,6 +17,10 @@ export default {
       isLoading: true,
       format: formatImageLink,
       formatShort,
+      uploadedImage: false,
+      imageType: null,
+      imageName: null,
+      clearImageChecked: false,
     };
   },
   computed: {
@@ -27,17 +31,40 @@ export default {
     this.isLoading = false;
   },
   methods: {
-    handleEdit() {
+    async handleEdit() {
+      if (this.clearImageChecked)
+        this.object.file = null;
+      else if (this.uploadedImage)
+        this.object.file = this.uploadedImage;
       const profileData = {
         first_name: this.object.first_name,
         last_name: this.object.last_name,
         phone_number: this.object.phone_number,
-        withCredentials: true,
+        file: this.object.file,
+        extension: this.imageType,
+        filename: this.imageName,
       };
-      const response = editProfile(this.object.user, profileData);
-      console.log(response);
+      await editProfile(this.object.user, profileData);
+
       this.$router.push({ name: 'profile-details', params: { id: this.object.id } });
     },
+    handleCheckboxChange() {
+      this.clearImageChecked = !this.clearImageChecked;
+    },
+    handleFileUploaded(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.imageName = file.name.slice(0, file.name.length / 2);
+        const reader = new FileReader();
+        const extension = file.type.replace('image/', '');
+        this.imageType = `.${extension}`;
+        reader.onload = () => {
+          this.uploadedImage = reader.result.split(',')[1];
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+
   },
 };
 </script>
@@ -82,11 +109,21 @@ export default {
                 Currently:
                 <a :href="format(object.file)" target="_blank">{{ formatShort(object.file) }}</a>
                 <p>
-                  <input id="file-clear" type="checkbox">
+                  <input
+                    id="file-clear"
+                    type="checkbox"
+                    :disabled="uploadedImage"
+                    @change="handleCheckboxChange"
+                  >
                   <label class="clear-image" for="file-clear">Clear Current</label>
                 </p>
               </template>
-              <input id="image" type="file">
+              <input
+                id="image"
+                type="file"
+                :disabled="clearImageChecked"
+                @change="handleFileUploaded"
+              >
             </div>
             <CreateFormFooter
               :is-editing="true"

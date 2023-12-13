@@ -24,7 +24,10 @@ export default {
         description: '',
         file: null,
         report_type: '',
+        imageType: 'null',
+        imageName: 'null',
       },
+
     };
   },
   computed: {
@@ -38,10 +41,25 @@ export default {
         title: this.object.title,
         description: this.object.description,
         file: this.object.file,
+        extension: this.object.imageType,
+        filename: this.object.imageName,
         report_type: document.querySelector('#report-type').value,
       };
       await createServiceReport(reportData);
       this.$router.push({ name: 'show-all-service-reports' });
+    },
+    handleFileUploaded(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.object.imageName = file.name.slice(0, file.name.length / 2);
+        const reader = new FileReader();
+        const extension = file.type.replace('image/', '');
+        this.object.imageType = `.${extension}`;
+        reader.onload = () => {
+          this.object.file = reader.result.split(',')[1];
+        };
+        reader.readAsDataURL(file);
+      }
     },
   },
 };
@@ -72,7 +90,7 @@ export default {
                 required
               />
               <label for="report-file">Image:</label>
-              <input type="file">
+              <input type="file" @change="handleFileUploaded">
               <label for="report-type">Report Type:</label>
               <select id="report-type">
                 <option v-for="option in reportType" :key="option" :value="option">

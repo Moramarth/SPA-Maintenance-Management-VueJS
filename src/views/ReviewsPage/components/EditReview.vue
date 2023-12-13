@@ -18,7 +18,6 @@ export default {
         [4, 'Very good'],
         [5, 'Excellent'],
       ],
-      selected: '',
     };
   },
   async created() {
