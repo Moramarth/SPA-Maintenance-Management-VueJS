@@ -48,7 +48,7 @@ async function editServiceReport(id, reportData) {
 
 async function deleteServiceReport(id) {
   try {
-    const response = await axios.delete(`${apiURL}${id}/`L);
+    const response = await axios.delete(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {

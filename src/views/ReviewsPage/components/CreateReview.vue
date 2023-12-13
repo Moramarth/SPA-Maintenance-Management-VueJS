@@ -92,6 +92,7 @@ export default {
                 v-model="object.comment"
                 type="text"
                 required
+                placeholder="We are looking forward to your feedback"
               />
               <ValidationMessege :errors="v$.object.comment.$errors" />
             </div>

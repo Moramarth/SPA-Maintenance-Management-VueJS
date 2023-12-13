@@ -15,10 +15,11 @@ export default {
       Show My Reports
     </router-link>
   </li>
-  <li>
+  <!-- <li>
     <hr class="dropdown-divider">
-  </li>
-  <li><a class="nav-link" href="#">Invite a colleague</a></li>
+  </li> -->
+  <!-- not implemented in the backend
+  <li><a class="nav-link" href="#">Invite a colleague</a></li> -->
 </template>
 
 <style lang="scss" scoped>
