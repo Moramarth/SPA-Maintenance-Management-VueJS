@@ -1,5 +1,7 @@
 <script>
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
+import { editServiceReport, getServiceReportById } from '../../../dataProviders/serviceReports';
+import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 
 export default {
   components: {
@@ -8,15 +10,40 @@ export default {
   data() {
     return {
       object: {
-        id: -1,
-        title: 'Service report title',
-        description: 'Service report description',
-        file: 'Service report attachments if any',
+        title: '',
+        description: '',
       },
+      formatImageLink,
+      formatShort,
     };
   },
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        if (this.$route.name === 'edit-service-report')
+          this.loadObject();
+      },
+
+      { immediate: true },
+    );
+  },
   methods: {
-    handleEdit() {
+    async loadObject() {
+      const id = Number(this.$route.params.id);
+      const serviceReport = await getServiceReportById(id);
+      if (Object.keys(serviceReport).length === 0)
+        this.$router.push({ name: 'NotFound' });
+      else {
+        this.object = serviceReport;
+      }
+    },
+    async handleEdit() {
+      const reportData = {
+        title: this.object.title,
+        description: this.object.description,
+      };
+      await editServiceReport(this.object.id, reportData);
       this.$router.push({ name: 'service-report-details', params: { id: this.object.id } });
     },
   },
@@ -36,21 +63,21 @@ export default {
               <label for="report-title">Title:</label>
               <input
                 id="report-title"
+                v-model="object.title"
                 type="text"
-                :value="object.title"
                 required
               >
               <label for="report-description">Description:</label>
               <textarea
                 id="report-description"
+                v-model="object.description"
                 type="text"
-                :value="object.description"
                 required
               />
               <label for="report-file">Image:</label>
               <template v-if="object.file">
                 Currently:
-                <a href="#">{{ object.file }}</a>
+                <a :href="formatImageLink(object.file)">{{ formatShort(object.file) }}</a>
                 <p>
                   <input id="file-clear" type="checkbox">
                   <label class="clear-image" for="file-clear">Clear Current</label>

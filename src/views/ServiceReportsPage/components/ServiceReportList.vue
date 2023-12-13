@@ -17,7 +17,6 @@ export default {
     ...mapState(useUsersStore, ['getStoreProfiles', 'getCurrentUser']),
   },
   async created() {
-    // TODO: better API calls for performance
     this.serviceReports = await getServiceReports();
     this.companies = await getCompanies();
   },

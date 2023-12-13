@@ -49,7 +49,6 @@ export default {
       const reviewData = {
         rating: Number(document.querySelector('#review-rating').value),
         comment: this.object.comment,
-        withCredentials: true,
       };
       await editReview(this.object.id, reviewData);
       this.$router.push({ name: 'review-details', params: { id: this.object.id } });

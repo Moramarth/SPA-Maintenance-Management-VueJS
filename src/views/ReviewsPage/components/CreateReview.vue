@@ -39,7 +39,7 @@ export default {
         token: this.getCurrentToken,
         user: this.getCurrentUser.id,
         service_report: this.serviceReport.id,
-        rating: 4,
+        rating: Number(document.querySelector('#review-rating').value),
         comment: this.object.comment,
       };
       await createReview(reviewData);

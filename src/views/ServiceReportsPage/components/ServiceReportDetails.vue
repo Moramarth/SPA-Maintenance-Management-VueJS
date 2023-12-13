@@ -39,7 +39,8 @@ export default {
         this.userProfile = this.getStoreProfiles.filter(profile => profile.user === this.object.user)[0];
         this.userCompany = await getCompanyById(this.userProfile.company);
         this.assignedProfile = this.getStoreProfiles.filter(profile => profile.user === this.object.assigned_to)[0];
-        this.assignedCompany = await getCompanyById(this.assignedProfile.company);
+        if (this.assignedProfile)
+          this.assignedCompany = await getCompanyById(this.assignedProfile.company);
       }
     },
     async handleReviewCreation() {
