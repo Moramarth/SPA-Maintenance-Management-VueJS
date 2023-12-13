@@ -1,15 +1,24 @@
 <script>
+import { useVuelidate } from '@vuelidate/core';
+import { maxLength } from '@vuelidate/validators';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { editReview, getReviewById } from '../../../dataProviders/reviews';
 import { getServiceReportById } from '../../../dataProviders/serviceReports';
+import ValidationMessege from '../../../components/ValidationMessege.vue';
 
 export default {
   components: {
     CreateFormFooter,
+    ValidationMessege,
+  },
+  setup() {
+    return { v$: useVuelidate() };
   },
   data() {
     return {
-      object: {},
+      object: {
+        comment: '',
+      },
       serviceReport: {},
       rating: [
         [1, 'Very Bad'],
@@ -45,13 +54,25 @@ export default {
       }
     },
     async handleEdit() {
-      const reviewData = {
-        rating: Number(document.querySelector('#review-rating').value),
-        comment: this.object.comment,
-      };
-      await editReview(this.object.id, reviewData);
-      this.$router.push({ name: 'review-details', params: { id: this.object.id } });
+      const isValid = await this.v$.$validate();
+      if (isValid) {
+        const reviewData = {
+          rating: Number(document.querySelector('#review-rating').value),
+          comment: this.object.comment,
+        };
+        await editReview(this.object.id, reviewData);
+        this.$router.push({ name: 'review-details', params: { id: this.object.id } });
+      }
     },
+
+  },
+  validations() {
+    return {
+      object: {
+        comment: { maxLength: maxLength(500) },
+      },
+
+    };
   },
 };
 </script>
@@ -90,6 +111,7 @@ export default {
                 type="text"
                 required
               />
+              <ValidationMessege :errors="v$.object.comment.$errors" />
             </div>
             <CreateFormFooter
               :is-editing="true"

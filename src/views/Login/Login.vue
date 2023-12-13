@@ -1,11 +1,20 @@
 <script>
+import { useVuelidate } from '@vuelidate/core';
+import { email, required } from '@vuelidate/validators';
 import { mapActions, mapState } from 'pinia';
 import LoadSpinner from '../../components/LoadSpinner.vue';
 import { loginUser } from '../../dataProviders/auth';
 import { useUsersStore } from '../../stores/usersStore';
+import ValidationMessege from '../../components/ValidationMessege.vue';
 
 export default {
-  components: { LoadSpinner },
+  components: {
+    LoadSpinner,
+    ValidationMessege,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
       isLoading: false,
@@ -19,18 +28,29 @@ export default {
   methods: {
     ...mapActions(useUsersStore, ['storeLoginUser']),
     async handleSubmit() {
-      this.isLoading = true;
-      const userData = {
-        email: this.email,
-        password: this.password,
-        withCredentials: true,
-      };
-      const response = await loginUser(userData);
-      await this.storeLoginUser(response.user_id, response.jwt);
-      this.isLoading = false;
-      if (this.authenticationStatus !== null)
-        this.$router.push({ name: 'profile-details', params: { id: response.user_id } });
+      const isValid = await this.v$.$validate();
+      if (isValid) {
+        this.isLoading = true;
+        const userData = {
+          email: this.email,
+          password: this.password,
+          withCredentials: true,
+        };
+        const response = await loginUser(userData);
+        await this.storeLoginUser(response.user_id, response.jwt);
+        this.isLoading = false;
+        if (this.authenticationStatus !== null)
+          this.$router.push({ name: 'profile-details', params: { id: response.user_id } });
+      }
     },
+  },
+  validations() {
+    return {
+
+      email: { required, email },
+      password: { required },
+
+    };
   },
 };
 </script>
@@ -52,6 +72,7 @@ export default {
                 type="email"
                 :disabled="isLoading"
               >
+              <ValidationMessege :errors="v$.email.$errors" />
               <label for="password">Password</label>
               <input
                 id="password"
@@ -59,6 +80,7 @@ export default {
                 type="password"
                 :disabled="isLoading"
               >
+              <ValidationMessege :errors="v$.password.$errors" />
             </div>
             <div class="form__foot">
               <button class="btn btn-primary">

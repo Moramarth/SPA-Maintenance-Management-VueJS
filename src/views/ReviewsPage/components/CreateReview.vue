@@ -1,14 +1,20 @@
 <script>
+import { useVuelidate } from '@vuelidate/core';
+import { maxLength } from '@vuelidate/validators';
 import { mapActions, mapState } from 'pinia';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { createReview } from '../../../dataProviders/reviews';
 import { useUsersStore } from '../../../stores/usersStore';
+import ValidationMessege from '../../../components/ValidationMessege.vue';
 
-// TODO: handle creation only with report presented
 export default {
   components: {
     CreateFormFooter,
+    ValidationMessege,
+  },
+  setup() {
+    return { v$: useVuelidate() };
   },
   data() {
     return {
@@ -34,18 +40,29 @@ export default {
   methods: {
     ...mapActions(useTempObjectStore, ['clearTempObject']),
     async handleCreation() {
-      this.serviceReport = this.getTempObject;
-      const reviewData = {
-        token: this.getCurrentToken,
-        user: this.getCurrentUser.id,
-        service_report: this.serviceReport.id,
-        rating: Number(document.querySelector('#review-rating').value),
-        comment: this.object.comment,
-      };
-      await createReview(reviewData);
-      this.clearTempObject();
-      this.$router.push({ name: 'show-all-reviews' });
+      const isValid = await this.v$.$validate();
+      if (isValid) {
+        this.serviceReport = this.getTempObject;
+        const reviewData = {
+          token: this.getCurrentToken,
+          user: this.getCurrentUser.id,
+          service_report: this.serviceReport.id,
+          rating: Number(document.querySelector('#review-rating').value),
+          comment: this.object.comment,
+        };
+        await createReview(reviewData);
+        this.clearTempObject();
+        this.$router.push({ name: 'show-all-reviews' });
+      }
     },
+  },
+  validations() {
+    return {
+      object: {
+        comment: { maxLength: maxLength(500) },
+      },
+
+    };
   },
 };
 </script>
@@ -76,6 +93,7 @@ export default {
                 type="text"
                 required
               />
+              <ValidationMessege :errors="v$.object.comment.$errors" />
             </div>
             <CreateFormFooter
               :is-editing="false"
