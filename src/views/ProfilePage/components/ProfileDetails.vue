@@ -34,7 +34,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'profile-details')
+          this.loadObject();
       },
 
       { immediate: true },

@@ -11,10 +11,18 @@ export const useTempObjectStore = defineStore('tempObjects', {
   actions: {
     async setTempObject(id) {
       this.tempObject = JSON.stringify(await getServiceReportById(id));
-      console.log(this.tempObject);
+      localStorage.setItem('tempObj', this.tempObject);
+      this.loadTempObject();
+    },
+    loadTempObject() {
+      const persisted = localStorage.getItem('tempObj');
+      if (!persisted)
+        return;
+      this.tempObject = JSON.parse(persisted);
     },
     clearTempObject() {
       this.tempObject = null;
+      localStorage.removeItem('tempObj');
     },
   },
 

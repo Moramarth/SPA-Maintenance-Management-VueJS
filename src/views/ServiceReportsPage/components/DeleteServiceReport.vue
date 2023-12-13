@@ -7,11 +7,7 @@ export default {
   },
   data() {
     return {
-      object: {
-        id: -1,
-        title: 'Service report title',
-        submitDate: 'Date of subbmission',
-      },
+      object: {},
     };
   },
   methods: {

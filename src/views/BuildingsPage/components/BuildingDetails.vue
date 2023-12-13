@@ -25,7 +25,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'building-details')
+          this.loadObject();
       },
 
       { immediate: true },

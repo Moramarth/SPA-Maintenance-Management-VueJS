@@ -20,7 +20,6 @@ export default {
   },
   async created() {
     const randomData = await getHomePage();
-    console.log(randomData);
     this.buildings = randomData.buildings;
     this.companies = randomData.tenants;
     this.reviews = randomData.reviews;

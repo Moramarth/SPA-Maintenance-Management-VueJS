@@ -29,17 +29,18 @@ export default {
   },
   computed: {
     ...mapState(useTempObjectStore, ['getTempObject']),
-    ...mapState(useUsersStore, ['getCurrentUser']),
+    ...mapState(useUsersStore, ['getCurrentUser', 'getCurrentToken']),
   },
   methods: {
     ...mapActions(useTempObjectStore, ['clearTempObject']),
     async handleCreation() {
+      this.serviceReport = this.getTempObject;
       const reviewData = {
+        token: this.getCurrentToken,
         user: this.getCurrentUser.id,
-        service_report_id: this.getTempObject.id,
+        service_report: this.serviceReport.id,
         rating: 4,
         comment: this.object.comment,
-        withCredentials: true,
       };
       await createReview(reviewData);
       this.clearTempObject();

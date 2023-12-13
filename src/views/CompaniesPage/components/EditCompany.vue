@@ -21,7 +21,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'edit-company')
+          this.loadObject();
       },
 
       { immediate: true },

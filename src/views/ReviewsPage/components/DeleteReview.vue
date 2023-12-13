@@ -17,7 +17,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'delete-review')
+          this.loadObject();
       },
 
       { immediate: true },
@@ -35,7 +36,9 @@ export default {
         this.$router.push({ name: 'NotFound' });
       else {
         this.object = review;
-        this.serviceReport = await getServiceReportById(this.object.service_report);
+        const reportId = this.object.service_report ?? null;
+        if (reportId)
+          this.serviceReport = await getServiceReportById(reportId);
       }
     },
   },

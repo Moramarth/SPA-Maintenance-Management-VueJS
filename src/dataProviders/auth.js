@@ -40,8 +40,7 @@ async function logoutUser() {
 async function testToken(token) {
   const apiURL = `http://127.0.0.1:8000/api/accounts/test-token/`;
   try {
-    const response = await axios.post(apiURL, { token, withCredentials: true });
-    console.log(response);
+    await axios.post(apiURL, { token, withCredentials: true });
     return true;
   }
   catch (error) {

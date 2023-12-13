@@ -23,7 +23,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'service-report-details')
+          this.loadObject();
       },
 
       { immediate: true },

@@ -25,7 +25,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'edit-review')
+          this.loadObject();
       },
 
       { immediate: true },
@@ -39,7 +40,9 @@ export default {
         this.$router.push({ name: 'NotFound' });
       else {
         this.object = review;
-        this.serviceReport = await getServiceReportById(this.object.service_report);
+        const reportId = this.object.service_report ?? null;
+        if (reportId)
+          this.serviceReport = await getServiceReportById(reportId);
       }
     },
     async handleEdit() {
@@ -65,7 +68,7 @@ export default {
         <div class="form-main form-main--login">
           <form action="" method="post" enctype="multipart/form-data">
             <div class="form__fields">
-              <p v-if="serviceReport">
+              <p v-if="object.service_report">
                 Your Review for {{ serviceReport.title }}
               </p>
               <label for="review-rating">Rating:</label>

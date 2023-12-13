@@ -19,7 +19,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.loadObject();
+        if (this.$route.name === 'review-details')
+          this.loadObject();
       },
 
       { immediate: true },
