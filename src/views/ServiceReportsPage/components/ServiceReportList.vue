@@ -7,7 +7,8 @@ import { formatDate } from '../../../helpers/formatDate';
 import FilterByReportStatus from '../../../components/filters/FilterByReportStatus.vue';
 import FilterByReportType from '../../../components/filters/filterByReportType.vue';
 import FilterSearch from '../../../components/filters/filterSearch.vue';
-import Pagination from '../../../components/Pagination.vue';
+import Pagination from '../../../components/pagination/Pagination.vue';
+import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 
 export default {
   components: {
@@ -15,6 +16,7 @@ export default {
     FilterByReportType,
     FilterSearch,
     Pagination,
+    PaginationSelector,
   },
   data() {
     return {
@@ -90,12 +92,13 @@ export default {
       this.$refs.searchBar.reset();
 
       this.paginator.rowsPerPage = 5;
+      this.$refs.itemsOnPage.reset();
     },
     handlePageChange(newPage) {
       this.paginator.currentPage = newPage;
     },
-    handleRowsPerPageChange(event) {
-      this.paginator.rowsPerPage = Number(event.target.value);
+    handleRowsPerPageChange(value) {
+      this.paginator.rowsPerPage = Number(value);
       this.paginator.currentPage = 1;
     },
   },
@@ -125,21 +128,7 @@ export default {
             </div>
             <div class="form__foot">
               <div class="form__col">
-                <label for="rowsPerPage">Rows Per Page:</label>
-                <select v-model="paginator.rowsPerPage" @change="handleRowsPerPageChange">
-                  <option value="5">
-                    5
-                  </option>
-                  <option value="10">
-                    10
-                  </option>
-                  <option value="15">
-                    15
-                  </option>
-                  <option value="20">
-                    20
-                  </option>
-                </select>
+                <PaginationSelector ref="itemsOnPage" @change-row="handleRowsPerPageChange" />
               </div>
               <div class="form__col">
                 <button class="btn btn-primary" @click="clearFilters">
