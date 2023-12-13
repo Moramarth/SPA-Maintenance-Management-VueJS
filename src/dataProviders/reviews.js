@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const apiURL = 'http://127.0.0.1:8000/api/clients/reviews/';
+
 async function getReviews() {
-  const apiURL = 'http://127.0.0.1:8000/api/clients/reviews/';
   try {
     const response = await axios.get(apiURL);
     return response.data;
@@ -13,9 +14,8 @@ async function getReviews() {
 }
 
 async function getReviewById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/reviews/${id}/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {
@@ -25,7 +25,6 @@ async function getReviewById(id) {
 }
 
 async function createReview(reviewData) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/reviews/`;
   try {
     const response = await axios.post(apiURL, reviewData);
     return response.data;
@@ -37,9 +36,8 @@ async function createReview(reviewData) {
 }
 
 async function editReview(id, reviewData) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/reviews/${id}/`;
   try {
-    const response = await axios.patch(apiURL, reviewData);
+    const response = await axios.patch(`${apiURL}${id}/`, reviewData);
     return response.data;
   }
   catch (error) {
@@ -49,9 +47,8 @@ async function editReview(id, reviewData) {
 }
 
 async function deleteReview(id) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/reviews/${id}/`;
   try {
-    const response = await axios.delete(apiURL);
+    const response = await axios.delete(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {

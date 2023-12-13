@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const apiURL = 'http://127.0.0.1:8000/api/companies/';
+
 async function getCompanies() {
-  const apiURL = 'http://127.0.0.1:8000/api/companies/';
   try {
     const response = await axios.get(apiURL);
     return response.data;
@@ -13,21 +14,19 @@ async function getCompanies() {
 }
 
 async function getCompanyById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/companies/${id}/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {
     console.error('Error fetching data:', error);
-    return [];
+    return {};
   }
 }
 
 async function getCompanyAddress(id) {
-  const apiURL = `http://127.0.0.1:8000/api/companies/${id}/address/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/address/`);
     return response.data;
   }
   catch (error) {
@@ -36,9 +35,8 @@ async function getCompanyAddress(id) {
   }
 }
 async function getCompanyEmployees(id) {
-  const apiURL = `http://127.0.0.1:8000/api/companies/${id}/employees/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/employees/`);
     return response.data;
   }
   catch (error) {
@@ -48,14 +46,13 @@ async function getCompanyEmployees(id) {
 }
 
 async function editCompany(id, companyData) {
-  const apiURL = `http://127.0.0.1:8000/api/companies/${id}/`;
   try {
-    const response = await axios.patch(apiURL, companyData);
+    const response = await axios.patch(`${apiURL}${id}/`, companyData);
     return response.data;
   }
   catch (error) {
     console.error('Error fetching data:', error);
-    return [];
+    return {};
   }
 }
 

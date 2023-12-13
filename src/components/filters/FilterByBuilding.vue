@@ -23,7 +23,7 @@ export default {
 </script>
 
 <template>
-  <select id="buildingFilter" selected @change="handleSelection">
+  <select id="buildingFilter" @change="handleSelection">
     <option>
       Filter by Building
     </option>

@@ -51,13 +51,11 @@ export default {
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
       <li>
-        <!-- profile url -->
         <router-link class="nav-link" :to="{ name: 'profile-details', params: { id: profile.user } }">
           Profile
         </router-link>
       </li>
       <li>
-        <!-- company details url -->
         <router-link
           v-if="company"
           class="nav-link"

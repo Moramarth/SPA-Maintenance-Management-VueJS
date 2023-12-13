@@ -20,6 +20,7 @@ export default {
       isLoading: false,
       email: '',
       password: '',
+      errorLogin: false,
     };
   },
   computed: {
@@ -34,9 +35,18 @@ export default {
         const userData = {
           email: this.email,
           password: this.password,
-          withCredentials: true,
         };
         const response = await loginUser(userData);
+
+        if (Object.keys(response).length === 0) {
+          this.errorLogin = true;
+          setTimeout(() => {
+            this.errorLogin = false;
+          }, 2000);
+          this.isLoading = false;
+          return;
+        }
+
         await this.storeLoginUser(response.user_id, response.jwt);
         this.isLoading = false;
         if (this.authenticationStatus !== null)
@@ -71,6 +81,7 @@ export default {
                 v-model="email"
                 type="email"
                 :disabled="isLoading"
+                placeholder="email@example.com"
               >
               <ValidationMessege :errors="v$.email.$errors" />
               <label for="password">Password</label>
@@ -79,16 +90,20 @@ export default {
                 v-model="password"
                 type="password"
                 :disabled="isLoading"
+                placeholder="password"
               >
               <ValidationMessege :errors="v$.password.$errors" />
             </div>
             <div class="form__foot">
-              <button class="btn btn-primary">
+              <div v-if="errorLogin" class="error-msg">
+                Invalid Email or Password! Access denied!
+              </div>
+              <button v-else class="btn btn-primary">
                 <LoadSpinner v-if="isLoading" />
                 <span v-else>Login</span>
               </button>
-
-              <a href="{% url 'reset password' %}">Forgotten password</a>
+              <!-- not implemented in backend api
+              <a href="{% url 'reset password' %}">Forgotten password</a> -->
             </div>
           </form>
         </div>
@@ -97,6 +112,8 @@ export default {
   </section>
 </template>
 
-<style lang="scss" scoped>
-
+<style  scoped>
+.error-msg {
+  color: red
+}
 </style>

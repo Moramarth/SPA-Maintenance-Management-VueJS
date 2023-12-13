@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const apiURL = 'http://127.0.0.1:8000/api/estate/buildings/';
+
 async function getBuildings() {
-  const apiURL = 'http://127.0.0.1:8000/api/estate/buildings/';
   try {
     const response = await axios.get(apiURL);
     return response.data;
@@ -13,9 +14,8 @@ async function getBuildings() {
 }
 
 async function getBuildingById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/estate/buildings/${id}/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {

@@ -22,7 +22,6 @@ export default {
 <template>
   <div class="container">
     <div class="form-main form-main--login">
-      <!-- {% for person in object.appuserprofile_set.all %} -->
       <h2 v-if="employees.length === 0">
         No Employees to show
       </h2>
@@ -36,7 +35,6 @@ export default {
               title="Contact Info"
             />
           </router-link>
-          <p />
         </div>
       </template>
     </div>

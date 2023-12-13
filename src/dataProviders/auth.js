@@ -1,9 +1,10 @@
 import axios from 'axios';
 
+const baseAccountsURL = 'http://127.0.0.1:8000/api/accounts/';
+
 async function getUserById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/accounts/app-user/${id}/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${baseAccountsURL}app-user/${id}/`);
     return response.data;
   }
   catch (error) {
@@ -13,10 +14,8 @@ async function getUserById(id) {
 }
 
 async function loginUser(userData) {
-  const apiURL = `http://127.0.0.1:8000/api/accounts/login/`;
   try {
-    const response = await axios.post(apiURL, userData);
-    console.log(response);
+    const response = await axios.post(`${baseAccountsURL}login/`, userData);
     return response.data;
   }
   catch (error) {
@@ -26,9 +25,8 @@ async function loginUser(userData) {
 }
 
 async function logoutUser() {
-  const apiURL = `http://127.0.0.1:8000/api/accounts/logout/`;
   try {
-    const response = await axios.post(apiURL, { withCredentials: true });
+    const response = await axios.post(`${baseAccountsURL}logout/`);
     return response.data;
   }
   catch (error) {
@@ -38,9 +36,8 @@ async function logoutUser() {
 }
 
 async function testToken(token) {
-  const apiURL = `http://127.0.0.1:8000/api/accounts/test-token/`;
   try {
-    await axios.post(apiURL, { token, withCredentials: true });
+    await axios.post(`${baseAccountsURL}test-token/`, { token });
     return true;
   }
   catch (error) {

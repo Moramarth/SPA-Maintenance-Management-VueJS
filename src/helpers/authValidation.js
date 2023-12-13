@@ -6,7 +6,6 @@ async function validateUser() {
   const token = userStore.getCurrentToken;
 
   const isLoggedIn = await testToken(token);
-  console.log(isLoggedIn);
 
   if (!isLoggedIn) {
     userStore.storeLogoutUser();

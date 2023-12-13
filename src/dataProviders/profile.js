@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const apiURL = 'http://127.0.0.1:8000/api/accounts/profiles/';
+
 async function getProfiles() {
-  const apiURL = 'http://127.0.0.1:8000/api/accounts/profiles/';
   try {
     const response = await axios.get(apiURL);
     return response.data;
@@ -13,9 +14,8 @@ async function getProfiles() {
 }
 
 async function getProfileById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/accounts/profiles/${id}/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {
@@ -24,9 +24,8 @@ async function getProfileById(id) {
   }
 }
 async function editProfile(id, profileData) {
-  const apiURL = `http://127.0.0.1:8000/api/accounts/profiles/${id}/`;
   try {
-    const response = await axios.patch(apiURL, profileData);
+    const response = await axios.patch(`${apiURL}${id}/`, profileData);
     return response.data;
   }
   catch (error) {

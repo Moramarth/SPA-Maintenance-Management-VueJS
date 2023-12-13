@@ -8,8 +8,6 @@ import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import { createServiceReport } from '../../../dataProviders/serviceReports';
 
-;
-
 export default {
   components: {
     CreateFormFooter,
@@ -39,6 +37,7 @@ export default {
       },
       validationError: false,
       MAX_FILE_SIZE: MAX_FILE_SIZE_IN_MB,
+      isLoading: false,
 
     };
   },
@@ -49,6 +48,7 @@ export default {
     async  handleCreation() {
       const isValid = await this.v$.$validate();
       if (isValid) {
+        this.isLoading = true;
         const reportData = {
           token: this.getCurrentToken,
           user: this.getCurrentUser.id,
@@ -60,6 +60,7 @@ export default {
           report_type: document.querySelector('#report-type').value,
         };
         await createServiceReport(reportData);
+        this.isLoading = false;
         this.$router.push({ name: 'show-all-service-reports' });
       }
     },
@@ -112,6 +113,8 @@ export default {
                 v-model="object.title"
                 type="text"
                 required
+                placeholder="Short Descriptive title"
+                :disabled="isLoading"
               >
               <ValidationMessege :errors="v$.object.title.$errors" />
 
@@ -121,18 +124,20 @@ export default {
                 v-model="object.description"
                 type="text"
                 required
+                placeholder="Provide detailed information about the problem you are facing"
+                :disabled="isLoading"
               />
               <ValidationMessege :errors="v$.object.description.$errors" />
 
               <label for="report-file">Image:</label>
-              <input type="file" @change="handleFileUploaded">
+              <input type="file" :disabled="isLoading" @change="handleFileUploaded">
 
               <div v-if="validationError" class="error-msg">
                 The maximum file size that can be uploaded is{{ MAX_FILE_SIZE }} MB
               </div>
 
               <label for="report-type">Report Type:</label>
-              <select id="report-type" required>
+              <select id="report-type" required :disabled="isLoading">
                 <option v-for="option in reportType" :key="option" :value="option">
                   {{ option }}
                 </option>

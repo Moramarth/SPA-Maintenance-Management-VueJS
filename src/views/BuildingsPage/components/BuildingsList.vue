@@ -29,8 +29,9 @@ export default {
     filterBuildings() {
       let filteredBuildings = [...this.array];
 
-      if (this.appliedFilters.building)
-        filteredBuildings = filteredBuildings.filter(building => building.name === this.appliedFilters.building);
+      if (this.appliedFilters.buildingName) {
+        filteredBuildings = filteredBuildings.filter(building => building.name === this.appliedFilters.buildingName);
+      }
       const startIndex = (this.paginator.currentPage - 1) * this.paginator.rowsPerPage;
       const endIndex = startIndex + this.paginator.rowsPerPage;
       return filteredBuildings.slice(startIndex, endIndex);
@@ -44,7 +45,7 @@ export default {
   },
   methods: {
     clearFilters() {
-      this.buildingFilter.buildingName = '';
+      this.appliedFilters.buildingName = '';
       this.$refs.buildingFilter.reset();
 
       this.paginator.rowsPerPage = 5;
@@ -95,7 +96,7 @@ export default {
             No Buildings to show
           </h1>
           <div v-else class="row row-cols-1 row-cols-md-3 g-4">
-            <template v-for="building in array" :key="building.id">
+            <template v-for="building in filterBuildings" :key="building.id">
               <BuildingCard :building="building" />
             </template>
           </div>

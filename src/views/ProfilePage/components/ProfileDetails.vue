@@ -18,10 +18,7 @@ export default {
       isLoading: true,
       object: {},
       address: {
-        building: {
-          id: -1,
-          city: 'Varna',
-        },
+        building: {},
       },
       company: {},
       user: {},
@@ -140,11 +137,14 @@ export default {
                         Edit
                         Profile
                       </router-link>
+
+                      <!-- not implemented in backend api
                       <a
                         class="btn btn-danger"
                         href="#change-password"
+                        disabled="true"
                       >Change
-                        Password</a>
+                        Password</a> -->
                     </div>
                   </div>
                 </div>

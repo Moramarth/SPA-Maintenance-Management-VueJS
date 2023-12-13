@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const apiURL = 'http://127.0.0.1:8000/api/clients/service-reports/';
+
 async function getServiceReports() {
-  const apiURL = 'http://127.0.0.1:8000/api/clients/service-reports/';
   try {
     const response = await axios.get(apiURL);
     return response.data;
@@ -13,21 +14,19 @@ async function getServiceReports() {
 }
 
 async function createServiceReport(reportData) {
-  const apiURL = 'http://127.0.0.1:8000/api/clients/service-reports/';
   try {
     const response = await axios.post(apiURL, reportData);
     return response.data;
   }
   catch (error) {
     console.error('Error fetching data:', error);
-    return [];
+    return {};
   }
 }
 
 async function getServiceReportById(id) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/service-reports/${id}/`;
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(`${apiURL}${id}/`);
     return response.data;
   }
   catch (error) {
@@ -37,9 +36,8 @@ async function getServiceReportById(id) {
 }
 
 async function editServiceReport(id, reportData) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/service-reports/${id}/`;
   try {
-    const response = await axios.patch(apiURL, reportData);
+    const response = await axios.patch(`${apiURL}${id}/`, reportData);
     return response.data;
   }
   catch (error) {
@@ -49,9 +47,8 @@ async function editServiceReport(id, reportData) {
 }
 
 async function deleteServiceReport(id) {
-  const apiURL = `http://127.0.0.1:8000/api/clients/service-reports/${id}/`;
   try {
-    const response = await axios.delete(apiURL);
+    const response = await axios.delete(`${apiURL}${id}/`L);
     return response.data;
   }
   catch (error) {
