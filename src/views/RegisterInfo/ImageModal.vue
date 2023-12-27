@@ -24,7 +24,7 @@ export default {
     document.addEventListener('keyup', this.handleKeyEvent);
   },
   unmounted() {
-    document.removeEventListener('keyup', this.handleKeEvent);
+    document.removeEventListener('keyup', this.handleKeyEvent);
   },
   methods: {
     handleKeyEvent(event) {

@@ -1,15 +1,20 @@
-import { testToken } from '../dataProviders/auth';
+import { refreshAPIToken, testToken } from '../dataProviders/auth';
 import { useUsersStore } from '../stores/usersStore';
 
 async function validateUser() {
   const userStore = useUsersStore();
-  const token = userStore.getCurrentToken;
+  const [accessToken, refreshToken] = userStore.getCurrentTokens;
 
-  const isLoggedIn = await testToken(token);
+  const isLoggedIn = await testToken(accessToken);
 
   if (!isLoggedIn) {
-    userStore.storeLogoutUser();
-    return { name: 'login-page' };
+    try {
+      await refreshAPIToken(refreshToken);
+    }
+    catch (error) {
+      userStore.storeLogoutUser();
+      return { name: 'login-page' };
+    }
   }
   return true;
 };

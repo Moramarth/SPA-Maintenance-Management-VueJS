@@ -10,7 +10,7 @@ export const reviewsRoutes = [
   { path: '/reviews', component: Reviews,children: [
       { path: '', component: ReviewsList, name: 'show-all-reviews' },
       { path: 'create', component: CreateReview, name: 'create-review', beforeEnter: validateUser },
-      { path: 'details/:id', component: ReviewDetails, name: 'review-details' },
+      { path: 'details/:id', component: ReviewDetails, name: 'review-details', beforeEnter: validateUser },
       { path: 'edit/:id', component: EditReview, name: 'edit-review', beforeEnter: validateUser },
       { path: 'delete/:id', component: DeleteReview, name: 'delete-review', beforeEnter: validateUser },
     ] },

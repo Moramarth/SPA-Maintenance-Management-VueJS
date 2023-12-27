@@ -1,6 +1,21 @@
 import axios from 'axios';
+import { useUsersStore } from '../stores/usersStore';
 
 const baseAccountsURL = 'http://127.0.0.1:8000/api/accounts/';
+async function getCurrentLoggedUser(access) {
+  try {
+    const response = await axios.get(`${baseAccountsURL}app-user/current/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error('Error fetching data:', error);
+    return {};
+  }
+}
 
 async function getUserById(id) {
   try {
@@ -15,18 +30,7 @@ async function getUserById(id) {
 
 async function loginUser(userData) {
   try {
-    const response = await axios.post(`${baseAccountsURL}login/`, userData);
-    return response.data;
-  }
-  catch (error) {
-    console.error('Error fetching data:', error);
-    return {};
-  }
-}
-
-async function logoutUser() {
-  try {
-    const response = await axios.post(`${baseAccountsURL}logout/`);
+    const response = await axios.post(`${baseAccountsURL}token/`, userData);
     return response.data;
   }
   catch (error) {
@@ -37,7 +41,7 @@ async function logoutUser() {
 
 async function testToken(token) {
   try {
-    await axios.post(`${baseAccountsURL}test-token/`, { token });
+    await axios.post(`${baseAccountsURL}token/verify/`, { token });
     return true;
   }
   catch (error) {
@@ -46,4 +50,19 @@ async function testToken(token) {
   }
 }
 
-export { getUserById, loginUser, logoutUser, testToken };
+async function refreshAPIToken(token) {
+  try {
+    const response = await axios.post(`${baseAccountsURL}token/refresh/`, {
+      refresh: token,
+    });
+
+    const userStore = useUsersStore();
+    userStore.setAccessToken(response.data.access);
+  }
+  catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+
+export { getUserById, loginUser, testToken, getCurrentLoggedUser, refreshAPIToken };

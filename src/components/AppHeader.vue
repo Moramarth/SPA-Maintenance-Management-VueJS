@@ -11,7 +11,7 @@ export default {
 <template>
   <header class="header fixed-top bg-light">
     <div class="container">
-      <router-link class="logo" :to="{ name: 'home-page' }">
+      <router-link class="logo" :to="{ name: 'login-page' }">
         <img
           src="../../public/navbar_logo.png"
           alt="logo"

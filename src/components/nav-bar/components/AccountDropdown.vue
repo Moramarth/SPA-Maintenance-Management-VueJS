@@ -1,7 +1,6 @@
 <script>
 import { mapActions, mapState } from 'pinia';
 import { getProfileById } from '../../../dataProviders/profile';
-import { logoutUser } from '../../../dataProviders/auth';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getCompanyById } from '../../../dataProviders/companies';
 import LoadSpinner from '../../LoadSpinner.vue';
@@ -28,9 +27,8 @@ export default {
   methods: {
     ...mapActions(useUsersStore, ['storeLogoutUser']),
     handleLogout() {
-      logoutUser();
       this.storeLogoutUser();
-      this.$router.push({ name: 'home-page' });
+      this.$router.push({ name: 'login-page' });
     },
   },
 };

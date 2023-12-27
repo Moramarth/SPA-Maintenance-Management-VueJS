@@ -24,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['authenticationStatus']),
+    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
   },
   methods: {
     ...mapActions(useUsersStore, ['storeLoginUser']),
@@ -37,7 +37,6 @@ export default {
           password: this.password,
         };
         const response = await loginUser(userData);
-
         if (Object.keys(response).length === 0) {
           this.errorLogin = true;
           setTimeout(() => {
@@ -46,11 +45,10 @@ export default {
           this.isLoading = false;
           return;
         }
-
-        await this.storeLoginUser(response.user_id, response.jwt);
+        await this.storeLoginUser(response.refresh, response.access);
         this.isLoading = false;
-        if (this.authenticationStatus !== null)
-          this.$router.push({ name: 'profile-details', params: { id: response.user_id } });
+        if (this.authenticationStatus)
+          this.$router.push({ name: 'profile-details', params: { id: this.getCurrentUser.id } });
       }
     },
   },

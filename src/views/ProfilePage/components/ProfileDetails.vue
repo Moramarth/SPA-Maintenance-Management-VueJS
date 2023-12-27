@@ -129,7 +129,7 @@ export default {
                       <label>Phone number:</label> {{ object.phone_number }}
                       <label>Email:</label> {{ user.email }}
                     </div>
-                    <div v-if="getCurrentUser.id === object.user" class="form__foot">
+                    <div v-if="getCurrentUser?.id === object.user" class="form__foot">
                       <router-link
                         class="btn btn-warning"
                         :to="{ name: 'edit-profile', params: { id: object.user } }"
