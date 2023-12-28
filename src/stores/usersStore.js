@@ -8,7 +8,6 @@ export const useUsersStore = defineStore('users', {
     currentUser: null,
     accessToken: null,
     refreshToken: null,
-    currentUserProfile: null,
     isAuthenticated: false,
   }),
   getters: {
@@ -45,10 +44,10 @@ export const useUsersStore = defineStore('users', {
     },
     storeLogoutUser() {
       this.currentUser = null;
-      localStorage.removeItem('user');
-      this.isAuthenticated = false;
       this.accessToken = null;
       this.refreshToken = null;
+      this.isAuthenticated = false;
+      localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
     },

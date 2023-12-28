@@ -1,10 +1,13 @@
 import axios from 'axios';
+import { authHeaders } from '../helpers/authValidation';
 
 const apiURL = 'http://127.0.0.1:8000/api/companies/';
 
 async function getCompanies() {
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(apiURL, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -15,7 +18,9 @@ async function getCompanies() {
 
 async function getCompanyById(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/`);
+    const response = await axios.get(`${apiURL}${id}/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -26,7 +31,9 @@ async function getCompanyById(id) {
 
 async function getCompanyAddress(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/address/`);
+    const response = await axios.get(`${apiURL}${id}/address/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -36,7 +43,9 @@ async function getCompanyAddress(id) {
 }
 async function getCompanyEmployees(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/employees/`);
+    const response = await axios.get(`${apiURL}${id}/employees/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -47,7 +56,9 @@ async function getCompanyEmployees(id) {
 
 async function editCompany(id, companyData) {
   try {
-    const response = await axios.patch(`${apiURL}${id}/`, companyData);
+    const response = await axios.patch(`${apiURL}${id}/`, companyData, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {

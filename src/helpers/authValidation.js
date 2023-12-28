@@ -19,4 +19,9 @@ async function validateUser() {
   return true;
 };
 
-export { validateUser };
+function authHeaders() {
+  const userStore = useUsersStore();
+  return { Authorization: `Bearer ${userStore.getCurrentTokens[0]}` };
+}
+
+export { validateUser, authHeaders };

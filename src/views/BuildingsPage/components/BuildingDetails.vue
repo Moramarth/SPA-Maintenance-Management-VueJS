@@ -1,7 +1,6 @@
 <script>
 import { getBuildingById } from '../../../dataProviders/buildings';
 
-// TODO: Integrate Google Maps API
 export default {
 
   data() {

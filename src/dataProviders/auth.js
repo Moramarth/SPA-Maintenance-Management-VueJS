@@ -2,11 +2,11 @@ import axios from 'axios';
 import { useUsersStore } from '../stores/usersStore';
 
 const baseAccountsURL = 'http://127.0.0.1:8000/api/accounts/';
-async function getCurrentLoggedUser(access) {
+async function getCurrentLoggedUser(accessToken) {
   try {
     const response = await axios.get(`${baseAccountsURL}app-user/current/`, {
       headers: {
-        Authorization: `Bearer ${access}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     return response.data;
