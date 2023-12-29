@@ -32,7 +32,7 @@ export default {
   <div class="block-testimonial">
     <div class="block__image">
       <img
-        v-if="profile.file"
+        v-if="profile?.file"
         :src="profile.file"
         class="img-fluid rounded-start"
         alt=""
@@ -51,7 +51,7 @@ export default {
 
     <div class="block__content">
       <p v-if="testimonial.user">
-        <strong>From:</strong> {{ profile.first_name }}  {{ profile.last_name }}
+        <strong>From:</strong> {{ profile?.first_name }}  {{ profile?.last_name }}
       </p>
 
       <p v-else>

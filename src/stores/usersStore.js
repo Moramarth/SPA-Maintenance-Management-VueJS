@@ -21,7 +21,9 @@ export const useUsersStore = defineStore('users', {
       this.profiles = await getProfiles();
     },
     setAccessToken(token) {
+      localStorage.removeItem('accessToken');
       this.accessToken = token;
+      localStorage.setItem('accessToken', this.accessToken);
     },
     async storeLoginUser(refresh, access) {
       this.accessToken = access;

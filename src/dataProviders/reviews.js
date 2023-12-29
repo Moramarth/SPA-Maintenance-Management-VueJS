@@ -1,10 +1,13 @@
 import axios from 'axios';
+import { authHeaders } from '../helpers/authValidation';
 
 const apiURL = 'http://127.0.0.1:8000/api/clients/reviews/';
 
 async function getReviews() {
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(apiURL, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -15,7 +18,9 @@ async function getReviews() {
 
 async function getReviewById(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/`);
+    const response = await axios.get(`${apiURL}${id}/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -26,7 +31,9 @@ async function getReviewById(id) {
 
 async function createReview(reviewData) {
   try {
-    const response = await axios.post(apiURL, reviewData);
+    const response = await axios.post(apiURL, reviewData, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -37,7 +44,9 @@ async function createReview(reviewData) {
 
 async function editReview(id, reviewData) {
   try {
-    const response = await axios.patch(`${apiURL}${id}/`, reviewData);
+    const response = await axios.patch(`${apiURL}${id}/`, reviewData, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -48,7 +57,9 @@ async function editReview(id, reviewData) {
 
 async function deleteReview(id) {
   try {
-    const response = await axios.delete(`${apiURL}${id}/`);
+    const response = await axios.delete(`${apiURL}${id}/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {

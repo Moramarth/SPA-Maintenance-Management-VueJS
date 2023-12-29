@@ -19,7 +19,7 @@ export default {
       appliedFilters: {
         reportType: false,
         reportStatus: false,
-        rating: 0,
+        rating: null,
       },
       paginator: {
         currentPage: 1,
@@ -37,7 +37,7 @@ export default {
       return filteredReviews.slice(startIndex, endIndex);
     },
     totalPages() {
-      return Math.ceil(this.filterReviews.length / this.paginator.rowsPerPage);
+      return Math.ceil(this.array.length / this.paginator.rowsPerPage);
     },
   },
 

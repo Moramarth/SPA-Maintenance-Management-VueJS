@@ -15,7 +15,7 @@ export default {
   methods: {
     handleChange(event) {
       const selectedValue = event.target.value;
-      this.$emit('selected', selectedValue);
+      this.$emit('selected', Number(selectedValue));
     },
     reset() {
       console.log('reset');

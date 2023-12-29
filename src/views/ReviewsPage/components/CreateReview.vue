@@ -5,7 +5,6 @@ import { mapActions, mapState } from 'pinia';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { createReview } from '../../../dataProviders/reviews';
-import { useUsersStore } from '../../../stores/usersStore';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 
 export default {
@@ -35,7 +34,6 @@ export default {
   },
   computed: {
     ...mapState(useTempObjectStore, ['getTempObject']),
-    ...mapState(useUsersStore, ['getCurrentUser', 'getCurrentToken']),
   },
   methods: {
     ...mapActions(useTempObjectStore, ['clearTempObject']),
@@ -44,8 +42,6 @@ export default {
       if (isValid) {
         this.serviceReport = this.getTempObject;
         const reviewData = {
-          token: this.getCurrentToken,
-          user: this.getCurrentUser.id,
           service_report: this.serviceReport.id,
           rating: Number(document.querySelector('#review-rating').value),
           comment: this.object.comment,
@@ -82,7 +78,7 @@ export default {
                 id="review-rating"
                 required
               >
-                <option v-for="rate in rating" :key="rate" value="rate[0]">
+                <option v-for="rate in rating" :key="rate" :value="rate[0]">
                   {{ rate[1] }}
                 </option>
               </select>
