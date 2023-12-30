@@ -2,22 +2,19 @@
 import { mapActions, mapState } from 'pinia';
 import { getServiceReportById } from '../../../dataProviders/serviceReports';
 import { useUsersStore } from '../../../stores/usersStore';
-import { getCompanyById } from '../../../dataProviders/companies';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
+import { formatDate } from '../../../helpers/formatDate';
 
 export default {
   data() {
     return {
       object: {},
-      userProfile: {},
-      userCompany: {},
-      assignedProfile: {},
-      assignedCompany: {},
+      format: formatDate,
 
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['getCurrentUser', 'getStoreProfiles']),
+    ...mapState(useUsersStore, ['getCurrentUser']),
   },
   async created() {
     this.$watch(
@@ -35,13 +32,6 @@ export default {
     async loadObject() {
       const id = this.$route.params.id;
       this.object = await getServiceReportById(id);
-      if (Object.keys(this.object).lenght !== 0) {
-        this.userProfile = this.getStoreProfiles.filter(profile => profile.user === this.object.user)[0];
-        this.userCompany = await getCompanyById(this.userProfile.company);
-        this.assignedProfile = this.getStoreProfiles.filter(profile => profile.user === this.object.assigned_to)[0];
-        if (this.assignedProfile)
-          this.assignedCompany = await getCompanyById(this.assignedProfile.company);
-      }
     },
     async handleReviewCreation() {
       await this.setTempObject(this.object.id);
@@ -107,9 +97,9 @@ export default {
                 <tr>
                   <th>From:</th>
                   <td>
-                    {{ userProfile.first_name }} {{ userProfile.last_name }}
+                    {{ object.user_full_name }}
                     Employee at
-                    {{ userCompany.name }}
+                    {{ object.user_company_name }}
 
                     <router-link :to="{ name: 'profile-details', params: { id: object.user } }">
                       <i
@@ -144,8 +134,9 @@ export default {
                 <tr v-if="object.assigned_to">
                   <th>Assigned to:</th>
                   <td>
-                    {{ assignedProfile.first_name }} {{ assignedProfile.last_name }}
-                    Employee at {{ assignedCompany.name }}
+                    {{ object.assigned_to_full_name }}
+                    Employee at
+                    {{ object.assigned_to_company_name }}
 
                     <router-link :to="{ name: 'profile-details', params: { id: object.assigned_to } }">
                       <i
@@ -155,6 +146,10 @@ export default {
                       />
                     </router-link>
                   </td>
+                </tr>
+                <tr>
+                  <th>Last Updated:</th>
+                  <td>{{ format(object.last_updated) }}</td>
                 </tr>
               </tbody>
               <thead>

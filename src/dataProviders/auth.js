@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useUsersStore } from '../stores/usersStore';
+import { authHeaders } from '../helpers/authValidation';
 
 const baseAccountsURL = 'http://127.0.0.1:8000/api/accounts/';
 async function getCurrentLoggedUser(accessToken) {
@@ -19,7 +20,9 @@ async function getCurrentLoggedUser(accessToken) {
 
 async function getUserById(id) {
   try {
-    const response = await axios.get(`${baseAccountsURL}app-user/${id}/`);
+    const response = await axios.get(`${baseAccountsURL}app-user/${id}/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {

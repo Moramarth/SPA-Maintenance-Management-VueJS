@@ -16,17 +16,16 @@ export default {
   data() {
     return {
       object: {},
-      address: {},
-      employees: [],
       formatDate,
       isLoading: true,
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['authenticationStatus', 'getStoreProfiles', 'getCurrentUser']),
-    profileCompany() {
-      if (this.getCurrentUser)
-        return this.getStoreProfiles.filter(profile => profile.user === this.getCurrentUser.id)[0].company;
+    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
+    canEdit() {
+      if (this.getCurrentUser) {
+        return true;
+      }
       return false;
     },
   },
@@ -141,7 +140,7 @@ export default {
                         Partner since: {{ formatDate(object.created_on) }}
                       </p>
 
-                      <router-link v-if="profileCompany === object.id" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
+                      <router-link v-if="canEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
                         Edit
                         Company Info
                       </router-link>

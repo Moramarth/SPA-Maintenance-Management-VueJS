@@ -2,18 +2,15 @@
 import { mapState } from 'pinia';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getReviewById } from '../../../dataProviders/reviews';
-import { getCompanyById } from '../../../dataProviders/companies';
 
 export default {
   data() {
     return {
       object: {},
-      profile: {},
-      company: {},
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser', 'getStoreProfiles']),
+    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
   },
   async created() {
     this.$watch(
@@ -34,10 +31,6 @@ export default {
         this.$router.push({ name: 'NotFound' });
       else {
         this.object = review;
-        if (this.object.user) {
-          this.profile = this.getStoreProfiles.filter(profile => profile.user === this.object.user)[0];
-          this.company = await getCompanyById(this.profile.company);
-        }
       }
     },
   },
@@ -68,9 +61,9 @@ export default {
           <div class="block-review">
             <div class="block__image">
               <img
-                v-if="profile.file"
+                v-if="object.user_profile_picture"
                 class="img-fluid rounded-start"
-                :src="profile.file"
+                :src="object.user_profile_picture"
                 alt=""
               >
               <img
@@ -84,22 +77,24 @@ export default {
             <div class="block__content">
               <div class="block__content-bg">
                 <p v-if="object.user">
-                  <strong>From:</strong> {{ profile.first_name }} {{ profile.last_name }}
+                  <strong>From:</strong>
+                  {{ object.user_full_name }}
                 </p>
                 <p v-else>
                   <strong>From:</strong> Ex tenant
                 </p>
 
-                <p v-if="object.company">
-                  <strong>Company:</strong> {{ object.company }}
+                <p v-if="object.user_company_name">
+                  <strong>Company:</strong>
+                  {{ object.user_company_name }}
                 </p>
 
                 <p v-else>
                   <strong>Company:</strong> Previous Partner
                 </p>
 
-                <p v-if="object.serviceReport">
-                  <strong>For:</strong> {{ object.serviceReport }}
+                <p v-if="object.service_report">
+                  <strong>For:</strong> {{ object.service_report_title }}
                 </p>
 
                 <p><strong>Rating:</strong> {{ object.rating }}</p>
@@ -109,9 +104,9 @@ export default {
 
             <div class="block__logo">
               <img
-                v-if="company.file"
+                v-if="object.company_logo"
                 class="img-fluid rounded-start"
-                :src="company.file"
+                :src="object.company_logo"
                 alt=""
               >
               <img

@@ -35,7 +35,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['getStoreProfiles', 'getCurrentUser']),
+    ...mapState(useUsersStore, ['getCurrentUser']),
     filterReports() {
       let filteredReports = [...this.serviceReports];
       if (this.appliedFilters.reportStatus)
@@ -57,21 +57,6 @@ export default {
     this.companies = await getCompanies();
   },
   methods: {
-    createdBy(id) {
-      const profile = this.getStoreProfiles.filter(profile => profile.user === id)[0];
-      if (profile)
-        return `${profile.first_name} ${profile.last_name}`;
-    },
-    assignedTo(id) {
-      const profile = this.getStoreProfiles.filter(profile => profile.user === id)[0];
-      if (profile)
-        return `${profile.first_name} ${profile.last_name}`;
-    },
-    atCompany(id) {
-      const company = this.companies.filter(company => company.id === id)[0];
-      if (company)
-        return company.name;
-    },
     statusFilter(value) {
       this.appliedFilters.reportStatus = value;
     },
@@ -166,9 +151,9 @@ export default {
                       You
                     </td>
                     <td v-else>
-                      {{ createdBy(object.user) }}
+                      {{ object.user_full_name }}
                     </td>
-                    <td>{{ atCompany(object.company) }}</td>
+                    <td>{{ object.user_company_name }}</td>
                     <td>{{ object.report_status }}</td>
                     <td>{{ object.report_type }}</td>
                     <td>{{ format(object.submit_date) }}</td>
@@ -177,7 +162,7 @@ export default {
                       None
                     </td>
                     <td v-else>
-                      {{ assignedTo(object.assigned_to) }}
+                      {{ object.assigned_to_full_name }}
                     </td>
 
                     <td>

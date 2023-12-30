@@ -39,7 +39,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUsersStore, ['getCurrentUser', 'getStoreProfiles']),
+    ...mapState(useUsersStore, ['getCurrentUser']),
   },
   async created() {
     this.object = await getProfileById(this.getCurrentUser.id);

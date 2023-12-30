@@ -19,7 +19,7 @@ export default {
         <div class="form-main form-main--filters">
           <div class="form__wrap">
             <div class="form__foot">
-              <router-link class="btn btn-dark text-centered" :to="{ name: 'home-page' }">
+              <router-link class="btn btn-dark text-centered" :to="{ name: 'login-page' }">
                 BACK TO HOMEPAGE
               </router-link>
             </div>

@@ -1,10 +1,13 @@
 import axios from 'axios';
+import { authHeaders } from '../helpers/authValidation';
 
 const apiURL = 'http://127.0.0.1:8000/api/accounts/profiles/';
 
 async function getProfiles() {
   try {
-    const response = await axios.get(apiURL);
+    const response = await axios.get(apiURL, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -15,7 +18,9 @@ async function getProfiles() {
 
 async function getProfileById(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/`);
+    const response = await axios.get(`${apiURL}${id}/`, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {
@@ -25,7 +30,9 @@ async function getProfileById(id) {
 }
 async function editProfile(id, profileData) {
   try {
-    const response = await axios.patch(`${apiURL}${id}/`, profileData);
+    const response = await axios.patch(`${apiURL}${id}/`, profileData, {
+      headers: authHeaders(),
+    });
     return response.data;
   }
   catch (error) {

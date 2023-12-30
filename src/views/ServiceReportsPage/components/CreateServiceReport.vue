@@ -1,11 +1,9 @@
 <script>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, required } from '@vuelidate/validators';
-import { mapState } from 'pinia';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
-import { useUsersStore } from '../../../stores/usersStore';
 import { createServiceReport } from '../../../dataProviders/serviceReports';
 
 export default {
@@ -41,17 +39,12 @@ export default {
 
     };
   },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentToken', 'getCurrentUser']),
-  },
   methods: {
-    async  handleCreation() {
+    async handleCreation() {
       const isValid = await this.v$.$validate();
       if (isValid) {
         this.isLoading = true;
         const reportData = {
-          token: this.getCurrentToken,
-          user: this.getCurrentUser.id,
           title: this.object.title,
           description: this.object.description,
           file: this.object.file,
@@ -149,7 +142,7 @@ export default {
             <CreateFormFooter
               v-else
               :is-editing="false"
-              :fallback-u-r-l="{ name: 'home-page' }"
+              :fallback-u-r-l="{ name: 'login-page' }"
               @is-created="handleCreation"
             />
           </form>

@@ -1,7 +1,5 @@
 <script>
-import { mapState } from 'pinia';
 import { formatDate } from '../helpers/formatDate';
-import { useUsersStore } from '../stores/usersStore';
 
 export default {
   props: {
@@ -14,16 +12,7 @@ export default {
   data() {
     return {
       formatDate,
-      profile: {},
     };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getStoreProfiles']),
-
-  },
-  created() {
-    if (this.testimonial.user)
-      this.profile = this.getStoreProfiles.filter(profile => profile.user === this.testimonial.user)[0];
   },
 };
 </script>
@@ -32,8 +21,8 @@ export default {
   <div class="block-testimonial">
     <div class="block__image">
       <img
-        v-if="profile?.file"
-        :src="profile.file"
+        v-if="testimonial.user_profile_picture"
+        :src="testimonial.user_profile_picture"
         class="img-fluid rounded-start"
         alt=""
       >
@@ -51,7 +40,7 @@ export default {
 
     <div class="block__content">
       <p v-if="testimonial.user">
-        <strong>From:</strong> {{ profile?.first_name }}  {{ profile?.last_name }}
+        <strong>From:</strong> {{ testimonial.user_full_name }}
       </p>
 
       <p v-else>

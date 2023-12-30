@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { getProfiles } from '../dataProviders/profile';
+import { getProfileById } from '../dataProviders/profile';
 import { getCurrentLoggedUser } from '../dataProviders/auth';
 
 export const useUsersStore = defineStore('users', {
   state: () => ({
-    profiles: [],
     currentUser: null,
+    currentProfile: null,
     accessToken: null,
     refreshToken: null,
     isAuthenticated: false,
@@ -13,13 +13,10 @@ export const useUsersStore = defineStore('users', {
   getters: {
     getCurrentUser: state => state.currentUser,
     getCurrentTokens: state => [state.accessToken, state.refreshToken],
-    getStoreProfiles: state => state.profiles,
+    getCurrentProfile: state => state.currentProfile,
     authenticationStatus: state => state.isAuthenticated,
   },
   actions: {
-    async loadProfiles() {
-      this.profiles = await getProfiles();
-    },
     setAccessToken(token) {
       localStorage.removeItem('accessToken');
       this.accessToken = token;
@@ -33,7 +30,7 @@ export const useUsersStore = defineStore('users', {
       localStorage.setItem('refreshToken', this.refreshToken);
       this.getPersistedUser();
     },
-    getPersistedUser() {
+    async getPersistedUser() {
       const persisted = localStorage.getItem('user');
       const access = localStorage.getItem('accessToken');
       const refresh = localStorage.getItem('refreshToken');
@@ -42,6 +39,7 @@ export const useUsersStore = defineStore('users', {
       this.currentUser = JSON.parse(persisted);
       this.accessToken = access;
       this.refreshToken = refresh;
+      this.currentProfile = await getProfileById(this.currentUser.id);
       this.isAuthenticated = true;
     },
     storeLogoutUser() {

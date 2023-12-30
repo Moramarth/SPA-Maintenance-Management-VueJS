@@ -17,10 +17,6 @@ export default {
     return {
       isLoading: true,
       object: {},
-      address: {
-        building: {},
-      },
-      company: {},
       user: {},
     };
   },
@@ -159,7 +155,6 @@ export default {
               <ProfileCompany :profile-object="object" />
             </div>
             <div
-              v-if="address"
               id="contact"
               class="tab-pane fade"
               role="tabpanel"

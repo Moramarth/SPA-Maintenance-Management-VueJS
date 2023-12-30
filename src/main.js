@@ -17,6 +17,5 @@ app.use(VueGoogleMaps, {
 });
 const userStore = useUsersStore();
 userStore.getPersistedUser();
-userStore.loadProfiles();
 
 app.mount('#app');
