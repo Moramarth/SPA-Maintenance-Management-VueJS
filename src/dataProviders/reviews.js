@@ -1,69 +1,77 @@
-import axios from 'axios';
 import { authHeaders } from '../helpers/authValidation';
+import { axiosInstance } from './axiosInstance';
 
-const apiURL = 'http://127.0.0.1:8000/api/clients/reviews/';
+const reviewsURLs = {
+  allReviews: 'clients/reviews/',
+  singleReview: {
+    details: id => `clients/reviews/${id}/`,
+    edit: id => `clients/reviews/${id}/`,
+    delete: id => `clients/reviews/${id}/`,
+  },
+};
+const errorFetchingMsg = 'Error fetching data:';
 
 async function getReviews() {
   try {
-    const response = await axios.get(apiURL, {
+    const response = await axiosInstance.get(reviewsURLs.allReviews, {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return [];
   }
 }
 
 async function getReviewById(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/`, {
+    const response = await axiosInstance.get(reviewsURLs.singleReview.details(id), {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 
 async function createReview(reviewData) {
   try {
-    const response = await axios.post(apiURL, reviewData, {
+    const response = await axiosInstance.post(reviewsURLs.allReviews, reviewData, {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 
 async function editReview(id, reviewData) {
   try {
-    const response = await axios.patch(`${apiURL}${id}/`, reviewData, {
+    const response = await axiosInstance.patch(reviewsURLs.singleReview.edit(id), reviewData, {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 
 async function deleteReview(id) {
   try {
-    const response = await axios.delete(`${apiURL}${id}/`, {
+    const response = await axiosInstance.delete(reviewsURLs.singleReview.delete(id), {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }

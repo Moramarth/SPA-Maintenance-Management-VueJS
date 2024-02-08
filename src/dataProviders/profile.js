@@ -1,42 +1,49 @@
-import axios from 'axios';
 import { authHeaders } from '../helpers/authValidation';
+import { axiosInstance } from './axiosInstance';
 
-const apiURL = 'http://127.0.0.1:8000/api/accounts/profiles/';
+const profileURLs = {
+  allProfiles: 'accounts/profiles/',
+  singleProfile: {
+    details: id => `accounts/profiles/${id}/`,
+    edit: id => `accounts/profiles/${id}/`,
+  },
+};
+const errorFetchingMsg = 'Error fetching data:';
 
 async function getProfiles() {
   try {
-    const response = await axios.get(apiURL, {
+    const response = await axiosInstance.get(profileURLs.allProfiles, {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return [];
   }
 }
 
 async function getProfileById(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/`, {
+    const response = await axiosInstance.get(profileURLs.singleProfile.details(id), {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 async function editProfile(id, profileData) {
   try {
-    const response = await axios.patch(`${apiURL}${id}/`, profileData, {
+    const response = await axiosInstance.patch(profileURLs.singleProfile.edit(id), profileData, {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return error;
   }
 }

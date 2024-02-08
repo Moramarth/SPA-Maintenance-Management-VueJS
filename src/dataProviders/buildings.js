@@ -1,30 +1,34 @@
-import axios from 'axios';
 import { authHeaders } from '../helpers/authValidation';
+import { axiosInstance } from './axiosInstance';
 
-const apiURL = 'http://127.0.0.1:8000/api/estate/buildings/';
+const buildingsURLs = {
+  allBuildings: 'estate/buildings/',
+  singleBuilding: id => `estate/buildings/${id}/`,
+};
+const errorFetchingMsg = 'Error fetching data:';
 
 async function getBuildings() {
   try {
-    const response = await axios.get(apiURL, {
+    const response = await axiosInstance.get(buildingsURLs.allBuildings, {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return [];
   }
 }
 
 async function getBuildingById(id) {
   try {
-    const response = await axios.get(`${apiURL}${id}/`, {
+    const response = await axiosInstance.get(buildingsURLs.singleBuilding(id), {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }

@@ -1,61 +1,75 @@
-import axios from 'axios';
 import { useUsersStore } from '../stores/usersStore';
 import { authHeaders } from '../helpers/authValidation';
+import { axiosInstance } from './axiosInstance';
 
-const baseAccountsURL = 'http://127.0.0.1:8000/api/accounts/';
+const accountsURLs = {
+  appuser: {
+    currentUser: 'accounts/app-user/current/',
+    getSingleUser: id => `accounts/app-user/${id}/`,
+  },
+  token: {
+    access: 'accounts/token/',
+    refresh: 'accounts/token/refresh/',
+    verify: 'accounts/token/verify/',
+  },
+};
+
+const tokenKeyword = 'Bearer';
+const errorFetchingMsg = 'Error fetching data:';
+
 async function getCurrentLoggedUser(accessToken) {
   try {
-    const response = await axios.get(`${baseAccountsURL}app-user/current/`, {
+    const response = await axiosInstance.get(accountsURLs.appuser.currentUser, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${tokenKeyword} ${accessToken}`,
       },
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 
 async function getUserById(id) {
   try {
-    const response = await axios.get(`${baseAccountsURL}app-user/${id}/`, {
+    const response = await axiosInstance.get(accountsURLs.appuser.getSingleUser(id), {
       headers: authHeaders(),
     });
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 
 async function loginUser(userData) {
   try {
-    const response = await axios.post(`${baseAccountsURL}token/`, userData);
+    const response = await axiosInstance.post(accountsURLs.token.access, userData);
     return response.data;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return {};
   }
 }
 
 async function testToken(token) {
   try {
-    await axios.post(`${baseAccountsURL}token/verify/`, { token });
+    await axiosInstance.post(accountsURLs.token.verify, { token });
     return true;
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     return false;
   }
 }
 
 async function refreshAPIToken(token) {
   try {
-    const response = await axios.post(`${baseAccountsURL}token/refresh/`, {
+    const response = await axiosInstance.post(accountsURLs.token.refresh, {
       refresh: token,
     });
 
@@ -63,7 +77,7 @@ async function refreshAPIToken(token) {
     userStore.setAccessToken(response.data.access);
   }
   catch (error) {
-    console.error('Error fetching data:', error);
+    console.error(errorFetchingMsg, error);
     throw error;
   }
 }
