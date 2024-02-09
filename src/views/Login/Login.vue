@@ -1,66 +1,52 @@
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
-import { mapActions, mapState } from 'pinia';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import LoadSpinner from '../../components/LoadSpinner.vue';
 import { loginUser } from '../../dataProviders/auth';
 import { useUsersStore } from '../../stores/usersStore';
 import ValidationMessege from '../../components/ValidationMessege.vue';
 
-export default {
-  components: {
-    LoadSpinner,
-    ValidationMessege,
-  },
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      isLoading: false,
-      email: '',
-      password: '',
-      errorLogin: false,
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
-  },
-  methods: {
-    ...mapActions(useUsersStore, ['storeLoginUser']),
-    async handleSubmit() {
-      const isValid = await this.v$.$validate();
-      if (isValid) {
-        this.isLoading = true;
-        const userData = {
-          email: this.email,
-          password: this.password,
-        };
-        const response = await loginUser(userData);
-        if (Object.keys(response).length === 0) {
-          this.errorLogin = true;
-          setTimeout(() => {
-            this.errorLogin = false;
-          }, 2000);
-          this.isLoading = false;
-          return;
-        }
-        await this.storeLoginUser(response.refresh, response.access);
-        this.isLoading = false;
-        if (this.authenticationStatus)
-          this.$router.push({ name: 'profile-details', params: { id: this.getCurrentUser.id } });
-      }
-    },
-  },
-  validations() {
-    return {
+const userStore = useUsersStore();
+const router = useRouter();
 
-      email: { required, email },
-      password: { required },
+const isLoading = ref(false);
+const errorLogin = ref(false);
 
+const emailInput = ref('');
+const password = ref('');
+
+const rules = computed(() => ({
+  emailInput: { required, email },
+  password: { required },
+}
+));
+const v$ = useVuelidate(rules, { emailInput, password });
+
+async function handleSubmit() {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    isLoading.value = true;
+    const userData = {
+      email: emailInput.value,
+      password: password.value,
     };
-  },
-};
+    const response = await loginUser(userData);
+    if (Object.keys(response).length === 0) {
+      errorLogin.value = true;
+      setTimeout(() => {
+        errorLogin.value = false;
+      }, 2000);
+      isLoading.value = false;
+      return;
+    }
+    await userStore.storeLoginUser(response.refresh, response.access);
+    isLoading.value = false;
+    if (userStore.authenticationStatus)
+      router.push({ name: 'profile-details', params: { id: userStore.getCurrentUser.id } });
+  }
+}
 </script>
 
 <template>
@@ -76,12 +62,12 @@ export default {
               <label for="email">E-mail</label>
               <input
                 id="email"
-                v-model="email"
+                v-model="emailInput"
                 type="email"
                 :disabled="isLoading"
                 placeholder="email@example.com"
               >
-              <ValidationMessege :errors="v$.email.$errors" />
+              <ValidationMessege :errors="v$.emailInput.$errors" />
               <label for="password">Password</label>
               <input
                 id="password"

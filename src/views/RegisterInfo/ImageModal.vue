@@ -1,61 +1,58 @@
-<script>
-export default {
-  props: {
-    tinyImgURL: {
-      type: String,
-      required: true,
-    },
-    originalImgURL: {
-      type: String,
-      required: true,
-    },
-    isLandscape: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  emits: ['close'],
-  data() {
-    return {
-      isOpen: false,
-    };
-  },
-  mounted() {
-    document.addEventListener('keyup', this.handleKeyEvent);
-  },
-  unmounted() {
-    document.removeEventListener('keyup', this.handleKeyEvent);
-  },
-  methods: {
-    handleKeyEvent(event) {
-      if (event.keyCode === 27) {
-        this.close();
-      }
-    },
-    open() {
-      this.isOpen = true;
-    },
-    close() {
-      this.isOpen = false;
-    },
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
 
+const props = defineProps({
+  tinyImgURL: {
+    type: String,
+    required: true,
   },
+  originalImgURL: {
+    type: String,
+    required: true,
+  },
+  isLandscape: {
+    type: Boolean,
+    required: true,
+  },
+});
 
-};
+const isOpen = ref(false);
+
+onMounted(() => {
+  document.addEventListener('keyup', handleKeyEvent);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keyup', handleKeyEvent);
+});
+
+function handleKeyEvent(event) {
+  if (event.keyCode === 27) {
+    close();
+  }
+}
+
+function open() {
+  isOpen.value = true;
+}
+
+function close() {
+  isOpen.value = false;
+}
 </script>
 
 <template>
   <div class="info-page-img">
     <a class="image-popup-link" @click="open">
-      <img :src="tinyImgURL" alt="">
+      <img :src="props.tinyImgURL" alt="">
     </a>
   </div>
 
   <transition name="fade">
     <div v-show="isOpen" class="vue-modal">
-      <div :class=" isLandscape ? 'vue-modal-inner landscape' : 'vue-modal-inner'">
+      <div :class=" props.isLandscape ? 'vue-modal-inner landscape' : 'vue-modal-inner'">
         <div class="vue-modal-content">
-          <img :src="originalImgURL" alt="">
+          <img :src="props.originalImgURL" alt="">
 
           <i class="fa-solid fa-xmark" @click="close" />
         </div>

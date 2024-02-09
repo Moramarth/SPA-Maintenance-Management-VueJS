@@ -1,7 +1,4 @@
-<script>
-export default {
-
-};
+<script setup>
 </script>
 
 <template>
@@ -30,5 +27,4 @@ export default {
 </template>
 
 <style scoped>
-
 </style>

@@ -1,7 +1,4 @@
-<script>
-export default {
-
-};
+<script setup>
 </script>
 
 <template>
@@ -29,6 +26,5 @@ export default {
   </section>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>

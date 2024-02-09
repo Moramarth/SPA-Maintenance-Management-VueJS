@@ -1,12 +1,5 @@
-<script>
+<script setup>
 import ImageModal from './ImageModal.vue';
-
-export default {
-  components: {
-    ImageModal,
-  },
-
-};
 </script>
 
 <template>
