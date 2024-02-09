@@ -1,16 +1,9 @@
-<script>
-export default {
-  emits: ['changeRow'],
-  methods: {
-    handleRowsPerPageChange(event) {
-      this.$emit('changeRow', event.target.value);
-    },
-    reset() {
-      document.querySelector('#item-per-page-choice').selectedIndex = 0;
-    },
-  },
+<script setup>
+const emit = defineEmits(['changeRow']);
 
-};
+function handleRowsPerPageChange(event) {
+  emit('changeRow', event.target.value);
+}
 </script>
 
 <template>

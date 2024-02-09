@@ -1,34 +1,24 @@
-<script>
-export default {
+<script setup>
+const emit = defineEmits(['selected']);
 
-  emits: ['selected'],
-  data() {
-    return {
-      reportType: [
-        'Other',
-        'Networking',
-        'Electrical',
-        'Plumbing',
-        'Structural Integrity',
-        'Security Systems',
-        'Landscaping',
-      ],
-    };
-  },
-  methods: {
-    handleChange(event) {
-      const selectedValue = event.target.value;
-      this.$emit('selected', selectedValue);
-    },
-    reset() {
-      document.querySelectorAll('select')[1].selectedIndex = 0;
-    },
-  },
-};
+const reportType = [
+  'Other',
+  'Networking',
+  'Electrical',
+  'Plumbing',
+  'Structural Integrity',
+  'Security Systems',
+  'Landscaping',
+];
+
+function handleChange(event) {
+  const selectedValue = event.target.value;
+  emit('selected', selectedValue);
+}
 </script>
 
 <template>
-  <select @change="handleChange">
+  <select id="report-type-selector" @change="handleChange">
     <option value="" selected>
       Filter by Report Type
     </option>

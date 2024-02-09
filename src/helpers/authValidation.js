@@ -1,5 +1,6 @@
 import { refreshAPIToken, testToken } from '../dataProviders/auth';
 import { useUsersStore } from '../stores/usersStore';
+import { tokenKeyword } from '../constants/tokenKeyword';
 
 async function validateUser() {
   const userStore = useUsersStore();
@@ -21,7 +22,7 @@ async function validateUser() {
 
 function authHeaders() {
   const userStore = useUsersStore();
-  return { Authorization: `Bearer ${userStore.getCurrentTokens[0]}` };
+  return { Authorization: `${tokenKeyword} ${userStore.getCurrentTokens[0]}` };
 }
 
 export { validateUser, authHeaders };

@@ -1,38 +1,35 @@
-<script>
-export default {
-  props: {
-    currentPage: {
-      type: Number,
-      required: true,
-    },
-    totalPages: {
-      type: Number,
-      required: true,
-    },
-  },
-  emits: ['pageChange'],
-  computed: {
-    hasPreviousPage() {
-      return this.currentPage > 1;
-    },
-    hasNextPage() {
-      return this.currentPage < this.totalPages;
-    },
-  },
-  methods: {
-    goToPreviousPage() {
-      if (this.hasPreviousPage) {
-        this.$emit('pageChange', this.currentPage - 1);
-      }
-    },
-    goToNextPage() {
-      if (this.hasNextPage) {
-        this.$emit('pageChange', this.currentPage + 1);
-      }
-    },
-  },
+<script setup>
+import { computed } from 'vue';
 
-};
+const props = defineProps({
+  currentPage: {
+    type: Number,
+    required: true,
+  },
+  totalPages: {
+    type: Number,
+    required: true,
+  },
+});
+const emit = defineEmits(['pageChange']);
+
+const hasPreviousPage = computed(() => {
+  return props.currentPage > 1;
+});
+const hasNextPage = computed(() => {
+  return props.currentPage < props.totalPages;
+});
+
+function goToPreviousPage() {
+  if (hasPreviousPage.value) {
+    emit('pageChange', props.currentPage - 1);
+  }
+}
+function goToNextPage() {
+  if (hasNextPage.value) {
+    emit('pageChange', props.currentPage + 1);
+  }
+}
 </script>
 
 <template>
@@ -41,7 +38,7 @@ export default {
       <i v-if="hasPreviousPage" class="fa-solid fa-circle-arrow-left fa-beat" />
       <i v-else class="fa-solid fa-circle-arrow-left" />
     </a>
-    <h4>page {{ currentPage }} of {{ totalPages }}</h4>
+    <h4>page {{ props.currentPage }} of {{ props.totalPages }}</h4>
     <a :disabled="!hasNextPage" @click="goToNextPage">
       <i v-if="hasNextPage" class="fa-solid fa-circle-arrow-right fa-beat" />
       <i v-else class="fa-solid fa-circle-arrow-right" />

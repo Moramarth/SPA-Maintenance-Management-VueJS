@@ -1,37 +1,27 @@
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup>
+import { onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { getProfileById } from '../../../dataProviders/profile';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getCompanyById } from '../../../dataProviders/companies';
 import LoadSpinner from '../../LoadSpinner.vue';
 
-export default {
-  components: {
-    LoadSpinner,
-  },
-  data() {
-    return {
-      isLoading: true,
-      profile: {},
-      company: {},
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentUser']),
-  },
-  async created() {
-    this.profile = await getProfileById(this.getCurrentUser.id);
-    this.company = await getCompanyById(this.profile.company);
-    this.isLoading = false;
-  },
-  methods: {
-    ...mapActions(useUsersStore, ['storeLogoutUser']),
-    handleLogout() {
-      this.storeLogoutUser();
-      this.$router.push({ name: 'login-page' });
-    },
-  },
-};
+const userStore = useUsersStore();
+const router = useRouter();
+const isLoading = ref(true);
+let profile = reactive({});
+let company = reactive({});
+
+onMounted(async () => {
+  profile = await getProfileById(userStore.getCurrentUser.id);
+  company = await getCompanyById(userStore.getCurrentProfile.company);
+  isLoading.value = false;
+});
+
+function handleLogout() {
+  userStore.storeLogoutUser();
+  router.push({ name: 'login-page' });
+}
 </script>
 
 <template>

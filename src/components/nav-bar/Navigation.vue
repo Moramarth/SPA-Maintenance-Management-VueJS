@@ -1,23 +1,9 @@
-<script>
-import { mapState } from 'pinia';
+<script setup>
 import { useUsersStore } from '../../stores/usersStore';
 import AccountDropdown from './components/AccountDropdown.vue';
 import ClientActions from './components/ClientActions.vue';
 
-export default {
-  components: {
-    AccountDropdown,
-    ClientActions,
-  },
-  data() {
-    return {
-      isAuthenticated: true,
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['authenticationStatus']),
-  },
-};
+const userStore = useUsersStore();
 </script>
 
 <template>
@@ -36,7 +22,7 @@ export default {
 
     <div id="navbarSupportedContent" class="navbar-collapse collapse">
       <ul class="navbar-nav">
-        <template v-if="authenticationStatus">
+        <template v-if="userStore.authenticationStatus">
           <li class="nav-item dropdown">
             <a
               id="navbarDropdown"

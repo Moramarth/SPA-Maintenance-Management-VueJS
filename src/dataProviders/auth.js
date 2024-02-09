@@ -1,5 +1,6 @@
 import { useUsersStore } from '../stores/usersStore';
 import { authHeaders } from '../helpers/authValidation';
+import { tokenKeyword } from '../constants/tokenKeyword';
 import { axiosInstance } from './axiosInstance';
 
 const accountsURLs = {
@@ -14,7 +15,6 @@ const accountsURLs = {
   },
 };
 
-const tokenKeyword = 'Bearer';
 const errorFetchingMsg = 'Error fetching data:';
 
 async function getCurrentLoggedUser(accessToken) {

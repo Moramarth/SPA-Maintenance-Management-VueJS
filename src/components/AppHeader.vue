@@ -1,11 +1,5 @@
-<script>
+<script setup>
 import Navigation from './nav-bar/Navigation.vue';
-
-export default {
-  components: {
-    Navigation,
-  },
-};
 </script>
 
 <template>

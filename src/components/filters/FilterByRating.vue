@@ -1,28 +1,18 @@
-<script>
-export default {
-  emits: ['selected'],
-  data() {
-    return {
-      rating: [
-        [1, 'Very Bad'],
-        [2, 'Bad'],
-        [3, 'Good'],
-        [4, 'Very good'],
-        [5, 'Excellent'],
-      ],
-    };
-  },
-  methods: {
-    handleChange(event) {
-      const selectedValue = event.target.value;
-      this.$emit('selected', Number(selectedValue));
-    },
-    reset() {
-      console.log('reset');
-      document.querySelector('#rating').selectedIndex = 0;
-    },
-  },
-};
+<script setup>
+const emit = defineEmits(['selected']);
+
+const rating = [
+  [1, 'Very Bad'],
+  [2, 'Bad'],
+  [3, 'Good'],
+  [4, 'Very good'],
+  [5, 'Excellent'],
+];
+
+function handleChange(event) {
+  const selectedValue = event.target.value;
+  emit('selected', Number(selectedValue));
+}
 </script>
 
 <template>

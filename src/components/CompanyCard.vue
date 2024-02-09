@@ -1,31 +1,29 @@
-<script>
-export default {
-  props: {
-    company: {
-      type: Object,
-      required: true,
-      default: () => {
-        return {
-          id: -1,
-          name: 'Company Name',
-          file: 'default_company_logo.jpg',
-          business_field: 'Compnay Business Field',
-        };
-      },
+<script setup>
+const props = defineProps({
+  company: {
+    type: Object,
+    required: true,
+    default: () => {
+      return {
+        id: -1,
+        name: 'Company Name',
+        file: 'default_company_logo.jpg',
+        business_field: 'Compnay Business Field',
+      };
     },
   },
-};
+});
 </script>
 
 <template>
   <div class="col">
     <div class="card card--box">
-      <router-link :to="{ name: 'company-details', params: { id: company.id } }">
+      <router-link :to="{ name: 'company-details', params: { id: props.company.id } }">
         See Details
       </router-link>
       <img
-        v-if="company.file"
-        :src="company.file"
+        v-if="props.company.file"
+        :src="props.company.file"
         class="card-img-top"
         alt="Company logo"
       >
@@ -37,10 +35,10 @@ export default {
       >
       <div class="card-body">
         <h5 class="card-title">
-          {{ company.name }}
+          {{ props.company.name }}
         </h5>
-        <p v-if="company.business_field" class="card-text">
-          {{ company.business_field }}
+        <p v-if="props.company.business_field" class="card-text">
+          {{ props.company.business_field }}
         </p>
       </div>
     </div>

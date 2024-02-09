@@ -9,6 +9,7 @@ import FilterByReportType from '../../../components/filters/filterByReportType.v
 import FilterSearch from '../../../components/filters/filterSearch.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
+import { paginationReset } from '../../../helpers/filterReset';
 
 export default {
   components: {
@@ -77,7 +78,7 @@ export default {
       this.$refs.searchBar.reset();
 
       this.paginator.rowsPerPage = 5;
-      this.$refs.itemsOnPage.reset();
+      paginationReset();
     },
     handlePageChange(newPage) {
       this.paginator.currentPage = newPage;

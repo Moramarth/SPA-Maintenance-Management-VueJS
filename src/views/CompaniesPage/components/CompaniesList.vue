@@ -4,6 +4,7 @@ import { getCompanies } from '../../../dataProviders/companies';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import FilterSearch from '../../../components/filters/FilterSearch.vue';
+import { paginationReset } from '../../../helpers/filterReset';
 
 export default {
   components: {
@@ -48,7 +49,7 @@ export default {
       this.$refs.search.reset();
 
       this.paginator.rowsPerPage = 5;
-      this.$refs.itemsOnPage.reset();
+      paginationReset();
     },
     searchFilter(value) {
       this.appliedFilters.search = value;
@@ -79,7 +80,7 @@ export default {
                   <FilterSearch ref="search" @is-searching="searchFilter" />
                 </div>
                 <div class="form__col">
-                  <PaginationSelector ref="itemsOnPage" @change-row="handleRowsPerPageChange" />
+                  <PaginationSelector @change-row="handleRowsPerPageChange" />
                 </div>
                 <div class="form__col">
                   <button class="btn btn-primary" @click="clearFilters">

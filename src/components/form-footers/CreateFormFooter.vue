@@ -1,28 +1,26 @@
-<script>
-export default {
-  props: {
-    isEditing: {
-      type: Boolean,
-      required: true,
-    },
-    fallbackURL: {
-      type: Object,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  isEditing: {
+    type: Boolean,
+    required: true,
   },
-  emits: ['isEdited', 'isCreated'],
-};
+  fallbackURL: {
+    type: Object,
+    required: true,
+  },
+});
+const emit = defineEmits(['isEdited', 'isCreated']);
 </script>
 
 <template>
   <div class="form__foot">
-    <button v-if="isEditing" class="btn btn-success" @click.prevent="$emit('isEdited')">
+    <button v-if="props.isEditing" class="btn btn-success" @click.prevent="emit('isEdited')">
       Save
     </button>
-    <button v-else class="btn btn-primary" @click.prevent="$emit('isCreated')">
+    <button v-else class="btn btn-primary" @click.prevent="emit('isCreated')">
       Create
     </button>
-    <router-link :to="fallbackURL">
+    <router-link :to="props.fallbackURL">
       Cancel
     </router-link>
   </div>

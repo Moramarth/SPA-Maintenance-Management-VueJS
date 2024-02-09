@@ -1,31 +1,29 @@
-<script>
-export default {
-  props: {
-    building: {
-      type: Object,
-      required: true,
-      default: () => {
-        return {
-          id: -1,
-          name: 'Building Name',
-          file: 'default_building_picture.png',
-          city: 'Building City',
-        };
-      },
+<script setup>
+const props = defineProps({
+  building: {
+    type: Object,
+    required: true,
+    default: () => {
+      return {
+        id: -1,
+        name: 'Building Name',
+        file: 'default_building_picture.png',
+        city: 'Building City',
+      };
     },
   },
-};
+});
 </script>
 
 <template>
   <div class="col">
     <div class="card card--box">
-      <router-link :to="{ name: 'building-details', params: { id: building.id } }">
+      <router-link :to="{ name: 'building-details', params: { id: props.building.id } }">
         See Details
       </router-link>
       <img
-        v-if="building.file"
-        :src="building.file"
+        v-if="props.building.file"
+        :src="props.building.file"
         class="card-img-top"
         alt="Builing image"
       >
@@ -37,10 +35,10 @@ export default {
       >
       <div class="card-body">
         <h5 class="card-title">
-          {{ building.name }}
+          {{ props.building.name }}
         </h5>
         <p class="card-text">
-          {{ building.city }}
+          {{ props.building.city }}
         </p>
       </div>
     </div>

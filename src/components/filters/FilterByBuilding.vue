@@ -1,29 +1,22 @@
-<script>
+<script setup>
+import { onMounted, ref } from 'vue';
 import { getBuildings } from '../../dataProviders/buildings';
 
-export default {
-  emits: ['selected'],
-  data() {
-    return {
-      buildings: [],
-    };
-  },
-  async created() {
-    this.buildings = await getBuildings();
-  },
-  methods: {
-    handleSelection(event) {
-      this.$emit('selected', event.target.value);
-    },
-    reset() {
-      document.querySelector('#buildingFilter').selectedIndex = 0;
-    },
-  },
-};
+const emit = defineEmits(['selected']);
+
+const buildings = ref([]);
+
+onMounted(async () => {
+  buildings.value = await getBuildings();
+});
+
+function handleSelection(event) {
+  emit('selected', event.target.value);
+}
 </script>
 
 <template>
-  <select id="buildingFilter" @change="handleSelection">
+  <select id="buildings-filter" @change="handleSelection">
     <option>
       Filter by Building
     </option>

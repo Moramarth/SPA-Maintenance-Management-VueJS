@@ -4,6 +4,7 @@ import FilterByRating from '../../../components/filters/FilterByRating.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import { getReviews } from '../../../dataProviders/reviews';
+import { paginationReset } from '../../../helpers/filterReset';
 
 export default {
   components: {
@@ -60,7 +61,7 @@ export default {
       this.$refs.rating.reset();
 
       this.paginator.rowsPerPage = 5;
-      this.$refs.itemsOnPage.reset();
+      paginationReset();
     },
   },
 
@@ -81,7 +82,7 @@ export default {
                 <FilterByRating ref="rating" @selected="handleRatingChange" />
               </div>
               <div class="form__col">
-                <PaginationSelector ref="itemsOnPage" @change-row="handleRowsPerPageChange" />
+                <PaginationSelector @change-row="handleRowsPerPageChange" />
               </div>
               <div class="form__col">
                 <button class="btn btn-primary" @click="clearFilters">
