@@ -1,55 +1,71 @@
 import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 import { getProfileById } from '../dataProviders/profile';
 import { getCurrentLoggedUser } from '../dataProviders/auth';
 
-export const useUsersStore = defineStore('users', {
-  state: () => ({
-    currentUser: null,
-    currentProfile: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthenticated: false,
-  }),
-  getters: {
-    getCurrentUser: state => state.currentUser,
-    getCurrentTokens: state => [state.accessToken, state.refreshToken],
-    getCurrentProfile: state => state.currentProfile,
-    authenticationStatus: state => state.isAuthenticated,
-  },
-  actions: {
-    setAccessToken(token) {
-      localStorage.removeItem('accessToken');
-      this.accessToken = token;
-      localStorage.setItem('accessToken', this.accessToken);
-    },
-    async storeLoginUser(refresh, access) {
-      this.accessToken = access;
-      this.refreshToken = refresh;
-      localStorage.setItem('user', JSON.stringify(await getCurrentLoggedUser(access)));
-      localStorage.setItem('accessToken', this.accessToken);
-      localStorage.setItem('refreshToken', this.refreshToken);
-      this.getPersistedUser();
-    },
-    async getPersistedUser() {
-      const persisted = localStorage.getItem('user');
-      const access = localStorage.getItem('accessToken');
-      const refresh = localStorage.getItem('refreshToken');
-      if (!persisted || !access || !refresh)
-        return;
-      this.currentUser = JSON.parse(persisted);
-      this.accessToken = access;
-      this.refreshToken = refresh;
-      this.currentProfile = await getProfileById(this.currentUser.id);
-      this.isAuthenticated = true;
-    },
-    storeLogoutUser() {
-      this.currentUser = null;
-      this.accessToken = null;
-      this.refreshToken = null;
-      this.isAuthenticated = false;
-      localStorage.removeItem('user');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-    },
-  },
+export const useUsersStore = defineStore('users', () => {
+  const currentUser = ref(null);
+  const currentProfile = ref(null);
+  const accessToken = ref(null);
+  const refreshToken = ref(null);
+  const isAuthenticated = ref(false);
+
+  const getCurrentUser = computed(() => currentUser.value);
+  const getCurrentTokens = computed(() => [accessToken.value, refreshToken.value]);
+  const getCurrentProfile = computed(() => currentProfile.value);
+  const authenticationStatus = computed(() => isAuthenticated.value);
+
+  function setAccessToken(token) {
+    localStorage.removeItem('accessToken');
+    accessToken.value = token;
+    localStorage.setItem('accessToken', accessToken);
+  }
+
+  async function storeLoginUser(refresh, access) {
+    accessToken.value = access;
+    refreshToken.value = refresh;
+    localStorage.setItem('user', JSON.stringify(await getCurrentLoggedUser(access)));
+    localStorage.setItem('accessToken', accessToken.value);
+    localStorage.setItem('refreshToken', refreshToken.value);
+    await getPersistedUser();
+  }
+
+  async function getPersistedUser() {
+    const persisted = localStorage.getItem('user');
+    const access = localStorage.getItem('accessToken');
+    const refresh = localStorage.getItem('refreshToken');
+    if (!persisted || !access || !refresh)
+      return;
+    currentUser.value = JSON.parse(persisted);
+    accessToken.value = access;
+    refreshToken.value = refresh;
+    currentProfile.value = await getProfileById(currentUser.value.id);
+    isAuthenticated.value = true;
+  }
+
+  function storeLogoutUser() {
+    currentUser.value = null;
+    accessToken.value = null;
+    refreshToken.value = null;
+    isAuthenticated.value = false;
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
+
+  return {
+    currentUser,
+    currentProfile,
+    accessToken,
+    refreshToken,
+    isAuthenticated,
+    getCurrentUser,
+    getCurrentTokens,
+    getCurrentProfile,
+    authenticationStatus,
+    setAccessToken,
+    storeLoginUser,
+    getPersistedUser,
+    storeLogoutUser,
+  };
 });
