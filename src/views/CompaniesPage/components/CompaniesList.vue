@@ -1,68 +1,55 @@
-<script>
+<script setup>
+import { computed, onMounted, reactive, ref } from 'vue';
 import CompanyCard from '../../../components/CompanyCard.vue';
 import { getCompanies } from '../../../dataProviders/companies';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import FilterSearch from '../../../components/filters/FilterSearch.vue';
-import { paginationReset } from '../../../helpers/filterReset';
+import { paginationReset, searchReset } from '../../../helpers/filterReset';
 
-export default {
-  components: {
-    CompanyCard,
-    Pagination,
-    PaginationSelector,
-    FilterSearch,
+const array = ref([]);
+const appliedFilters = reactive({
+  search: '',
+});
+const paginator = reactive({
+  currentPage: 1,
+  rowsPerPage: 5,
+});
 
-  },
-  data() {
-    return {
-      array: [],
-      appliedFilters: {
-        search: '',
-      },
-      paginator: {
-        currentPage: 1,
-        rowsPerPage: 5,
-      },
-    };
-  },
-  computed: {
-    filterCompanies() {
-      let filteredCompanies = [...this.array];
+const filterCompanies = computed(() => {
+  let filteredCompanies = [...array.value];
 
-      if (this.appliedFilters.search)
-        filteredCompanies = filteredCompanies.filter(company => company.name.includes(this.appliedFilters.search));
-      const startIndex = (this.paginator.currentPage - 1) * this.paginator.rowsPerPage;
-      const endIndex = startIndex + this.paginator.rowsPerPage;
-      return filteredCompanies.slice(startIndex, endIndex);
-    },
-    totalPages() {
-      return Math.ceil(this.filterCompanies.length / this.paginator.rowsPerPage);
-    },
-  },
-  async created() {
-    this.array = await getCompanies();
-  },
-  methods: {
-    clearFilters() {
-      this.appliedFilters.search = '';
-      this.$refs.search.reset();
+  if (appliedFilters.search)
+    filteredCompanies = filteredCompanies.filter(company => company.name.includes(appliedFilters.search));
+  const startIndex = (paginator.currentPage - 1) * paginator.rowsPerPage;
+  const endIndex = startIndex + paginator.rowsPerPage;
+  return filteredCompanies.slice(startIndex, endIndex);
+});
+const totalPages = computed(() => {
+  return Math.ceil(filterCompanies.value.length / paginator.rowsPerPage);
+});
 
-      this.paginator.rowsPerPage = 5;
-      paginationReset();
-    },
-    searchFilter(value) {
-      this.appliedFilters.search = value;
-    },
-    handlePageChange(newPage) {
-      this.paginator.currentPage = newPage;
-    },
-    handleRowsPerPageChange(value) {
-      this.paginator.rowsPerPage = Number(value);
-      this.paginator.currentPage = 1;
-    },
-  },
-};
+onMounted (async () => {
+  array.value = await getCompanies();
+});
+
+function clearFilters() {
+  appliedFilters.search = '';
+  searchReset();
+
+  paginator.rowsPerPage = 5;
+  paginationReset();
+}
+function searchFilter(value) {
+  appliedFilters.search = value;
+}
+function handlePageChange(newPage) {
+  paginator.currentPage = newPage;
+}
+function handleRowsPerPageChange(value) {
+  paginator.rowsPerPage = Number(value);
+  paginator.currentPage = 1;
+}
 </script>
 
 <template>
@@ -77,7 +64,7 @@ export default {
             <div class="form__wrap">
               <div class="form__foot">
                 <div class="form__col">
-                  <FilterSearch ref="search" @is-searching="searchFilter" />
+                  <FilterSearch @is-searching="searchFilter" />
                 </div>
                 <div class="form__col">
                   <PaginationSelector @change-row="handleRowsPerPageChange" />

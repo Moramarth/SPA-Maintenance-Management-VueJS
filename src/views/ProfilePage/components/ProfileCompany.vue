@@ -1,36 +1,27 @@
-<script>
-import { mapState } from 'pinia';
+<script setup>
+import { computed, onMounted, ref } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { getCompanyById } from '../../../dataProviders/companies';
 import { useUsersStore } from '../../../stores/usersStore';
 
-export default {
-  components: {
-    LoadSpinner,
+const props = defineProps({
+  profileObject: {
+    type: Object,
+    required: true,
   },
-  props: {
-    profileObject: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      company: {},
-      isLoading: true,
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentUser', 'getCurrentProfile']),
-    profileCompany() {
-      return this.getCurrentProfile.company;
-    },
-  },
-  async created() {
-    this.company = await getCompanyById(this.profileObject.company);
-    this.isLoading = false;
-  },
-};
+});
+const userStore = useUsersStore();
+const company = ref({});
+const isLoading = ref(true);
+
+const profileCompany = computed(() => {
+  return userStore.getCurrentProfile.company;
+});
+
+onMounted (async () => {
+  company.value = await getCompanyById(props.profileObject.company);
+  isLoading.value = false;
+});
 </script>
 
 <template>
@@ -44,8 +35,8 @@ export default {
     </div>
     <div class="block__content">
       <h1>
-        {{ company.name }}
-        <router-link :to="{ name: 'company-details', params: { id: company.id } }">
+        {{ company.value.name }}
+        <router-link :to="{ name: 'company-details', params: { id: company.value.id } }">
           <i
             class="fa-solid fa-arrow-right-to-bracket"
             data-toggle="tooltip"
@@ -54,14 +45,14 @@ export default {
         </router-link>
       </h1>
       <div class="form-main form-main--filters">
-        <div v-if="company.business_field" class="form__label">
+        <div v-if="company.value.business_field" class="form__label">
           <label>Business Field:</label>
-          {{ company.business_field }}
+          {{ company.value.business_field }}
         </div>
-        <div v-if="profileCompany === company.id" class="form__label">
+        <div v-if="profileCompany === company.value.id" class="form__label">
           <router-link
             class="btn btn-danger"
-            :to="{ name: 'edit-company', params: { id: company.id } }"
+            :to="{ name: 'edit-company', params: { id: company.value.id } }"
           >
             Edit
             Company
@@ -73,6 +64,5 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>

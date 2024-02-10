@@ -1,43 +1,37 @@
-<script>
+<script setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { getBuildingById } from '../../../dataProviders/buildings';
 
-export default {
+const route = useRoute();
+const object = ref({});
 
-  data() {
-    return {
-      object: {},
-    };
-  },
-  computed: {
-    markerDetails() {
-      return {
-        id: 1,
-        position: {
-          lat: this.object.latitude,
-          lng: this.object.longitude,
-        },
-
-      };
+const markerDetails = computed(() => {
+  return {
+    id: 1,
+    position: {
+      lat: object.value.latitude,
+      lng: object.value.longitude,
     },
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'building-details')
-          this.loadObject();
-      },
+  };
+});
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    async loadObject() {
-      const id = this.$route.params.id;
-      this.object = await getBuildingById(id);
+onMounted (async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'building-details')
+        loadObject();
     },
-  },
-};
+
+    { immediate: true },
+  );
+});
+
+async function loadObject() {
+  const id = route.params.id;
+  object.value = await getBuildingById(id);
+}
 </script>
 
 <template>
@@ -50,16 +44,16 @@ export default {
         <div class="section__body-group">
           <div class="block-review">
             <div class="block__image">
-              <img v-if="object.file" :src="object.file" alt="Building Picture">
+              <img v-if="object.value.file" :src="object.value.file" alt="Building Picture">
               <img v-else src="../../../../public/default_building_picture.png" alt="Building Picture">
             </div>
             <div class="block__content">
               <div class="block__content-bg">
-                <p><strong>Name:</strong> {{ object.name }} </p>
-                <p><strong>City:</strong>{{ object.city }} </p>
-                <p><strong>Address:</strong>{{ object.address }} </p>
+                <p><strong>Name:</strong> {{ object.value.name }} </p>
+                <p><strong>City:</strong>{{ object.value.city }} </p>
+                <p><strong>Address:</strong>{{ object.value.address }} </p>
                 <p>
-                  <strong>Current tenants:</strong> {{ String(object.tenants) }} companies
+                  <strong>Current tenants:</strong> {{ String(object.value.tenants) }} companies
                 </p>
               </div>
             </div>
@@ -84,7 +78,7 @@ export default {
 
           <GMapMap
 
-            :center="{ lat: object.latitude, lng: object.longitude }"
+            :center="{ lat: object.value.latitude, lng: object.value.longitude }"
             :zoom="13"
             map-type-id="roadmap"
             style="width: 100%; height: 60rem"

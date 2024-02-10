@@ -1,33 +1,25 @@
-<script>
+<script setup>
+import { onMounted, ref } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { getCompanyAddress } from '../../../dataProviders/companies';
 import { getBuildingById } from '../../../dataProviders/buildings';
 
-export default {
-  components: {
-    LoadSpinner,
+const props = defineProps({
+  companyId: {
+    type: Number,
+    required: true,
   },
-  props: {
-    companyId: {
-      type: Number,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      isLoading: true,
-      address: {},
-      building: {},
-    };
-  },
+});
 
-  async created() {
-    this.address = await getCompanyAddress(this.companyId);
-    this.building = await getBuildingById(this.address.building);
-    this.isLoading = false;
-  },
+const isLoading = ref(true);
+const address = ref({});
+const building = ref({});
 
-};
+onMounted (async () => {
+  address.value = await getCompanyAddress(props.companyId);
+  building.value = await getBuildingById(address.value.building);
+  isLoading.value = false;
+});
 </script>
 
 <template>
@@ -37,12 +29,12 @@ export default {
       <div class="form__label">
         <label>Address:</label>
       </div>
-      <p> {{ building.city }}, {{ building.address }}</p>
+      <p> {{ building.value.city }}, {{ building.value.address }}</p>
       <div class="form__label">
         <label>Building:</label>
       </div>
       {{ building.name }}
-      <router-link :to="{ name: 'building-details', params: { id: building.id } }" target="_blank">
+      <router-link :to="{ name: 'building-details', params: { id: building.value.id } }" target="_blank">
         <i
           class="fa-solid fa-arrow-right-to-bracket"
           data-toggle="tooltip"
@@ -53,13 +45,12 @@ export default {
       <div class="form__label">
         <label>Location:</label>
       </div>
-      <span v-if="address.section">{{ address.section }}, </span>
-      floor {{ address.floor }},
-      office {{ address.office_number }}
+      <span v-if="address.value.section">{{ address.value.section }}, </span>
+      floor {{ address.value.floor }},
+      office {{ address.value.office_number }}
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>

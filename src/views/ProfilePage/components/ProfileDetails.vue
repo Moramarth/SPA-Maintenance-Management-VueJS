@@ -1,5 +1,6 @@
-<script>
-import { mapState } from 'pinia';
+<script setup>
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { getProfileById } from '../../../dataProviders/profile';
 import { getUserById } from '../../../dataProviders/auth';
@@ -7,48 +8,36 @@ import { useUsersStore } from '../../../stores/usersStore';
 import ProfileCompany from '../components/ProfileCompany.vue';
 import ProfileAddress from './profileAddress.vue';
 
-export default {
-  components: {
-    LoadSpinner,
-    ProfileCompany,
-    ProfileAddress,
-  },
-  data() {
-    return {
-      isLoading: true,
-      object: {},
-      user: {},
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentUser']),
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'profile-details')
-          this.loadObject();
-      },
+const route = useRoute();
+const router = useRouter;
+const userStore = useUsersStore();
+const isLoading = ref(true);
+const object = ref({});
+const user = ref({});
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    async loadObject() {
-      const id = Number(this.$route.params.id);
-      const profile = await getProfileById(id);
-      if (Object.keys(profile).length === 0)
-        this.$router.push({ name: 'NotFound' });
-      else {
-        this.object = profile;
-        this.isLoading = false;
-        this.user = await getUserById(id);
-      }
+onMounted(async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'profile-details')
+        loadObject();
     },
-  },
 
-};
+    { immediate: true },
+  );
+});
+
+async function loadObject() {
+  const id = Number(route.params.id);
+  const profile = await getProfileById(id);
+  if (Object.keys(profile).length === 0)
+    router.push({ name: 'NotFound' });
+  else {
+    object.value = profile;
+    isLoading.value = false;
+    user.value = await getUserById(id);
+  }
+}
 </script>
 
 <template>
@@ -114,21 +103,21 @@ export default {
             >
               <div class="block-testimonial">
                 <div class="block__image">
-                  <img v-if="object.file" :src="object.file" alt="Profile Picture">
+                  <img v-if="object.value.file" :src="object.value.file" alt="Profile Picture">
 
                   <img v-else src="../../../../public/default_profile_picture.png" alt="">
                 </div>
                 <div class="block__content">
-                  <h1>{{ object.first_name }} {{ object.last_name }}</h1>
+                  <h1>{{ object.value.first_name }} {{ object.value.last_name }}</h1>
                   <div class="form-main form-main--filters">
                     <div class="form__label">
-                      <label>Phone number:</label> {{ object.phone_number }}
-                      <label>Email:</label> {{ user.email }}
+                      <label>Phone number:</label> {{ object.value.phone_number }}
+                      <label>Email:</label> {{ user.value.email }}
                     </div>
-                    <div v-if="getCurrentUser?.id === object.user" class="form__foot">
+                    <div v-if="userStore.getCurrentUser?.id === object.value.user" class="form__foot">
                       <router-link
                         class="btn btn-warning"
-                        :to="{ name: 'edit-profile', params: { id: object.user } }"
+                        :to="{ name: 'edit-profile', params: { id: object.value.user } }"
                       >
                         Edit
                         Profile
@@ -152,7 +141,7 @@ export default {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              <ProfileCompany :profile-object="object" />
+              <ProfileCompany :profile-object="object.value" />
             </div>
             <div
               id="contact"
@@ -160,7 +149,7 @@ export default {
               role="tabpanel"
               aria-labelledby="contact-tab"
             >
-              <ProfileAddress :company-id="object.company" />
+              <ProfileAddress :company-id="object.value.company" />
             </div>
           </div>
         </div>
@@ -169,6 +158,5 @@ export default {
   </section>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>

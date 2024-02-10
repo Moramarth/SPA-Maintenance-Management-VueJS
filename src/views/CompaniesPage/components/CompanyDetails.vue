@@ -1,5 +1,6 @@
-<script>
-import { mapState } from 'pinia';
+<script setup>
+import { useRoute } from 'vue-router';
+import { computed, onMounted, ref, watch } from 'vue';
 import { getCompanyById } from '../../../dataProviders/companies';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
@@ -7,48 +8,37 @@ import LoadSpinner from '../../../components/LoadSpinner.vue';
 import CompanyAddress from './CompanyAddress.vue';
 import CompanyEmployees from './CompanyEmployees.vue';
 
-export default {
-  components: {
-    LoadSpinner,
-    CompanyAddress,
-    CompanyEmployees,
-  },
-  data() {
-    return {
-      object: {},
-      formatDate,
-      isLoading: true,
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
-    canEdit() {
-      if (this.getCurrentUser) {
-        return true;
-      }
-      return false;
-    },
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'company-details')
-          this.loadObject();
-      },
-      { immediate: true },
+const route = useRoute();
+const userStore = useUsersStore();
 
-    );
-  },
-  methods: {
-    async loadObject() {
-      const id = this.$route.params.id;
-      this.object = await getCompanyById(id);
-      this.isLoading = false;
-    },
-  },
+const object = ref({});
+const isLoading = ref(true);
 
-};
+// ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
+const canEdit = computed(() => {
+  if (userStore.getCurrentUser) {
+    return true;
+  }
+  return false;
+});
+
+onMounted (async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'company-details')
+        loadObject();
+    },
+    { immediate: true },
+
+  );
+});
+
+async function loadObject() {
+  const id = route.params.id;
+  object.value = await getCompanyById(id);
+  isLoading.value = false;
+}
 </script>
 
 <template>
@@ -75,7 +65,7 @@ export default {
             </button>
           </li>
 
-          <template v-if="authenticationStatus">
+          <template v-if="userStore.authenticationStatus">
             <li class="nav-item" role="presentation">
               <button
                 id="profile-tab"
@@ -117,30 +107,30 @@ export default {
             >
               <div class="block-testimonial">
                 <div class="block__image">
-                  <img v-if="object.file" :src="object.file" alt="Company Logo">
+                  <img v-if="object.value.file" :src="object.value.file" alt="Company Logo">
 
                   <img v-else src="../../../../public/default_company_logo.jpg" alt="Default Company logo">
                 </div>
                 <div class="block__content">
-                  <h1>{{ object.name }}</h1>
+                  <h1>{{ object.value.name }}</h1>
                   <div class="form-main form-main--filters">
                     <div class="form__label">
-                      <template v-if="object.business_field">
+                      <template v-if="object.value.business_field">
                         <label>Business Field:</label>
-                        {{ object.business_field }}
+                        {{ object.value.business_field }}
                       </template>
 
-                      <template v-if="object.additional_information">
+                      <template v-if="object.value.additional_information">
                         <label>About us:</label>
-                        {{ object.additional_information }}
+                        {{ object.value.additional_information }}
                       </template>
                     </div>
                     <div class="form__label">
                       <p class="text-muted">
-                        Partner since: {{ formatDate(object.created_on) }}
+                        Partner since: {{ formatDate(object.value.created_on) }}
                       </p>
 
-                      <router-link v-if="canEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
+                      <router-link v-if="canEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.value.id } }">
                         Edit
                         Company Info
                       </router-link>
@@ -157,7 +147,7 @@ export default {
                 role="tabpanel"
                 aria-labelledby="profile-tab"
               >
-                <CompanyAddress :company-id="object.id" />
+                <CompanyAddress :company-id="object.value.id" />
               </div>
 
               <div
@@ -166,7 +156,7 @@ export default {
                 role="tabpanel"
                 aria-labelledby="contact-tab"
               >
-                <CompanyEmployees :company-id="object.id" />
+                <CompanyEmployees :company-id="object.value.id" />
               </div>
             </template>
           </div>
@@ -176,6 +166,5 @@ export default {
   </section>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>
