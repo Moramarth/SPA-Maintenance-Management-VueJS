@@ -1,80 +1,71 @@
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength } from '@vuelidate/validators';
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { editReview, getReviewById } from '../../../dataProviders/reviews';
 import { getServiceReportById } from '../../../dataProviders/serviceReports';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 
-export default {
-  components: {
-    CreateFormFooter,
-    ValidationMessege,
-  },
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      object: {
-        comment: '',
-      },
-      serviceReport: {},
-      rating: [
-        [1, 'Very Bad'],
-        [2, 'Bad'],
-        [3, 'Good'],
-        [4, 'Very good'],
-        [5, 'Excellent'],
-      ],
-    };
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'edit-review')
-          this.loadObject();
-      },
+const route = useRoute();
+const router = useRouter();
+const object = ref({
+  comment: '',
+});
+const serviceReport = ref({});
+const rating = [
+  [1, 'Very Bad'],
+  [2, 'Bad'],
+  [3, 'Good'],
+  [4, 'Very good'],
+  [5, 'Excellent'],
+];
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    async loadObject() {
-      const id = Number(this.$route.params.id);
-      const review = await getReviewById(id);
-      if (Object.keys(review).length === 0)
-        this.$router.push({ name: 'NotFound' });
-      else {
-        this.object = review;
-        const reportId = this.object.service_report ?? null;
-        if (reportId)
-          this.serviceReport = await getServiceReportById(reportId);
-      }
-    },
-    async handleEdit() {
-      const isValid = await this.v$.$validate();
-      if (isValid) {
-        const reviewData = {
-          rating: Number(document.querySelector('#review-rating').value),
-          comment: this.object.comment,
-        };
-        await editReview(this.object.id, reviewData);
-        this.$router.push({ name: 'review-details', params: { id: this.object.id } });
-      }
-    },
+const rules = {
+  object: {
+    comment: { maxLength: maxLength(500) },
 
-  },
-  validations() {
-    return {
-      object: {
-        comment: { maxLength: maxLength(500) },
-      },
-
-    };
   },
 };
+
+const v$ = useVuelidate(rules, { object });
+
+onMounted(async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'edit-review')
+        loadObject();
+    },
+
+    { immediate: true },
+  );
+});
+
+async function loadObject() {
+  const id = Number(route.params.id);
+  const review = await getReviewById(id);
+  if (Object.keys(review).length === 0)
+    router.push({ name: 'NotFound' });
+  else {
+    object.value = review;
+    const reportId = object.value.service_report ?? null;
+    if (reportId)
+      serviceReport.value = await getServiceReportById(reportId);
+  }
+}
+async function handleEdit() {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    const reviewData = {
+      rating: Number(document.querySelector('#review-rating').value),
+      comment: object.value.comment,
+    };
+    await editReview(object.value.id, reviewData);
+    router.push({ name: 'review-details', params: { id: object.value.id } });
+  }
+}
 </script>
 
 <template>

@@ -1,66 +1,49 @@
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength } from '@vuelidate/validators';
-import { mapActions, mapState } from 'pinia';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { createReview } from '../../../dataProviders/reviews';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 
-export default {
-  components: {
-    CreateFormFooter,
-    ValidationMessege,
-  },
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      serviceReport: {},
-      object: {
-        comment: '',
-      },
+const router = useRouter();
+const tempObjStore = useTempObjectStore();
+const serviceReport = ref({});
+const object = ref({
+  comment: '',
+});
 
-      rating: [
-        [1, 'Very Bad'],
-        [2, 'Bad'],
-        [3, 'Good'],
-        [4, 'Very good'],
-        [5, 'Excellent'],
-      ],
+const rating = [
+  [1, 'Very Bad'],
+  [2, 'Bad'],
+  [3, 'Good'],
+  [4, 'Very good'],
+  [5, 'Excellent'],
+];
 
-    };
-  },
-  computed: {
-    ...mapState(useTempObjectStore, ['getTempObject']),
-  },
-  methods: {
-    ...mapActions(useTempObjectStore, ['clearTempObject']),
-    async handleCreation() {
-      const isValid = await this.v$.$validate();
-      if (isValid) {
-        this.serviceReport = this.getTempObject;
-        const reviewData = {
-          service_report: this.serviceReport.id,
-          rating: Number(document.querySelector('#review-rating').value),
-          comment: this.object.comment,
-        };
-        await createReview(reviewData);
-        this.clearTempObject();
-        this.$router.push({ name: 'show-all-reviews' });
-      }
-    },
-  },
-  validations() {
-    return {
-      object: {
-        comment: { maxLength: maxLength(500) },
-      },
-
-    };
+const rules = {
+  object: {
+    comment: { maxLength: maxLength(500) },
   },
 };
+const v$ = useVuelidate(rules, { object });
+
+async function handleCreation() {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    serviceReport.value = tempObjStore.getTempObject;
+    const reviewData = {
+      service_report: serviceReport.value.id,
+      rating: Number(document.querySelector('#review-rating').value),
+      comment: object.value.comment,
+    };
+    await createReview(reviewData);
+    tempObjStore.clearTempObject();
+    router.push({ name: 'show-all-reviews' });
+  }
+}
 </script>
 
 <template>

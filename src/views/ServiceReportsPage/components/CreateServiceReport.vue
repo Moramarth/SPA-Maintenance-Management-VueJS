@@ -1,93 +1,78 @@
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, required } from '@vuelidate/validators';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { createServiceReport } from '../../../dataProviders/serviceReports';
 
-export default {
-  components: {
-    CreateFormFooter,
-    ValidationMessege,
-  },
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      reportType: [
-        'Other',
-        'Networking',
-        'Electrical',
-        'Plumbing',
-        'Structural Integrity',
-        'Security Systems',
-        'Landscaping',
-      ],
-      object: {
-        title: '',
-        description: '',
-        file: null,
-        report_type: '',
-        imageType: 'null',
-        imageName: 'null',
-      },
-      validationError: false,
-      MAX_FILE_SIZE: MAX_FILE_SIZE_IN_MB,
-      isLoading: false,
-
-    };
-  },
-  methods: {
-    async handleCreation() {
-      const isValid = await this.v$.$validate();
-      if (isValid) {
-        this.isLoading = true;
-        const reportData = {
-          title: this.object.title,
-          description: this.object.description,
-          file: this.object.file,
-          extension: this.object.imageType,
-          filename: this.object.imageName,
-          report_type: document.querySelector('#report-type').value,
-        };
-        await createServiceReport(reportData);
-        this.isLoading = false;
-        this.$router.push({ name: 'show-all-service-reports' });
-      }
-    },
-    handleFileUploaded(event) {
-      const file = event.target.files[0];
-      this.validateImg(file);
-      if (file) {
-        this.object.imageName = file.name.slice(0, file.name.length / 2);
-        const reader = new FileReader();
-        const extension = file.type.replace('image/', '');
-        this.object.imageType = `.${extension}`;
-        reader.onload = () => {
-          this.object.file = reader.result.split(',')[1];
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    validateImg(file) {
-      if (file.size > this.MAX_FILE_SIZE * 1024 * 1024)
-        this.validationError = true;
-      else
-        this.validationError = false;
-    },
-  },
-  validations() {
-    return {
-      object: {
-        title: { required, maxLength: maxLength(50) },
-        description: { required, maxLength: maxLength(500) },
-      },
-
-    };
+const router = useRouter();
+const reportType = [
+  'Other',
+  'Networking',
+  'Electrical',
+  'Plumbing',
+  'Structural Integrity',
+  'Security Systems',
+  'Landscaping',
+];
+const object = ref({
+  title: '',
+  description: '',
+  file: null,
+  report_type: '',
+  imageType: 'null',
+  imageName: 'null',
+});
+const validationError = ref(false);
+const isLoading = ref(false);
+const rules = {
+  object: {
+    title: { required, maxLength: maxLength(50) },
+    description: { required, maxLength: maxLength(500) },
   },
 };
+const v$ = useVuelidate(rules, { object });
+
+async function handleCreation() {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    isLoading.value = true;
+    const reportData = {
+      title: object.value.title,
+      description: object.value.description,
+      file: object.value.file,
+      extension: object.value.imageType,
+      filename: object.value.imageName,
+      report_type: document.querySelector('#report-type').value,
+    };
+    await createServiceReport(reportData);
+    isLoading.value = false;
+    router.push({ name: 'show-all-service-reports' });
+  }
+}
+function handleFileUploaded(event) {
+  const file = event.target.files[0];
+  validateImg(file);
+  if (file) {
+    object.value.imageName = file.name.slice(0, file.name.length / 2);
+    const reader = new FileReader();
+    const extension = file.type.replace('image/', '');
+    object.value.imageType = `.${extension}`;
+    reader.onload = () => {
+      object.value.file = reader.result.split(',')[1];
+    };
+    reader.readAsDataURL(file);
+  }
+}
+function validateImg(file) {
+  if (file.size > MAX_FILE_SIZE_IN_MB * 1024 * 1024)
+    validationError.value = true;
+  else
+    validationError.value = false;
+}
 </script>
 
 <template>
@@ -126,7 +111,7 @@ export default {
               <input type="file" :disabled="isLoading" @change="handleFileUploaded">
 
               <div v-if="validationError" class="error-msg">
-                The maximum file size that can be uploaded is{{ MAX_FILE_SIZE }} MB
+                The maximum file size that can be uploaded is{{ MAX_FILE_SIZE_IN_MB }} MB
               </div>
 
               <label for="report-type">Report Type:</label>

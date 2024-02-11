@@ -9,7 +9,7 @@ import ProfileCompany from '../components/ProfileCompany.vue';
 import ProfileAddress from './profileAddress.vue';
 
 const route = useRoute();
-const router = useRouter;
+const router = useRouter();
 const userStore = useUsersStore();
 const isLoading = ref(true);
 const object = ref({});
@@ -103,21 +103,21 @@ async function loadObject() {
             >
               <div class="block-testimonial">
                 <div class="block__image">
-                  <img v-if="object.value.file" :src="object.value.file" alt="Profile Picture">
+                  <img v-if="object.file" :src="object.file" alt="Profile Picture">
 
                   <img v-else src="../../../../public/default_profile_picture.png" alt="">
                 </div>
                 <div class="block__content">
-                  <h1>{{ object.value.first_name }} {{ object.value.last_name }}</h1>
+                  <h1>{{ object.first_name }} {{ object.last_name }}</h1>
                   <div class="form-main form-main--filters">
                     <div class="form__label">
-                      <label>Phone number:</label> {{ object.value.phone_number }}
-                      <label>Email:</label> {{ user.value.email }}
+                      <label>Phone number:</label> {{ object.phone_number }}
+                      <label>Email:</label> {{ user.email }}
                     </div>
-                    <div v-if="userStore.getCurrentUser?.id === object.value.user" class="form__foot">
+                    <div v-if="userStore.getCurrentUser?.id === object.user" class="form__foot">
                       <router-link
                         class="btn btn-warning"
-                        :to="{ name: 'edit-profile', params: { id: object.value.user } }"
+                        :to="{ name: 'edit-profile', params: { id: object.user } }"
                       >
                         Edit
                         Profile
@@ -141,7 +141,7 @@ async function loadObject() {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              <ProfileCompany :profile-object="object.value" />
+              <ProfileCompany :profile-object="object" />
             </div>
             <div
               id="contact"
@@ -149,7 +149,7 @@ async function loadObject() {
               role="tabpanel"
               aria-labelledby="contact-tab"
             >
-              <ProfileAddress :company-id="object.value.company" />
+              <ProfileAddress :company-id="object.company" />
             </div>
           </div>
         </div>

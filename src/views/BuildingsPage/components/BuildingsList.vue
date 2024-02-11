@@ -79,7 +79,7 @@ function handleRowsPerPageChange(value) {
           </div>
         </div>
         <div class="section__body-group">
-          <h1 v-if="array.value.length === 0">
+          <h1 v-if="array.length === 0">
             No Buildings to show
           </h1>
           <div v-else class="row row-cols-1 row-cols-md-3 g-4">

@@ -35,8 +35,8 @@ onMounted (async () => {
     </div>
     <div class="block__content">
       <h1>
-        {{ company.value.name }}
-        <router-link :to="{ name: 'company-details', params: { id: company.value.id } }">
+        {{ company.name }}
+        <router-link :to="{ name: 'company-details', params: { id: company.id } }">
           <i
             class="fa-solid fa-arrow-right-to-bracket"
             data-toggle="tooltip"
@@ -45,14 +45,14 @@ onMounted (async () => {
         </router-link>
       </h1>
       <div class="form-main form-main--filters">
-        <div v-if="company.value.business_field" class="form__label">
+        <div v-if="company.business_field" class="form__label">
           <label>Business Field:</label>
-          {{ company.value.business_field }}
+          {{ company.business_field }}
         </div>
-        <div v-if="profileCompany === company.value.id" class="form__label">
+        <div v-if="profileCompany === company.id" class="form__label">
           <router-link
             class="btn btn-danger"
-            :to="{ name: 'edit-company', params: { id: company.value.id } }"
+            :to="{ name: 'edit-company', params: { id: company.id } }"
           >
             Edit
             Company

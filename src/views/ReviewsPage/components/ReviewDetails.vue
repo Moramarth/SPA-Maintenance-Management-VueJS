@@ -1,40 +1,35 @@
-<script>
-import { mapState } from 'pinia';
+<script setup>
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getReviewById } from '../../../dataProviders/reviews';
 
-export default {
-  data() {
-    return {
-      object: {},
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'review-details')
-          this.loadObject();
-      },
+const route = useRoute();
+const router = useRouter();
+const userStore = useUsersStore();
+const object = ref({});
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    async loadObject() {
-      const id = Number(this.$route.params.id);
-      const review = await getReviewById(id);
-      if (Object.keys(review).length === 0)
-        this.$router.push({ name: 'NotFound' });
-      else {
-        this.object = review;
-      }
+onMounted(async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'review-details')
+        loadObject();
     },
-  },
-};
+
+    { immediate: true },
+  );
+});
+
+async function loadObject() {
+  const id = Number(route.params.id);
+  const review = await getReviewById(id);
+  if (Object.keys(review).length === 0)
+    router.push({ name: 'NotFound' });
+  else {
+    object.value = review;
+  }
+}
 </script>
 
 <template>
@@ -45,7 +40,7 @@ export default {
       </div>
       <div class="section__body">
         <div class="form-main form-main--filters">
-          <div v-if="authenticationStatus && (getCurrentUser.id === object.user)" class="form__wrap">
+          <div v-if="userStore.authenticationStatus && (userStore.getCurrentUser.id === object.user)" class="form__wrap">
             <div class="form__foot">
               <router-link class="btn btn-warning" :to="{ name: 'edit-review', params: { id: object.id } }">
                 Edit

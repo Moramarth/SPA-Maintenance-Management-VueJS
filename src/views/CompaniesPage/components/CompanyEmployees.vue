@@ -23,7 +23,7 @@ onMounted (async () => {
         No Employees to show
       </h2>
       <template v-else>
-        <div v-for="profile in employees.value" :key="profile.user">
+        <div v-for="profile in employees" :key="profile.user">
           {{ profile.first_name }} {{ profile.last_name }}
           <router-link :to="{ name: 'profile-details', params: { id: profile.user } }">
             <i

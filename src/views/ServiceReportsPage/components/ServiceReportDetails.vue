@@ -1,44 +1,37 @@
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup>
+import { useRoute, useRouter } from 'vue-router';
+import { onMounted, ref, watch } from 'vue';
 import { getServiceReportById } from '../../../dataProviders/serviceReports';
 import { useUsersStore } from '../../../stores/usersStore';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { formatDate } from '../../../helpers/formatDate';
 
-export default {
-  data() {
-    return {
-      object: {},
-      format: formatDate,
+const route = useRoute();
+const router = useRouter();
+const userStore = useUsersStore();
+const tempObjStore = useTempObjectStore();
+const object = ref({});
 
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentUser']),
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'service-report-details')
-          this.loadObject();
-      },
+onMounted(async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'service-report-details')
+        loadObject();
+    },
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    ...mapActions(useTempObjectStore, ['setTempObject']),
-    async loadObject() {
-      const id = this.$route.params.id;
-      this.object = await getServiceReportById(id);
-    },
-    async handleReviewCreation() {
-      await this.setTempObject(this.object.id);
-      this.$router.push({ name: 'create-review' });
-    },
-  },
-};
+    { immediate: true },
+  );
+});
+
+async function loadObject() {
+  const id = route.params.id;
+  object.value = await getServiceReportById(id);
+}
+async function handleReviewCreation() {
+  await tempObjStore.setTempObject(object.value.id);
+  router.push({ name: 'create-review' });
+}
 </script>
 
 <template>
@@ -51,7 +44,7 @@ export default {
         <div class="form-main form-main--filters">
           <div class="form__wrap">
             <div class="form__foot">
-              <template v-if="getCurrentUser.id === object.user">
+              <template v-if="userStore.getCurrentUser.id === object.user">
                 <template v-if="object.report_status === 'Pending'">
                   <router-link class="btn btn-warning" :to="{ name: 'edit-service-report', params: { id: object.id } }">
                     Edit Report
@@ -149,7 +142,7 @@ export default {
                 </tr>
                 <tr>
                   <th>Last Updated:</th>
-                  <td>{{ format(object.last_updated) }}</td>
+                  <td>{{ formatDate(object.last_updated) }}</td>
                 </tr>
               </tbody>
               <thead>
@@ -163,7 +156,7 @@ export default {
 
           <div class="form-main form-main--filters">
             <div class="form__foot">
-              <button v-if="object.report_status === 'Done' && getCurrentUser.id === object.user" class="btn btn-success" @click.prevent="handleReviewCreation">
+              <button v-if="object.report_status === 'Done' && userStore.getCurrentUser.id === object.user" class="btn btn-success" @click.prevent="handleReviewCreation">
                 Create Review
               </button>
             </div>

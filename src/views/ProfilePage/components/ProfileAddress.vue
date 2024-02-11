@@ -29,12 +29,12 @@ onMounted (async () => {
       <div class="form__label">
         <label>Address:</label>
       </div>
-      <p> {{ building.value.city }}, {{ building.value.address }}</p>
+      <p> {{ building.city }}, {{ building.address }}</p>
       <div class="form__label">
         <label>Building:</label>
       </div>
       {{ building.name }}
-      <router-link :to="{ name: 'building-details', params: { id: building.value.id } }" target="_blank">
+      <router-link :to="{ name: 'building-details', params: { id: building.id } }" target="_blank">
         <i
           class="fa-solid fa-arrow-right-to-bracket"
           data-toggle="tooltip"
@@ -45,9 +45,9 @@ onMounted (async () => {
       <div class="form__label">
         <label>Location:</label>
       </div>
-      <span v-if="address.value.section">{{ address.value.section }}, </span>
-      floor {{ address.value.floor }},
-      office {{ address.value.office_number }}
+      <span v-if="address.section">{{ address.section }}, </span>
+      floor {{ address.floor }},
+      office {{ address.office_number }}
     </div>
   </div>
 </template>

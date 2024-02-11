@@ -44,16 +44,16 @@ async function loadObject() {
         <div class="section__body-group">
           <div class="block-review">
             <div class="block__image">
-              <img v-if="object.value.file" :src="object.value.file" alt="Building Picture">
+              <img v-if="object.file" :src="object.file" alt="Building Picture">
               <img v-else src="../../../../public/default_building_picture.png" alt="Building Picture">
             </div>
             <div class="block__content">
               <div class="block__content-bg">
-                <p><strong>Name:</strong> {{ object.value.name }} </p>
-                <p><strong>City:</strong>{{ object.value.city }} </p>
-                <p><strong>Address:</strong>{{ object.value.address }} </p>
+                <p><strong>Name:</strong> {{ object.name }} </p>
+                <p><strong>City:</strong>{{ object.city }} </p>
+                <p><strong>Address:</strong>{{ object.address }} </p>
                 <p>
-                  <strong>Current tenants:</strong> {{ String(object.value.tenants) }} companies
+                  <strong>Current tenants:</strong> {{ String(object.tenants) }} companies
                 </p>
               </div>
             </div>
@@ -78,7 +78,7 @@ async function loadObject() {
 
           <GMapMap
 
-            :center="{ lat: object.value.latitude, lng: object.value.longitude }"
+            :center="{ lat: object.latitude, lng: object.longitude }"
             :zoom="13"
             map-type-id="roadmap"
             style="width: 100%; height: 60rem"

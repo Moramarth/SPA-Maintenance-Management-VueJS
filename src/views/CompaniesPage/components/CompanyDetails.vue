@@ -107,30 +107,30 @@ async function loadObject() {
             >
               <div class="block-testimonial">
                 <div class="block__image">
-                  <img v-if="object.value.file" :src="object.value.file" alt="Company Logo">
+                  <img v-if="object.file" :src="object.file" alt="Company Logo">
 
                   <img v-else src="../../../../public/default_company_logo.jpg" alt="Default Company logo">
                 </div>
                 <div class="block__content">
-                  <h1>{{ object.value.name }}</h1>
+                  <h1>{{ object.name }}</h1>
                   <div class="form-main form-main--filters">
                     <div class="form__label">
-                      <template v-if="object.value.business_field">
+                      <template v-if="object.business_field">
                         <label>Business Field:</label>
-                        {{ object.value.business_field }}
+                        {{ object.business_field }}
                       </template>
 
-                      <template v-if="object.value.additional_information">
+                      <template v-if="object.additional_information">
                         <label>About us:</label>
-                        {{ object.value.additional_information }}
+                        {{ object.additional_information }}
                       </template>
                     </div>
                     <div class="form__label">
                       <p class="text-muted">
-                        Partner since: {{ formatDate(object.value.created_on) }}
+                        Partner since: {{ formatDate(object.created_on) }}
                       </p>
 
-                      <router-link v-if="canEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.value.id } }">
+                      <router-link v-if="canEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
                         Edit
                         Company Info
                       </router-link>
@@ -140,14 +140,14 @@ async function loadObject() {
               </div>
             </div>
 
-            <template v-if="authenticationStatus">
+            <template v-if="userStore.authenticationStatus">
               <div
                 id="profile"
                 class="tab-pane fade"
                 role="tabpanel"
                 aria-labelledby="profile-tab"
               >
-                <CompanyAddress :company-id="object.value.id" />
+                <CompanyAddress :company-id="object.id" />
               </div>
 
               <div
@@ -156,7 +156,7 @@ async function loadObject() {
                 role="tabpanel"
                 aria-labelledby="contact-tab"
               >
-                <CompanyEmployees :company-id="object.value.id" />
+                <CompanyEmployees :company-id="object.id" />
               </div>
             </template>
           </div>

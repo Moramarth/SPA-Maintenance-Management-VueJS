@@ -1,6 +1,8 @@
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, required } from '@vuelidate/validators';
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { editCompany, getCompanyById } from '../../../dataProviders/companies';
@@ -8,106 +10,90 @@ import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
 
-export default {
-  components: {
-    CreateFormFooter,
-    LoadSpinner,
-    ValidationMessege,
-  },
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      object: {
-        name: '',
-        business_field: '',
-        additional_information: '',
-        file: '',
-      },
-      isLoading: true,
-      format: formatImageLink,
-      formatShort,
-      imageName: null,
-      imageType: null,
-      uploadedImage: false,
-      clearImageChecked: false,
-      validationError: false,
-      MAX_FILE_SIZE: MAX_FILE_SIZE_IN_MB,
-    };
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'edit-company')
-          this.loadObject();
-      },
+const route = useRoute();
+const router = useRouter();
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    async handleEdit() {
-      const isValid = await this.v$.$validate();
-      if (isValid) {
-        if (this.clearImageChecked)
-          this.object.file = null;
-        else if (this.uploadedImage)
-          this.object.file = this.uploadedImage;
-        const companyData = {
-          name: this.object.name,
-          business_field: this.object.business_field,
-          additional_information: this.object.additional_information,
-          file: this.object.file,
-          extension: this.imageType,
-          filename: this.imageName,
-        };
-        await editCompany(this.object.id, companyData);
-        this.$router.push({ name: 'company-details', params: { id: this.object.id } });
-      }
-    },
+const object = ref({
+  name: '',
+  business_field: '',
+  additional_information: '',
+  file: '',
+});
 
-    async loadObject() {
-      const id = this.$route.params.id;
-      this.object = await getCompanyById(id);
-      this.isLoading = false;
-    },
-    handleCheckboxChange() {
-      this.clearImageChecked = !this.clearImageChecked;
-    },
-    handleFileUploaded(event) {
-      const file = event.target.files[0];
-      this.validateImg(file);
-      if (file) {
-        this.imageName = file.name.slice(0, file.name.length / 2);
-        const reader = new FileReader();
-        const extension = file.type.replace('image/', '');
-        this.imageType = `.${extension}`;
-        reader.onload = () => {
-          this.uploadedImage = reader.result.split(',')[1];
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    validateImg(file) {
-      if (file.size > this.MAX_FILE_SIZE * 1024 * 1024)
-        this.validationError = true;
-      else
-        this.validationError = false;
-    },
-  },
-  validations() {
-    return {
-      object: {
-        name: { required, maxLength: maxLength(150) },
-        business_field: { maxLength: maxLength(250) },
-        additional_information: { maxLength: maxLength(500) },
-      },
-
-    };
+const isLoading = ref(true);
+const imageName = ref(null);
+const imageType = ref(null);
+const uploadedImage = ref(false);
+const clearImageChecked = ref(false);
+const validationError = ref(false);
+const rules = {
+  object: {
+    name: { required, maxLength: maxLength(150) },
+    business_field: { maxLength: maxLength(250) },
+    additional_information: { maxLength: maxLength(500) },
   },
 };
+
+const v$ = useVuelidate(rules, { object });
+onMounted (async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'edit-company')
+        loadObject();
+    },
+
+    { immediate: true },
+  );
+});
+
+async function handleEdit() {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    if (clearImageChecked.value)
+      object.value.file = null; else if (uploadedImage.value)
+      object.value.file = uploadedImage.value;
+    const companyData = {
+      name: object.value.name,
+      business_field: object.value.business_field,
+      additional_information: object.value.additional_information,
+      file: object.value.file,
+      extension: imageType.value,
+      filename: imageName.value,
+    };
+    await editCompany(object.value.id, companyData);
+    router.push({ name: 'company-details', params: { id: object.value.id } });
+  }
+}
+
+async function loadObject() {
+  const id = route.params.id;
+  object.value = await getCompanyById(id);
+  isLoading.value = false;
+}
+function handleCheckboxChange() {
+  clearImageChecked.value = !clearImageChecked.value;
+}
+function handleFileUploaded(event) {
+  const file = event.target.files[0];
+  validateImg(file);
+  if (file) {
+    imageName.value = file.name.slice(0, file.name.length / 2);
+    const reader = new FileReader();
+    const extension = file.type.replace('image/', '');
+    imageType.value = `.${extension}`;
+    reader.onload = () => {
+      uploadedImage.value = reader.result.split(',')[1];
+    };
+    reader.readAsDataURL(file);
+  }
+}
+function validateImg(file) {
+  if (file.size > MAX_FILE_SIZE_IN_MB * 1024 * 1024)
+    validationError.value = true;
+  else
+    validationError.value = false;
+}
 </script>
 
 <template>
@@ -141,7 +127,7 @@ export default {
               <label for="logo">Company Logo</label>
               <template v-if="object.file">
                 Currently:
-                <a :href="format(object.file)" target="_blank">{{ formatShort(object.file) }}</a>
+                <a :href="formatImageLink(object.file)" target="_blank">{{ formatShort(object.file) }}</a>
                 <p>
                   <input
                     id="file-clear"
@@ -163,7 +149,7 @@ export default {
               >
 
               <div v-if="validationError" class="error-msg">
-                The maximum file size that can be uploaded is{{ MAX_FILE_SIZE }} MB
+                The maximum file size that can be uploaded is{{ MAX_FILE_SIZE_IN_MB }} MB
               </div>
             </div>
             <template v-if="validationError">

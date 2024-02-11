@@ -1,48 +1,43 @@
-<script>
+<script setup>
+import { useRoute, useRouter } from 'vue-router';
+import { onMounted, ref, watch } from 'vue';
 import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
 import { deleteReview, getReviewById } from '../../../dataProviders/reviews';
 import { getServiceReportById } from '../../../dataProviders/serviceReports';
 
-export default {
-  components: {
-    DeleteFormFooter,
-  },
-  data() {
-    return {
-      object: {},
-      serviceReport: {},
-    };
-  },
-  async created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        if (this.$route.name === 'delete-review')
-          this.loadObject();
-      },
+const route = useRoute();
+const router = useRouter();
+const object = ref({});
+const serviceReport = ref({});
 
-      { immediate: true },
-    );
-  },
-  methods: {
-    async deleteObject() {
-      await deleteReview(this.object.id);
-      this.$router.push({ name: 'show-all-reviews' });
+onMounted(async () => {
+  watch(
+    () => route.params,
+    () => {
+      if (route.name === 'delete-review')
+        loadObject();
     },
-    async loadObject() {
-      const id = Number(this.$route.params.id);
-      const review = await getReviewById(id);
-      if (Object.keys(review).length === 0)
-        this.$router.push({ name: 'NotFound' });
-      else {
-        this.object = review;
-        const reportId = this.object.service_report ?? null;
-        if (reportId)
-          this.serviceReport = await getServiceReportById(reportId);
-      }
-    },
-  },
-};
+
+    { immediate: true },
+  );
+});
+
+async function deleteObject() {
+  await deleteReview(object.value.id);
+  router.push({ name: 'show-all-reviews' });
+}
+async function loadObject() {
+  const id = Number(route.params.id);
+  const review = await getReviewById(id);
+  if (Object.keys(review).length === 0)
+    router.push({ name: 'NotFound' });
+  else {
+    object.value = review;
+    const reportId = object.value.service_report ?? null;
+    if (reportId)
+      serviceReport.value = await getServiceReportById(reportId);
+  }
+}
 </script>
 
 <template>

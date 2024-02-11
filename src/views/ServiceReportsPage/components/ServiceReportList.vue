@@ -1,5 +1,5 @@
-<script>
-import { mapState } from 'pinia';
+<script setup>
+import { computed, onMounted, reactive, ref } from 'vue';
 import { getServiceReports } from '../../../dataProviders/serviceReports';
 import { useUsersStore } from '../../../stores/usersStore';
 import { getCompanies } from '../../../dataProviders/companies';
@@ -9,87 +9,71 @@ import FilterByReportType from '../../../components/filters/filterByReportType.v
 import FilterSearch from '../../../components/filters/filterSearch.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
-import { paginationReset } from '../../../helpers/filterReset';
+import { paginationReset, reportStatusSelectorReset, reportTypeSelectorReset, searchReset } from '../../../helpers/filterReset';
 
-export default {
-  components: {
-    FilterByReportStatus,
-    FilterByReportType,
-    FilterSearch,
-    Pagination,
-    PaginationSelector,
-  },
-  data() {
-    return {
-      serviceReports: [],
-      companies: [],
-      format: formatDate,
-      appliedFilters: {
-        reportType: false,
-        reportStatus: false,
-        search: '',
-      },
-      paginator: {
-        currentPage: 1,
-        rowsPerPage: 5,
-      },
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentUser']),
-    filterReports() {
-      let filteredReports = [...this.serviceReports];
-      if (this.appliedFilters.reportStatus)
-        filteredReports = filteredReports.filter(report => report.report_status === this.appliedFilters.reportStatus);
-      if (this.appliedFilters.reportType)
-        filteredReports = filteredReports.filter(report => report.report_type === this.appliedFilters.reportType);
-      if (this.appliedFilters.search)
-        filteredReports = filteredReports.filter(report => report.title.includes(this.appliedFilters.search));
-      const startIndex = (this.paginator.currentPage - 1) * this.paginator.rowsPerPage;
-      const endIndex = startIndex + this.paginator.rowsPerPage;
-      return filteredReports.slice(startIndex, endIndex);
-    },
-    totalPages() {
-      return Math.ceil(this.serviceReports.length / this.paginator.rowsPerPage);
-    },
-  },
-  async created() {
-    this.serviceReports = await getServiceReports();
-    this.companies = await getCompanies();
-  },
-  methods: {
-    statusFilter(value) {
-      this.appliedFilters.reportStatus = value;
-    },
-    typeFilter(value) {
-      this.appliedFilters.reportType = value;
-    },
-    searchFilter(value) {
-      this.appliedFilters.search = value;
-    },
-    clearFilters() {
-      this.appliedFilters.reportStatus = '';
-      this.$refs.statFilter.reset();
+const userStore = useUsersStore();
 
-      this.appliedFilters.reportType = '';
-      this.$refs.typeFilter.reset();
+const serviceReports = ref([]);
+const companies = ref([]);
+const appliedFilters = reactive({
+  reportType: false,
+  reportStatus: false,
+  search: '',
+});
+const paginator = reactive({
+  currentPage: 1,
+  rowsPerPage: 5,
+});
 
-      this.appliedFilters.search = '';
-      this.$refs.searchBar.reset();
+const filterReports = computed(() => {
+  let filteredReports = [...serviceReports.value];
+  if (appliedFilters.reportStatus)
+    filteredReports = filteredReports.filter(report => report.report_status === appliedFilters.reportStatus);
+  if (appliedFilters.reportType)
+    filteredReports = filteredReports.filter(report => report.report_type === appliedFilters.reportType);
+  if (appliedFilters.search)
+    filteredReports = filteredReports.filter(report => report.title.includes(appliedFilters.search));
+  const startIndex = (paginator.currentPage - 1) * paginator.rowsPerPage;
+  const endIndex = startIndex + paginator.rowsPerPage;
+  return filteredReports.slice(startIndex, endIndex);
+});
+const totalPages = computed(() => {
+  return Math.ceil(serviceReports.value.length / paginator.rowsPerPage);
+});
 
-      this.paginator.rowsPerPage = 5;
-      paginationReset();
-    },
-    handlePageChange(newPage) {
-      this.paginator.currentPage = newPage;
-    },
-    handleRowsPerPageChange(value) {
-      this.paginator.rowsPerPage = Number(value);
-      this.paginator.currentPage = 1;
-    },
-  },
+onMounted(async () => {
+  serviceReports.value = await getServiceReports();
+  companies.value = await getCompanies();
+});
+function statusFilter(value) {
+  appliedFilters.reportStatus = value;
+}
+function typeFilter(value) {
+  appliedFilters.reportType = value;
+}
+function searchFilter(value) {
+  appliedFilters.search = value;
+}
+function clearFilters() {
+  appliedFilters.reportStatus = '';
+  searchReset();
 
-};
+  appliedFilters.reportType = '';
+  reportTypeSelectorReset();
+
+  appliedFilters.search = '';
+  reportStatusSelectorReset();
+
+  paginator.rowsPerPage = 5;
+  paginationReset();
+}
+function handlePageChange(newPage) {
+  paginator.currentPage = newPage;
+}
+function handleRowsPerPageChange(value) {
+  paginator.rowsPerPage = Number(value);
+  paginator.currentPage = 1;
+}
 </script>
 
 <template>
@@ -103,18 +87,18 @@ export default {
           <div class="form-main form-main--filters">
             <div class="form__wrap">
               <div class="form__col">
-                <FilterByReportStatus ref="statFilter" @selected="statusFilter" />
+                <FilterByReportStatus @selected="statusFilter" />
               </div>
               <div class="form__col">
-                <FilterByReportType ref="typeFilter" @selected="typeFilter" />
+                <FilterByReportType @selected="typeFilter" />
               </div>
               <div class="form__col">
-                <FilterSearch ref="searchBar" @is-searching="searchFilter" />
+                <FilterSearch @is-searching="searchFilter" />
               </div>
             </div>
             <div class="form__foot">
               <div class="form__col">
-                <PaginationSelector ref="itemsOnPage" @change-row="handleRowsPerPageChange" />
+                <PaginationSelector @change-row="handleRowsPerPageChange" />
               </div>
               <div class="form__col">
                 <button class="btn btn-primary" @click="clearFilters">
@@ -148,7 +132,7 @@ export default {
                 <template v-else>
                   <tr v-for="object in filterReports" :key="object.id">
                     <td>{{ object.title }} </td>
-                    <td v-if="getCurrentUser && (getCurrentUser.id === object.user)">
+                    <td v-if="userStore.getCurrentUser && (userStore.getCurrentUser.id === object.user)">
                       You
                     </td>
                     <td v-else>
@@ -157,7 +141,7 @@ export default {
                     <td>{{ object.user_company_name }}</td>
                     <td>{{ object.report_status }}</td>
                     <td>{{ object.report_type }}</td>
-                    <td>{{ format(object.submit_date) }}</td>
+                    <td>{{ formatDate(object.submit_date) }}</td>
 
                     <td v-if="!object.assigned_to">
                       None

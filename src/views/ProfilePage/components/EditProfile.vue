@@ -1,7 +1,9 @@
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { alpha, helpers, maxLength, minLength, required } from '@vuelidate/validators';
-import { mapState } from 'pinia';
+
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
@@ -10,98 +12,79 @@ import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { MAX_FILE_SIZE_IN_MB, phoneNumberValidator } from '../../../helpers/formValidators';
 
-export default {
-  components: {
-    CreateFormFooter,
-    LoadSpinner,
-    ValidationMessege,
-  },
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      object: {
-        first_name: '',
-        last_name: '',
-        phone_number: '',
-        file: null,
-      },
-      isLoading: true,
-      format: formatImageLink,
-      formatShort,
-      uploadedImage: false,
-      imageType: null,
-      imageName: null,
-      clearImageChecked: false,
-      validationError: false,
-      MAX_FILE_SIZE: MAX_FILE_SIZE_IN_MB,
-    };
-  },
-  computed: {
-    ...mapState(useUsersStore, ['getCurrentUser']),
-  },
-  async created() {
-    this.object = await getProfileById(this.getCurrentUser.id);
-    this.isLoading = false;
-  },
-  methods: {
-    async handleEdit() {
-      const isValid = await this.v$.$validate();
-      if (isValid) {
-        if (this.clearImageChecked)
-          this.object.file = null;
-        else if (this.uploadedImage)
-          this.object.file = this.uploadedImage;
-        const profileData = {
-          first_name: this.object.first_name,
-          last_name: this.object.last_name,
-          phone_number: this.object.phone_number,
-          file: this.object.file,
-          extension: this.imageType,
-          filename: this.imageName,
-        };
-        await editProfile(this.object.user, profileData);
+const userStore = useUsersStore();
+const router = useRouter();
+const object = ref({
+  first_name: '',
+  last_name: '',
+  phone_number: '',
+  file: null,
+});
+const isLoading = ref(true);
+const uploadedImage = ref(false);
+const imageType = ref(null);
+const imageName = ref(null);
+const clearImageChecked = ref(false);
+const validationError = ref(false);
 
-        this.$router.push({ name: 'profile-details', params: { id: this.object.id } });
-      }
-    },
-    handleCheckboxChange() {
-      this.clearImageChecked = !this.clearImageChecked;
-    },
-    handleFileUploaded(event) {
-      const file = event.target.files[0];
-      this.validateImg(file);
-      if (file) {
-        this.imageName = file.name.slice(0, file.name.length / 2);
-        const reader = new FileReader();
-        const extension = file.type.replace('image/', '');
-        this.imageType = `.${extension}`;
-        reader.onload = () => {
-          this.uploadedImage = reader.result.split(',')[1];
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    validateImg(file) {
-      if (file.size > this.MAX_FILE_SIZE * 1024 * 1024)
-        this.validationError = true;
-      else
-        this.validationError = false;
-    },
-
-  },
-  validations() {
-    return {
-      object: {
-        first_name: { required, minLength: minLength(2), maxLength: maxLength(30), alpha },
-        last_name: { required, minLength: minLength(2), maxLength: maxLength(30), alpha },
-        phone_number: { required, maxLength: maxLength(15), phoneNumberValidator: helpers.withMessage('Phone number must be entered in the format: \'+999999999\'. Up to 15 digits allowed.', phoneNumberValidator) },
-      },
-
-    };
+const rules = {
+  object: {
+    first_name: { required, minLength: minLength(2), maxLength: maxLength(30), alpha },
+    last_name: { required, minLength: minLength(2), maxLength: maxLength(30), alpha },
+    phone_number: { required, maxLength: maxLength(15), phoneNumberValidator: helpers.withMessage('Phone number must be entered in the format: \'+999999999\'. Up to 15 digits allowed.', phoneNumberValidator) },
   },
 };
+
+const v$ = useVuelidate(rules, { object });
+
+onMounted(async () => {
+  object.value = await getProfileById(userStore.getCurrentUser.id);
+  isLoading.value = false;
+});
+
+async function handleEdit() {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    if (clearImageChecked.value)
+      object.value.file = null;
+    else if (uploadedImage.value)
+      object.value.file = uploadedImage.value;
+    const profileData = {
+      first_name: object.value.first_name,
+      last_name: object.value.last_name,
+      phone_number: object.value.phone_number,
+      file: object.value.file,
+      extension: imageType.value,
+      filename: imageName.value,
+    };
+    await editProfile(object.value.user, profileData);
+
+    router.push({ name: 'profile-details', params: { id: object.value.id } });
+  }
+}
+function handleCheckboxChange() {
+  clearImageChecked.value = !clearImageChecked.value;
+}
+function handleFileUploaded(event) {
+  const file = event.target.files[0];
+  validateImg(file);
+  if (file) {
+    imageName.value = file.name.slice(0, file.name.length / 2);
+    const reader = new FileReader();
+    const extension = file.type.replace('image/', '');
+    imageType.value = `.${extension}`;
+    reader.onload = () => {
+      uploadedImage.value = reader.result.split(',')[1];
+    };
+    reader.readAsDataURL(file);
+  }
+}
+function validateImg(file) {
+  if (file.size > MAX_FILE_SIZE_IN_MB * 1024 * 1024)
+    validationError.value = true;
+  else
+    validationError.value = false;
+}
 </script>
 
 <template>
@@ -148,7 +131,7 @@ export default {
               <label for="image">Profile Picture:</label>
               <template v-if="object.file">
                 Currently:
-                <a :href="format(object.file)" target="_blank">{{ formatShort(object.file) }}</a>
+                <a :href="formatImageLink(object.file)" target="_blank">{{ formatShort(object.file) }}</a>
                 <p>
                   <input
                     id="file-clear"
@@ -167,7 +150,7 @@ export default {
               >
             </div>
             <div v-if="validationError" class="error-msg">
-              The maximum file size that can be uploaded is{{ MAX_FILE_SIZE }} MB
+              The maximum file size that can be uploaded is{{ MAX_FILE_SIZE_IN_MB }} MB
             </div>
             <template v-if="validationError">
               Please upload a new image

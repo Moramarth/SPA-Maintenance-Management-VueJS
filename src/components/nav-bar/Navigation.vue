@@ -1,9 +1,13 @@
 <script setup>
+import { onMounted } from 'vue';
 import { useUsersStore } from '../../stores/usersStore';
+import { validateUser } from '../../helpers/authValidation';
 import AccountDropdown from './components/AccountDropdown.vue';
 import ClientActions from './components/ClientActions.vue';
 
 const userStore = useUsersStore();
+
+onMounted(async () => validateUser());
 </script>
 
 <template>
