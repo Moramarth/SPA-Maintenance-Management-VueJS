@@ -1,8 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
-import { getServiceReports } from '../../../dataProviders/serviceReports';
 import { useUsersStore } from '../../../stores/usersStore';
-import { getCompanies } from '../../../dataProviders/companies';
 import { formatDate } from '../../../helpers/formatDate';
 import FilterByReportStatus from '../../../components/filters/FilterByReportStatus.vue';
 import FilterByReportType from '../../../components/filters/filterByReportType.vue';
@@ -10,11 +8,11 @@ import FilterSearch from '../../../components/filters/filterSearch.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import { paginationReset, reportStatusSelectorReset, reportTypeSelectorReset, searchReset } from '../../../helpers/filterReset';
+import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
 
 const userStore = useUsersStore();
 
-const serviceReports = ref([]);
-const companies = ref([]);
+const array = ref([]);
 const appliedFilters = reactive({
   reportType: false,
   reportStatus: false,
@@ -26,7 +24,7 @@ const paginator = reactive({
 });
 
 const filterReports = computed(() => {
-  let filteredReports = [...serviceReports.value];
+  let filteredReports = [...array.value];
   if (appliedFilters.reportStatus)
     filteredReports = filteredReports.filter(report => report.report_status === appliedFilters.reportStatus);
   if (appliedFilters.reportType)
@@ -38,12 +36,11 @@ const filterReports = computed(() => {
   return filteredReports.slice(startIndex, endIndex);
 });
 const totalPages = computed(() => {
-  return Math.ceil(serviceReports.value.length / paginator.rowsPerPage);
+  return Math.ceil(array.value.length / paginator.rowsPerPage);
 });
 
 onMounted(async () => {
-  serviceReports.value = await getServiceReports();
-  companies.value = await getCompanies();
+  array.value = await dataArrayMapping.serviceReports();
 });
 function statusFilter(value) {
   appliedFilters.reportStatus = value;
@@ -124,7 +121,7 @@ function handleRowsPerPageChange(value) {
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="serviceReports.length === 0">
+                <tr v-if="array.length === 0">
                   <td colspan="8" align="center">
                     No Service Reports to show
                   </td>

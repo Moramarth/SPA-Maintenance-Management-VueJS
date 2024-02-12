@@ -2,20 +2,27 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
 import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
-import { deleteReview, getReviewById } from '../../../dataProviders/reviews';
-import { getServiceReportById } from '../../../dataProviders/serviceReports';
+import { deleteReview } from '../../../dataProviders/reviews';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const route = useRoute();
 const router = useRouter();
+
 const object = ref({});
 const serviceReport = ref({});
 
-onMounted(async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'delete-review')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'review');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
+      const reportId = object.value.service_report ?? null;
+      if (reportId)
+        serviceReport.value = await dataObjectMapping.serviceReport(reportId);
     },
 
     { immediate: true },
@@ -25,18 +32,6 @@ onMounted(async () => {
 async function deleteObject() {
   await deleteReview(object.value.id);
   router.push({ name: 'show-all-reviews' });
-}
-async function loadObject() {
-  const id = Number(route.params.id);
-  const review = await getReviewById(id);
-  if (Object.keys(review).length === 0)
-    router.push({ name: 'NotFound' });
-  else {
-    object.value = review;
-    const reportId = object.value.service_report ?? null;
-    if (reportId)
-      serviceReport.value = await getServiceReportById(reportId);
-  }
 }
 </script>
 

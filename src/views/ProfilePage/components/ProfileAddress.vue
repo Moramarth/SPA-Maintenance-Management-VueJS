@@ -1,8 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
-import { getCompanyAddress } from '../../../dataProviders/companies';
-import { getBuildingById } from '../../../dataProviders/buildings';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const props = defineProps({
   companyId: {
@@ -16,8 +15,8 @@ const address = ref({});
 const building = ref({});
 
 onMounted (async () => {
-  address.value = await getCompanyAddress(props.companyId);
-  building.value = await getBuildingById(address.value.building);
+  address.value = await dataObjectMapping.companyAddress(props.companyId);
+  building.value = await dataObjectMapping.building(address.value.building);
   isLoading.value = false;
 });
 </script>

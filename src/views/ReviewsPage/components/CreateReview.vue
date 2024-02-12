@@ -7,22 +7,15 @@ import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { createReview } from '../../../dataProviders/reviews';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
+import { rating } from '../../../constants/reviewRating';
 
 const router = useRouter();
 const tempObjStore = useTempObjectStore();
 const serviceReport = ref({});
+
 const object = ref({
   comment: '',
 });
-
-const rating = [
-  [1, 'Very Bad'],
-  [2, 'Bad'],
-  [3, 'Good'],
-  [4, 'Very good'],
-  [5, 'Excellent'],
-];
-
 const rules = {
   object: {
     comment: { maxLength: maxLength(500) },

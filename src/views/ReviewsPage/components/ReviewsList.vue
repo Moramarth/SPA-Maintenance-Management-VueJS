@@ -4,8 +4,8 @@ import Testimonial from '../../../components/Testimonial.vue';
 import FilterByRating from '../../../components/filters/FilterByRating.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
-import { getReviews } from '../../../dataProviders/reviews';
 import { paginationReset, ratingReset } from '../../../helpers/filterReset';
+import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
 
 const array = ref([]);
 const appliedFilters = reactive({
@@ -31,7 +31,7 @@ const totalPages = computed(() => {
 });
 
 onMounted (async () => {
-  array.value = await getReviews();
+  array.value = await dataArrayMapping.reviews();
 });
 
 function handlePageChange(newPage) {

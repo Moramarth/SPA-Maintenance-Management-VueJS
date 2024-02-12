@@ -7,19 +7,15 @@ import { useRouter } from 'vue-router';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
-import { editProfile, getProfileById } from '../../../dataProviders/profile';
+import { editProfile } from '../../../dataProviders/profile';
 import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { MAX_FILE_SIZE_IN_MB, phoneNumberValidator } from '../../../helpers/formValidators';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const userStore = useUsersStore();
 const router = useRouter();
-const object = ref({
-  first_name: '',
-  last_name: '',
-  phone_number: '',
-  file: null,
-});
+
 const isLoading = ref(true);
 const uploadedImage = ref(false);
 const imageType = ref(null);
@@ -27,6 +23,12 @@ const imageName = ref(null);
 const clearImageChecked = ref(false);
 const validationError = ref(false);
 
+const object = ref({
+  first_name: '',
+  last_name: '',
+  phone_number: '',
+  file: null,
+});
 const rules = {
   object: {
     first_name: { required, minLength: minLength(2), maxLength: maxLength(30), alpha },
@@ -34,11 +36,10 @@ const rules = {
     phone_number: { required, maxLength: maxLength(15), phoneNumberValidator: helpers.withMessage('Phone number must be entered in the format: \'+999999999\'. Up to 15 digits allowed.', phoneNumberValidator) },
   },
 };
-
 const v$ = useVuelidate(rules, { object });
 
 onMounted(async () => {
-  object.value = await getProfileById(userStore.getCurrentUser.id);
+  object.value = await dataObjectMapping.profile(userStore.getCurrentUser.id);
   isLoading.value = false;
 });
 

@@ -2,19 +2,22 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
 import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
-import { deleteServiceReport, getServiceReportById } from '../../../dataProviders/serviceReports';
+import { deleteServiceReport } from '../../../dataProviders/serviceReports';
 import { formatDate } from '../../../helpers/formatDate';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 
 const route = useRoute();
 const router = useRouter();
 const object = ref({});
 
-onMounted(async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
-      if (route.name === 'delete-service-report')
-        loadObject();
+    async () => {
+      if (route.name === 'service-report-details')
+        object.value = await loadSingleObject(route.params.id, 'serviceReport');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
     },
 
     { immediate: true },
@@ -24,15 +27,6 @@ onMounted(async () => {
 async function deleteObject() {
   await deleteServiceReport(object.value.id);
   router.push({ name: 'show-all-service-reports' });
-}
-async function loadObject() {
-  const id = Number(route.params.id);
-  const serviceReport = await getServiceReportById(id);
-  if (Object.keys(serviceReport).length === 0)
-    router.push({ name: 'NotFound' });
-  else {
-    object.value = serviceReport;
-  }
 }
 </script>
 

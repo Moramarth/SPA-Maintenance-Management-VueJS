@@ -4,57 +4,45 @@ import { maxLength } from '@vuelidate/validators';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
-import { editReview, getReviewById } from '../../../dataProviders/reviews';
-import { getServiceReportById } from '../../../dataProviders/serviceReports';
+import { editReview } from '../../../dataProviders/reviews';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import { rating } from '../../../constants/reviewRating';
 
 const route = useRoute();
 const router = useRouter();
+
+const serviceReport = ref({});
+
 const object = ref({
   comment: '',
 });
-const serviceReport = ref({});
-const rating = [
-  [1, 'Very Bad'],
-  [2, 'Bad'],
-  [3, 'Good'],
-  [4, 'Very good'],
-  [5, 'Excellent'],
-];
-
 const rules = {
   object: {
     comment: { maxLength: maxLength(500) },
 
   },
 };
-
 const v$ = useVuelidate(rules, { object });
 
-onMounted(async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'edit-review')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'review');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
+      const reportId = object.value.service_report ?? null;
+      if (reportId)
+        serviceReport.value = await dataObjectMapping.serviceReport(reportId);
     },
 
     { immediate: true },
   );
 });
 
-async function loadObject() {
-  const id = Number(route.params.id);
-  const review = await getReviewById(id);
-  if (Object.keys(review).length === 0)
-    router.push({ name: 'NotFound' });
-  else {
-    object.value = review;
-    const reportId = object.value.service_report ?? null;
-    if (reportId)
-      serviceReport.value = await getServiceReportById(reportId);
-  }
-}
 async function handleEdit() {
   const isValid = await v$.value.$validate();
   if (isValid) {

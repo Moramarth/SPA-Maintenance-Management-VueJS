@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
-import { getServiceReportById } from '../../../dataProviders/serviceReports';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { useUsersStore } from '../../../stores/usersStore';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { formatDate } from '../../../helpers/formatDate';
@@ -10,24 +10,23 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUsersStore();
 const tempObjStore = useTempObjectStore();
+
 const object = ref({});
 
-onMounted(async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'service-report-details')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'serviceReport');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
     },
 
     { immediate: true },
   );
 });
 
-async function loadObject() {
-  const id = route.params.id;
-  object.value = await getServiceReportById(id);
-}
 async function handleReviewCreation() {
   await tempObjStore.setTempObject(object.value.id);
   router.push({ name: 'create-review' });

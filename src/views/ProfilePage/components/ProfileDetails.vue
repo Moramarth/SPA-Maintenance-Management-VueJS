@@ -2,42 +2,36 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
-import { getProfileById } from '../../../dataProviders/profile';
-import { getUserById } from '../../../dataProviders/auth';
 import { useUsersStore } from '../../../stores/usersStore';
 import ProfileCompany from '../components/ProfileCompany.vue';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import ProfileAddress from './profileAddress.vue';
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUsersStore();
+
 const isLoading = ref(true);
 const object = ref({});
 const user = ref({});
 
-onMounted(async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'profile-details')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'profile');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
+
+      isLoading.value = false;
+      user.value = await dataObjectMapping.user(route.params.id);
     },
 
     { immediate: true },
   );
 });
-
-async function loadObject() {
-  const id = Number(route.params.id);
-  const profile = await getProfileById(id);
-  if (Object.keys(profile).length === 0)
-    router.push({ name: 'NotFound' });
-  else {
-    object.value = profile;
-    isLoading.value = false;
-    user.value = await getUserById(id);
-  }
-}
 </script>
 
 <template>

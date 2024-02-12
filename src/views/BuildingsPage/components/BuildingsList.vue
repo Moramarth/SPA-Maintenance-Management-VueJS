@@ -1,11 +1,11 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import BuildingCard from '../../../components/BuildingCard.vue';
-import { getBuildings } from '../../../dataProviders/buildings';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import FilterByBuilding from '../../../components/filters/FilterByBuilding.vue';
 import { buildingFilterReset, paginationReset } from '../../../helpers/filterReset';
+import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
 
 const array = ref([]);
 const appliedFilters = reactive({
@@ -29,8 +29,9 @@ const filterBuildings = computed(() => {
 const totalPages = computed(() => {
   return Math.ceil(filterBuildings.value.length / paginator.rowsPerPage);
 });
+
 onMounted(async () => {
-  array.value = await getBuildings();
+  array.value = await dataArrayMapping.buildings();
 });
 
 function clearFilters() {

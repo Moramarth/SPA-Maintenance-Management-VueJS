@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getCompanyEmployees } from '../../../dataProviders/companies';
+import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
 
 const props = defineProps({
   companyId: {
@@ -12,7 +12,7 @@ const props = defineProps({
 const employees = ref([]);
 
 onMounted (async () => {
-  employees.value = await getCompanyEmployees(props.companyId);
+  employees.value = await dataArrayMapping.companyEmployees(props.companyId);
 });
 </script>
 

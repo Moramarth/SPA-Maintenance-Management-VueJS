@@ -1,11 +1,11 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import CompanyCard from '../../../components/CompanyCard.vue';
-import { getCompanies } from '../../../dataProviders/companies';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import FilterSearch from '../../../components/filters/FilterSearch.vue';
 import { paginationReset, searchReset } from '../../../helpers/filterReset';
+import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
 
 const array = ref([]);
 const appliedFilters = reactive({
@@ -30,7 +30,7 @@ const totalPages = computed(() => {
 });
 
 onMounted (async () => {
-  array.value = await getCompanies();
+  array.value = await dataArrayMapping.companies();
 });
 
 function clearFilters() {

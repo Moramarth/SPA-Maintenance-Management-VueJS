@@ -5,20 +5,14 @@ import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
-import { editCompany, getCompanyById } from '../../../dataProviders/companies';
+import { editCompany } from '../../../dataProviders/companies';
 import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 
 const route = useRoute();
 const router = useRouter();
-
-const object = ref({
-  name: '',
-  business_field: '',
-  additional_information: '',
-  file: '',
-});
 
 const isLoading = ref(true);
 const imageName = ref(null);
@@ -26,6 +20,13 @@ const imageType = ref(null);
 const uploadedImage = ref(false);
 const clearImageChecked = ref(false);
 const validationError = ref(false);
+
+const object = ref({
+  name: '',
+  business_field: '',
+  additional_information: '',
+  file: '',
+});
 const rules = {
   object: {
     name: { required, maxLength: maxLength(150) },
@@ -33,14 +34,17 @@ const rules = {
     additional_information: { maxLength: maxLength(500) },
   },
 };
-
 const v$ = useVuelidate(rules, { object });
-onMounted (async () => {
+
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'edit-company')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'company');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
+      isLoading.value = false;
     },
 
     { immediate: true },
@@ -66,11 +70,6 @@ async function handleEdit() {
   }
 }
 
-async function loadObject() {
-  const id = route.params.id;
-  object.value = await getCompanyById(id);
-  isLoading.value = false;
-}
 function handleCheckboxChange() {
   clearImageChecked.value = !clearImageChecked.value;
 }

@@ -1,44 +1,36 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted, ref, watch } from 'vue';
-import { getCompanyById } from '../../../dataProviders/companies';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import CompanyAddress from './CompanyAddress.vue';
 import CompanyEmployees from './CompanyEmployees.vue';
 
+const router = useRouter();
 const route = useRoute();
 const userStore = useUsersStore();
 
 const object = ref({});
 const isLoading = ref(true);
 
-// ...mapState(useUsersStore, ['authenticationStatus', 'getCurrentUser']),
-const canEdit = computed(() => {
-  if (userStore.getCurrentUser) {
-    return true;
-  }
-  return false;
-});
+const canEdit = computed(() => useUsersStore.authenticationStatus && userStore.getCurrentProfile.company === object.value.id);
 
-onMounted (async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'company-details')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'company');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
+      isLoading.value = false;
     },
-    { immediate: true },
 
+    { immediate: true },
   );
 });
-
-async function loadObject() {
-  const id = route.params.id;
-  object.value = await getCompanyById(id);
-  isLoading.value = false;
-}
 </script>
 
 <template>

@@ -5,9 +5,10 @@ import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
-import { editServiceReport, getServiceReportById } from '../../../dataProviders/serviceReports';
+import { editServiceReport } from '../../../dataProviders/serviceReports';
 import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 
 const route = useRoute();
 const router = useRouter();
@@ -29,27 +30,20 @@ const rules = {
 };
 const v$ = useVuelidate(rules, { object });
 
-onMounted(async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
-      if (route.name === 'edit-service-report')
-        loadObject();
+    async () => {
+      if (route.name === 'edit-report-details')
+        object.value = await loadSingleObject(route.params.id, 'serviceReport');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
     },
 
     { immediate: true },
   );
 });
 
-async function loadObject() {
-  const id = Number(route.params.id);
-  const serviceReport = await getServiceReportById(id);
-  if (Object.keys(serviceReport).length === 0)
-    router.push({ name: 'NotFound' });
-  else {
-    object.value = serviceReport;
-  }
-}
 async function handleEdit() {
   const isValid = await v$.value.$validate();
   if (isValid) {

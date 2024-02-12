@@ -7,17 +7,9 @@ import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { createServiceReport } from '../../../dataProviders/serviceReports';
+import { reportType } from '../../../constants/reportType';
 
 const router = useRouter();
-const reportType = [
-  'Other',
-  'Networking',
-  'Electrical',
-  'Plumbing',
-  'Structural Integrity',
-  'Security Systems',
-  'Landscaping',
-];
 const object = ref({
   title: '',
   description: '',

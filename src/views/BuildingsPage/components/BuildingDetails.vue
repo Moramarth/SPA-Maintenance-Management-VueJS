@@ -1,11 +1,12 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { getBuildingById } from '../../../dataProviders/buildings';
+import { useRoute, useRouter } from 'vue-router';
+import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 
+const router = useRouter();
 const route = useRoute();
-const object = ref({});
 
+const object = ref({});
 const markerDetails = computed(() => {
   return {
     id: 1,
@@ -16,22 +17,19 @@ const markerDetails = computed(() => {
   };
 });
 
-onMounted (async () => {
+onMounted (() => {
   watch(
     () => route.params,
-    () => {
+    async () => {
       if (route.name === 'building-details')
-        loadObject();
+        object.value = await loadSingleObject(route.params.id, 'building');
+      if (!singleObjectIsValid(object.value))
+        router.push({ name: 'NotFound' });
     },
 
     { immediate: true },
   );
 });
-
-async function loadObject() {
-  const id = route.params.id;
-  object.value = await getBuildingById(id);
-}
 </script>
 
 <template>
