@@ -1,13 +1,8 @@
 <script setup>
-const emit = defineEmits(['selected']);
+import { rating } from '../../constants/reviewRating';
+import { filterElementId } from '../../helpers/filterReset';
 
-const rating = [
-  [1, 'Very Bad'],
-  [2, 'Bad'],
-  [3, 'Good'],
-  [4, 'Very good'],
-  [5, 'Excellent'],
-];
+const emit = defineEmits(['selected']);
 
 function handleChange(event) {
   const selectedValue = event.target.value;
@@ -16,7 +11,7 @@ function handleChange(event) {
 </script>
 
 <template>
-  <select id="rating" @change="handleChange">
+  <select :id="filterElementId.rating" @change="handleChange">
     <option value="" selected>
       Filter by Rating
     </option>

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { getBuildings } from '../../dataProviders/buildings';
+import { filterElementId } from '../../helpers/filterReset';
 
 const emit = defineEmits(['selected']);
 
@@ -16,7 +17,7 @@ function handleSelection(event) {
 </script>
 
 <template>
-  <select id="buildings-filter" @change="handleSelection">
+  <select :id="filterElementId.building" @change="handleSelection">
     <option>
       Filter by Building
     </option>

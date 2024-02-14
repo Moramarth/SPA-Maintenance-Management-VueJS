@@ -1,4 +1,6 @@
 <script setup>
+import { filterElementId } from '../../helpers/filterReset';
+
 const emit = defineEmits(['isSearching']);
 
 function handleSearch(event) {
@@ -9,7 +11,7 @@ function handleSearch(event) {
 
 <template>
   <input
-    id="search-box"
+    :id="filterElementId.search"
     type="text"
     placeholder="Search in titles"
     @change="handleSearch"

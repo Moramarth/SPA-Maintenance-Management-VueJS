@@ -1,24 +1,41 @@
+const filterElementId = {
+  pagination: '#item-per-page-choice',
+  search: '#search-box',
+  reportType: '#report-type-selector',
+  reportStatus: '#report-status-selector',
+  rating: '#rating',
+  building: '#buildings-filter',
+};
+
 function paginationReset() {
-  document.querySelector('#item-per-page-choice').selectedIndex = 0;
+  document.querySelector(filterElementId.pagination).selectedIndex = 0;
 }
 
 function searchReset() {
-  document.querySelector('#search-box').value = '';
+  document.querySelector(filterElementId.search).value = '';
 }
 
 function reportTypeSelectorReset() {
-  document.querySelector('#report-type-selector').selectedIndex = 0;
+  document.querySelector(filterElementId.reportType).selectedIndex = 0;
 }
 function reportStatusSelectorReset() {
-  document.querySelector('#report-status-selector').selectedIndex = 0;
+  document.querySelector(filterElementId.reportStatus).selectedIndex = 0;
 }
 
 function ratingReset() {
-  document.querySelector('#rating').selectedIndex = 0;
+  document.querySelector(filterElementId.rating).selectedIndex = 0;
 }
 
 function buildingFilterReset() {
-  document.querySelector('#buildings-filter').selectedIndex = 0;
+  document.querySelector(filterElementId.building).selectedIndex = 0;
 }
 
-export { paginationReset, searchReset, reportTypeSelectorReset, reportStatusSelectorReset, ratingReset, buildingFilterReset };
+export {
+  paginationReset,
+  searchReset,
+  reportTypeSelectorReset,
+  reportStatusSelectorReset,
+  ratingReset,
+  buildingFilterReset,
+  filterElementId,
+};

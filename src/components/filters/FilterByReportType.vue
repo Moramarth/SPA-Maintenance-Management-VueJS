@@ -1,16 +1,8 @@
 <script setup>
+import { reportType } from '../../constants/reportType';
+import { filterElementId } from '../../helpers/filterReset';
+
 const emit = defineEmits(['selected']);
-
-const reportType = [
-  'Other',
-  'Networking',
-  'Electrical',
-  'Plumbing',
-  'Structural Integrity',
-  'Security Systems',
-  'Landscaping',
-];
-
 function handleChange(event) {
   const selectedValue = event.target.value;
   emit('selected', selectedValue);
@@ -18,7 +10,7 @@ function handleChange(event) {
 </script>
 
 <template>
-  <select id="report-type-selector" @change="handleChange">
+  <select :id="filterElementId.reportType" @change="handleChange">
     <option value="" selected>
       Filter by Report Type
     </option>

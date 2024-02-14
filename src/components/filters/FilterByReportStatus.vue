@@ -1,12 +1,8 @@
 <script setup>
-const emit = defineEmits(['selected']);
+import { reportStatuses } from '../../constants/reportStatuses';
+import { filterElementId } from '../../helpers/filterReset';
 
-const reportStatuses = [
-  'Pending',
-  'Assigned',
-  'Done',
-  'Rejected',
-];
+const emit = defineEmits(['selected']);
 
 function handleChange(event) {
   const selectedValue = event.target.value;
@@ -15,7 +11,7 @@ function handleChange(event) {
 </script>
 
 <template>
-  <select id="report-status-selector" @change="handleChange">
+  <select :id="filterElementId.reportStatus" @change="handleChange">
     <option value="" selected>
       Filter by Report Status
     </option>

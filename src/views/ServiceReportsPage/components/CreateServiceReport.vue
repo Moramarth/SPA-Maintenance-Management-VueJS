@@ -103,7 +103,7 @@ function validateImg(file) {
               <input type="file" :disabled="isLoading" @change="handleFileUploaded">
 
               <div v-if="validationError" class="error-msg">
-                The maximum file size that can be uploaded is{{ MAX_FILE_SIZE_IN_MB }} MB
+                The maximum file size that can be uploaded is {{ MAX_FILE_SIZE_IN_MB }}MB
               </div>
 
               <label for="report-type">Report Type:</label>
