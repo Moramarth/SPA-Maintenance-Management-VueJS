@@ -1,18 +1,23 @@
 <script setup>
 import { rating } from '../../constants/reviewRating';
-import { filterElementId } from '../../helpers/filterReset';
 
-const emit = defineEmits(['selected']);
+const props = defineProps({
+  modelValue: {
+    type: Number,
+    required: true,
+  },
+});
+const emit = defineEmits(['update:modelValue']);
 
 function handleChange(event) {
   const selectedValue = event.target.value;
-  emit('selected', Number(selectedValue));
+  emit('update:modelValue', Number(selectedValue));
 }
 </script>
 
 <template>
-  <select :id="filterElementId.rating" @change="handleChange">
-    <option value="" selected>
+  <select :value="props.modelValue" @change="handleChange">
+    <option value="0" selected>
       Filter by Rating
     </option>
     <option
@@ -25,6 +30,5 @@ function handleChange(event) {
   </select>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>

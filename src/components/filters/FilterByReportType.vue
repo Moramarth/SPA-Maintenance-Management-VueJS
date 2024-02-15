@@ -1,16 +1,21 @@
 <script setup>
 import { reportType } from '../../constants/reportType';
-import { filterElementId } from '../../helpers/filterReset';
 
-const emit = defineEmits(['selected']);
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+});
+const emit = defineEmits(['update:modelValue']);
 function handleChange(event) {
   const selectedValue = event.target.value;
-  emit('selected', selectedValue);
+  emit('update:modelValue', selectedValue);
 }
 </script>
 
 <template>
-  <select :id="filterElementId.reportType" @change="handleChange">
+  <select :value="props.modelValue" @change="handleChange">
     <option value="" selected>
       Filter by Report Type
     </option>

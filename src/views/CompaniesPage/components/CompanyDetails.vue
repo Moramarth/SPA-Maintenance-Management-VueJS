@@ -15,7 +15,7 @@ const userStore = useUsersStore();
 const object = ref({});
 const isLoading = ref(true);
 
-const canEdit = computed(() => useUsersStore.authenticationStatus && userStore.getCurrentProfile.company === object.value.id);
+const canEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentProfile.company === object.value.id);
 
 onMounted (() => {
   watch(

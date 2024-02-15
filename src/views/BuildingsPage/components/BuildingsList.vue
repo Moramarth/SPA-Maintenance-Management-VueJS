@@ -1,55 +1,34 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import BuildingCard from '../../../components/BuildingCard.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import FilterByBuilding from '../../../components/filters/FilterByBuilding.vue';
-import { buildingFilterReset, paginationReset } from '../../../helpers/filterReset';
 import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
+import { defaultPaginator } from '../../../constants/paginatorDefault';
+import { applyFiltersToArray, calculateTotalPages, clearFilters, getQueryset } from '../../../helpers/filterFunctions';
+import { filterDefault } from '../../../constants/filterDefault';
 
 const array = ref([]);
-const appliedFilters = reactive({
-  buildingName: '',
-});
-const paginator = reactive({
-  currentPage: 1,
-  rowsPerPage: 5,
-});
+const appliedFilters = reactive(filterDefault);
+const paginator = reactive(defaultPaginator);
 
-const filterBuildings = computed(() => {
-  let filteredBuildings = [...array.value];
-
-  if (appliedFilters.buildingName) {
-    filteredBuildings = filteredBuildings.filter(building => building.name === appliedFilters.buildingName);
-  }
-  const startIndex = (paginator.currentPage - 1) * paginator.rowsPerPage;
-  const endIndex = startIndex + paginator.rowsPerPage;
-  return filteredBuildings.slice(startIndex, endIndex);
-});
-const totalPages = computed(() => {
-  return Math.ceil(filterBuildings.value.length / paginator.rowsPerPage);
-});
+const currentArray = computed(() => applyFiltersToArray(array.value, appliedFilters));
+const queryset = computed(() => getQueryset(currentArray.value, paginator));
+const totalPages = computed(() => calculateTotalPages(currentArray.value, paginator));
 
 onMounted(async () => {
   array.value = await dataArrayMapping.buildings();
 });
 
-function clearFilters() {
-  appliedFilters.buildingName = '';
-  buildingFilterReset();
+watch(() => paginator.rowsPerPage, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    paginator.currentPage = 1;
+  }
+});
 
-  paginator.rowsPerPage = 5;
-  paginationReset();
-}
-function buildingFilter(value) {
-  appliedFilters.buildingName = value;
-}
 function handlePageChange(newPage) {
   paginator.currentPage = newPage;
-}
-function handleRowsPerPageChange(value) {
-  paginator.rowsPerPage = Number(value);
-  paginator.currentPage = 1;
 }
 </script>
 
@@ -65,13 +44,13 @@ function handleRowsPerPageChange(value) {
             <div class="form__wrap">
               <div class="form__foot">
                 <div class="form__col">
-                  <FilterByBuilding @selected="buildingFilter" />
+                  <FilterByBuilding v-model="appliedFilters.building" />
                 </div>
                 <div class="form__col">
-                  <PaginationSelector @change-row="handleRowsPerPageChange" />
+                  <PaginationSelector v-model="paginator.rowsPerPage" />
                 </div>
                 <div class="form__col">
-                  <button class="btn btn-primary" @click="clearFilters">
+                  <button class="btn btn-primary" @click="clearFilters(appliedFilters, paginator)">
                     Clear Filters
                   </button>
                 </div>
@@ -80,11 +59,11 @@ function handleRowsPerPageChange(value) {
           </div>
         </div>
         <div class="section__body-group">
-          <h1 v-if="array.length === 0">
+          <h1 v-if="currentArray.length === 0">
             No Buildings to show
           </h1>
           <div v-else class="row row-cols-1 row-cols-md-3 g-4">
-            <template v-for="building in filterBuildings" :key="building.id">
+            <template v-for="building in queryset" :key="building.id">
               <BuildingCard :building="building" />
             </template>
           </div>

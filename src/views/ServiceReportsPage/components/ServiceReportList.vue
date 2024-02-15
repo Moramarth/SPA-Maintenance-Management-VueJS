@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
 import FilterByReportStatus from '../../../components/filters/FilterByReportStatus.vue';
@@ -7,69 +7,33 @@ import FilterByReportType from '../../../components/filters/filterByReportType.v
 import FilterSearch from '../../../components/filters/filterSearch.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
-import { paginationReset, reportStatusSelectorReset, reportTypeSelectorReset, searchReset } from '../../../helpers/filterReset';
+import { applyFiltersToArray, calculateTotalPages, clearFilters, getQueryset } from '../../../helpers/filterFunctions';
 import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
+import { defaultPaginator } from '../../../constants/paginatorDefault';
+import { filterDefault } from '../../../constants/filterDefault';
 
 const userStore = useUsersStore();
 
 const array = ref([]);
-const appliedFilters = reactive({
-  reportType: false,
-  reportStatus: false,
-  search: '',
-});
-const paginator = reactive({
-  currentPage: 1,
-  rowsPerPage: 5,
-});
+const appliedFilters = reactive(filterDefault);
+const paginator = reactive(defaultPaginator);
 
-const filterReports = computed(() => {
-  let filteredReports = [...array.value];
-  if (appliedFilters.reportStatus)
-    filteredReports = filteredReports.filter(report => report.report_status === appliedFilters.reportStatus);
-  if (appliedFilters.reportType)
-    filteredReports = filteredReports.filter(report => report.report_type === appliedFilters.reportType);
-  if (appliedFilters.search)
-    filteredReports = filteredReports.filter(report => report.title.includes(appliedFilters.search));
-  const startIndex = (paginator.currentPage - 1) * paginator.rowsPerPage;
-  const endIndex = startIndex + paginator.rowsPerPage;
-  return filteredReports.slice(startIndex, endIndex);
-});
-const totalPages = computed(() => {
-  return Math.ceil(array.value.length / paginator.rowsPerPage);
-});
+const currentArray = computed(() => applyFiltersToArray(array.value, appliedFilters, 'title'));
+const queryset = computed(() => getQueryset(currentArray.value, paginator));
+const totalPages = computed(() => calculateTotalPages(currentArray.value, paginator));
 
 onMounted(async () => {
   array.value = await dataArrayMapping.serviceReports();
 });
-function statusFilter(value) {
-  appliedFilters.reportStatus = value;
-}
-function typeFilter(value) {
-  appliedFilters.reportType = value;
-}
-function searchFilter(value) {
-  appliedFilters.search = value;
-}
-function clearFilters() {
-  appliedFilters.reportStatus = '';
-  searchReset();
 
-  appliedFilters.reportType = '';
-  reportTypeSelectorReset();
+watch(() => paginator.rowsPerPage, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    paginator.currentPage = 1;
+  }
+});
 
-  appliedFilters.search = '';
-  reportStatusSelectorReset();
-
-  paginator.rowsPerPage = 5;
-  paginationReset();
-}
 function handlePageChange(newPage) {
   paginator.currentPage = newPage;
-}
-function handleRowsPerPageChange(value) {
-  paginator.rowsPerPage = Number(value);
-  paginator.currentPage = 1;
 }
 </script>
 
@@ -84,21 +48,21 @@ function handleRowsPerPageChange(value) {
           <div class="form-main form-main--filters">
             <div class="form__wrap">
               <div class="form__col">
-                <FilterByReportStatus @selected="statusFilter" />
+                <FilterByReportStatus v-model="appliedFilters.reportStatus" />
               </div>
               <div class="form__col">
-                <FilterByReportType @selected="typeFilter" />
+                <FilterByReportType v-model="appliedFilters.reportType" />
               </div>
               <div class="form__col">
-                <FilterSearch @is-searching="searchFilter" />
+                <FilterSearch v-model="appliedFilters.search" />
               </div>
             </div>
             <div class="form__foot">
               <div class="form__col">
-                <PaginationSelector @change-row="handleRowsPerPageChange" />
+                <PaginationSelector v-model="paginator.rowsPerPage" />
               </div>
               <div class="form__col">
-                <button class="btn btn-primary" @click="clearFilters">
+                <button class="btn btn-primary" @click="clearFilters(appliedFilters, paginator)">
                   Clear Filters
                 </button>
               </div>
@@ -121,13 +85,13 @@ function handleRowsPerPageChange(value) {
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="array.length === 0">
+                <tr v-if="currentArray.length === 0">
                   <td colspan="8" align="center">
                     No Service Reports to show
                   </td>
                 </tr>
                 <template v-else>
-                  <tr v-for="object in filterReports" :key="object.id">
+                  <tr v-for="object in queryset" :key="object.id">
                     <td>{{ object.title }} </td>
                     <td v-if="userStore.getCurrentUser && (userStore.getCurrentUser.id === object.user)">
                       You
@@ -169,8 +133,8 @@ function handleRowsPerPageChange(value) {
 .form__foot {
   align-items: flex-end;
   justify-content: center;
-
 }
+
 label {
 text-align: center;
 }

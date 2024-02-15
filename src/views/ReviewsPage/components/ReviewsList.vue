@@ -1,55 +1,34 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import Testimonial from '../../../components/Testimonial.vue';
 import FilterByRating from '../../../components/filters/FilterByRating.vue';
 import Pagination from '../../../components/pagination/Pagination.vue';
 import PaginationSelector from '../../../components/pagination/PaginationSelector.vue';
-import { paginationReset, ratingReset } from '../../../helpers/filterReset';
+import { applyFiltersToArray, calculateTotalPages, clearFilters, getQueryset } from '../../../helpers/filterFunctions';
 import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
+import { defaultPaginator } from '../../../constants/paginatorDefault';
+import { filterDefault } from '../../../constants/filterDefault';
 
 const array = ref([]);
-const appliedFilters = reactive({
-  reportType: false,
-  reportStatus: false,
-  rating: null,
-});
-const paginator = reactive({
-  currentPage: 1,
-  rowsPerPage: 5,
-});
+const appliedFilters = reactive(filterDefault);
+const paginator = reactive(defaultPaginator);
 
-const filterReviews = computed(() => {
-  let filteredReviews = [...array.value];
-  if (appliedFilters.rating)
-    filteredReviews = filteredReviews.filter(review => review.rating === appliedFilters.rating);
-  const startIndex = (paginator.currentPage - 1) * paginator.rowsPerPage;
-  const endIndex = startIndex + paginator.rowsPerPage;
-  return filteredReviews.slice(startIndex, endIndex);
-});
-const totalPages = computed(() => {
-  return Math.ceil(array.value.length / paginator.rowsPerPage);
-});
+const currentArray = computed(() => applyFiltersToArray(array.value, appliedFilters));
+const queryset = computed(() => getQueryset(currentArray.value, paginator));
+const totalPages = computed(() => calculateTotalPages(currentArray.value, paginator));
 
 onMounted (async () => {
   array.value = await dataArrayMapping.reviews();
 });
 
+watch(() => paginator.rowsPerPage, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    paginator.currentPage = 1;
+  }
+});
+
 function handlePageChange(newPage) {
   paginator.currentPage = newPage;
-}
-function handleRowsPerPageChange(value) {
-  paginator.rowsPerPage = Number(value);
-  paginator.currentPage = 1;
-}
-function handleRatingChange(value) {
-  appliedFilters.rating = value;
-}
-function clearFilters() {
-  appliedFilters.rating = 0;
-  ratingReset();
-
-  paginator.rowsPerPage = 5;
-  paginationReset();
 }
 </script>
 
@@ -64,13 +43,13 @@ function clearFilters() {
           <div class="form-main form-main--filters">
             <div class="form__foot">
               <div class="form__col">
-                <FilterByRating @selected="handleRatingChange" />
+                <FilterByRating v-model="appliedFilters.rating" />
               </div>
               <div class="form__col">
-                <PaginationSelector @change-row="handleRowsPerPageChange" />
+                <PaginationSelector v-model="paginator.rowsPerPage" />
               </div>
               <div class="form__col">
-                <button class="btn btn-primary" @click="clearFilters">
+                <button class="btn btn-primary" @click="clearFilters(appliedFilters, paginator)">
                   Clear Filters
                 </button>
               </div>
@@ -79,10 +58,10 @@ function clearFilters() {
         </div>
 
         <div class="section__body-group">
-          <h1 v-if="array.length === 0">
+          <h1 v-if="currentArray.length === 0">
             No Reviews to show
           </h1>
-          <template v-for="review in filterReviews" :key="review.id">
+          <template v-for="review in queryset" :key="review.id">
             <Testimonial
               :testimonial="review"
             />

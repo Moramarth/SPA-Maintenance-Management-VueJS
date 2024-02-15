@@ -1,14 +1,20 @@
 <script setup>
-const emit = defineEmits(['changeRow']);
+const props = defineProps({
+  modelValue: {
+    type: Number,
+    required: true,
+  },
+});
+const emit = defineEmits(['update:modelValue']);
 
 function handleRowsPerPageChange(event) {
-  emit('changeRow', event.target.value);
+  emit('update:modelValue', Number(event.target.value));
 }
 </script>
 
 <template>
   <label for="rowsPerPage">Items Per Page:</label>
-  <select id="item-per-page-choice" @change="handleRowsPerPageChange">
+  <select :value="props.modelValue" @change="handleRowsPerPageChange">
     <option value="5">
       5
     </option>

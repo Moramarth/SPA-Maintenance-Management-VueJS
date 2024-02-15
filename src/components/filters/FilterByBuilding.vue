@@ -1,24 +1,29 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getBuildings } from '../../dataProviders/buildings';
-import { filterElementId } from '../../helpers/filterReset';
+import { dataArrayMapping } from '../../dataProviders/dataLoadMapping';
 
-const emit = defineEmits(['selected']);
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+});
+const emit = defineEmits(['update:modelValue']);
 
 const buildings = ref([]);
 
 onMounted(async () => {
-  buildings.value = await getBuildings();
+  buildings.value = await dataArrayMapping.buildings();
 });
 
 function handleSelection(event) {
-  emit('selected', event.target.value);
+  emit('update:modelValue', event.target.value);
 }
 </script>
 
 <template>
-  <select :id="filterElementId.building" @change="handleSelection">
-    <option>
+  <select :value="props.modelValue" @change="handleSelection">
+    <option value="" selected>
       Filter by Building
     </option>
     <option v-for="building in buildings" :key="building.id" :value="building.name">
@@ -27,6 +32,6 @@ function handleSelection(event) {
   </select>
 </template>
 
-<style  scoped>
+<style scoped>
 
 </style>

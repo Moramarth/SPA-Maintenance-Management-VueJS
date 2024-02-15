@@ -1,23 +1,26 @@
 <script setup>
-import { filterElementId } from '../../helpers/filterReset';
-
-const emit = defineEmits(['isSearching']);
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+});
+const emit = defineEmits(['update:modelValue']);
 
 function handleSearch(event) {
   const searchedValue = event.target.value;
-  emit('isSearching', searchedValue);
+  emit('update:modelValue', searchedValue);
 }
 </script>
 
 <template>
   <input
-    :id="filterElementId.search"
+    :value="props.modelValue"
     type="text"
     placeholder="Search in titles"
     @change="handleSearch"
   >
 </template>
 
-<style lang="scss" scoped>
-
+<style  scoped>
 </style>

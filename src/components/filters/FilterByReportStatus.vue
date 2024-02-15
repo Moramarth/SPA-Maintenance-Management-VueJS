@@ -1,17 +1,22 @@
 <script setup>
 import { reportStatuses } from '../../constants/reportStatuses';
-import { filterElementId } from '../../helpers/filterReset';
 
-const emit = defineEmits(['selected']);
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+});
+const emit = defineEmits(['update:modelValue']);
 
 function handleChange(event) {
   const selectedValue = event.target.value;
-  emit('selected', selectedValue);
+  emit('update:modelValue', selectedValue);
 }
 </script>
 
 <template>
-  <select :id="filterElementId.reportStatus" @change="handleChange">
+  <select :value="props.modelValue" @change="handleChange">
     <option value="" selected>
       Filter by Report Status
     </option>
@@ -25,6 +30,5 @@ function handleChange(event) {
   </select>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>
