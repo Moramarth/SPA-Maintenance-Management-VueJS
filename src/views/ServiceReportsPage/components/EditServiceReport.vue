@@ -8,7 +8,8 @@ import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.
 import { editServiceReport } from '../../../dataProviders/serviceReports';
 import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const route = useRoute();
 const router = useRouter();
@@ -35,7 +36,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'edit-report-details')
-        object.value = await loadSingleObject(route.params.id, 'serviceReport');
+        object.value = await dataObjectMapping.serviceReport(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
     },

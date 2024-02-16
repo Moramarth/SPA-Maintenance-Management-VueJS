@@ -6,7 +6,7 @@ import { useRoute, useRouter } from 'vue-router';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import { editReview } from '../../../dataProviders/reviews';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import { rating } from '../../../constants/reviewRating';
 
@@ -31,7 +31,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'edit-review')
-        object.value = await loadSingleObject(route.params.id, 'review');
+        object.value = await dataObjectMapping.review(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
       const reportId = object.value.service_report ?? null;
@@ -104,6 +104,6 @@ async function handleEdit() {
   </section>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

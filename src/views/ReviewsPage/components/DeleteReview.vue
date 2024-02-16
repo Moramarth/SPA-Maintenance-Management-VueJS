@@ -3,7 +3,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
 import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
 import { deleteReview } from '../../../dataProviders/reviews';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const route = useRoute();
@@ -17,7 +17,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'delete-review')
-        object.value = await loadSingleObject(route.params.id, 'review');
+        object.value = await dataObjectMapping.review(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
       const reportId = object.value.service_report ?? null;

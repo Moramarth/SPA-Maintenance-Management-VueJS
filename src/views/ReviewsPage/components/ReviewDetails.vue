@@ -2,7 +2,8 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUsersStore } from '../../../stores/usersStore';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const route = useRoute();
 const router = useRouter();
@@ -15,7 +16,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'review-details')
-        object.value = await loadSingleObject(route.params.id, 'review');
+        object.value = await dataObjectMapping.review(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
     },

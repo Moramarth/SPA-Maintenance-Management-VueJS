@@ -1,10 +1,9 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getProfileById } from '../../../dataProviders/profile';
 import { useUsersStore } from '../../../stores/usersStore';
-import { getCompanyById } from '../../../dataProviders/companies';
 import LoadSpinner from '../../LoadSpinner.vue';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -13,8 +12,8 @@ let profile = reactive({});
 let company = reactive({});
 
 onMounted(async () => {
-  profile = await getProfileById(userStore.getCurrentUser.id);
-  company = await getCompanyById(userStore.getCurrentProfile.company);
+  profile = await dataObjectMapping.profile(userStore.getCurrentUser.id);
+  company = await dataObjectMapping.company(userStore.getCurrentProfile.company);
   isLoading.value = false;
 });
 

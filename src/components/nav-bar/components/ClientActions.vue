@@ -19,6 +19,6 @@
   <li><a class="nav-link" href="#">Invite a colleague</a></li> -->
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

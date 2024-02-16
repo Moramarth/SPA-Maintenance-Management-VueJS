@@ -4,7 +4,8 @@ import { onMounted, ref, watch } from 'vue';
 import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
 import { deleteServiceReport } from '../../../dataProviders/serviceReports';
 import { formatDate } from '../../../helpers/formatDate';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const route = useRoute();
 const router = useRouter();
@@ -15,7 +16,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'service-report-details')
-        object.value = await loadSingleObject(route.params.id, 'serviceReport');
+        object.value = await dataObjectMapping.serviceReport(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
     },

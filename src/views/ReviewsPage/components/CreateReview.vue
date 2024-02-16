@@ -1,6 +1,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { maxLength } from '@vuelidate/validators';
+import { maxLength, required } from '@vuelidate/validators';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
@@ -14,10 +14,12 @@ const tempObjStore = useTempObjectStore();
 const serviceReport = ref({});
 
 const object = ref({
+  rating: 0,
   comment: '',
 });
 const rules = {
   object: {
+    rating: { required },
     comment: { maxLength: maxLength(500) },
   },
 };
@@ -29,7 +31,7 @@ async function handleCreation() {
     serviceReport.value = tempObjStore.getTempObject;
     const reviewData = {
       service_report: serviceReport.value.id,
-      rating: Number(document.querySelector('#review-rating').value),
+      rating: object.value.rating,
       comment: object.value.comment,
     };
     await createReview(reviewData);
@@ -51,7 +53,7 @@ async function handleCreation() {
             <div class="form__fields">
               <label for="review-rating">Rating:</label>
               <select
-                id="review-rating"
+                v-model="object.rating"
                 required
               >
                 <option v-for="rate in rating" :key="rate" :value="rate[0]">

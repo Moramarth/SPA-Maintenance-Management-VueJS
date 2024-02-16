@@ -1,7 +1,8 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 
 const router = useRouter();
 const route = useRoute();
@@ -22,7 +23,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'building-details')
-        object.value = await loadSingleObject(route.params.id, 'building');
+        object.value = await dataObjectMapping.building(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
     },

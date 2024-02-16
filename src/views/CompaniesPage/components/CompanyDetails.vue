@@ -4,7 +4,8 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import CompanyAddress from './CompanyAddress.vue';
 import CompanyEmployees from './CompanyEmployees.vue';
 
@@ -22,7 +23,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'company-details')
-        object.value = await loadSingleObject(route.params.id, 'company');
+        object.value = await dataObjectMapping.company(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
       isLoading.value = false;

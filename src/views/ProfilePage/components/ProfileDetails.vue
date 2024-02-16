@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import ProfileCompany from '../components/ProfileCompany.vue';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import ProfileAddress from './profileAddress.vue';
 
@@ -21,7 +21,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'profile-details')
-        object.value = await loadSingleObject(route.params.id, 'profile');
+        object.value = await dataObjectMapping.profile(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
 

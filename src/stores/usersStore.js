@@ -18,7 +18,7 @@ export const useUsersStore = defineStore('users', () => {
   function setAccessToken(token) {
     localStorage.removeItem('accessToken');
     accessToken.value = token;
-    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('accessToken', accessToken.value);
   }
 
   async function storeLoginUser(refresh, access) {
@@ -54,11 +54,6 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   return {
-    currentUser,
-    currentProfile,
-    accessToken,
-    refreshToken,
-    isAuthenticated,
     getCurrentUser,
     getCurrentTokens,
     getCurrentProfile,
