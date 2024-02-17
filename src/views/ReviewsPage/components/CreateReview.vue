@@ -53,6 +53,7 @@ async function handleCreation() {
             <div class="form__fields">
               <label for="review-rating">Rating:</label>
               <select
+                id="review-rating"
                 v-model="object.rating"
                 required
               >

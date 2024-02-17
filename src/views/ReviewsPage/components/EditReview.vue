@@ -1,6 +1,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { maxLength } from '@vuelidate/validators';
+import { maxLength, required } from '@vuelidate/validators';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
@@ -16,12 +16,13 @@ const router = useRouter();
 const serviceReport = ref({});
 
 const object = ref({
+  rating: 0,
   comment: '',
 });
 const rules = {
   object: {
+    rating: { required },
     comment: { maxLength: maxLength(500) },
-
   },
 };
 const v$ = useVuelidate(rules, { object });
@@ -47,7 +48,7 @@ async function handleEdit() {
   const isValid = await v$.value.$validate();
   if (isValid) {
     const reviewData = {
-      rating: Number(document.querySelector('#review-rating').value),
+      rating: object.value.rating,
       comment: object.value.comment,
     };
     await editReview(object.value.id, reviewData);
@@ -72,6 +73,7 @@ async function handleEdit() {
               <label for="review-rating">Rating:</label>
               <select
                 id="review-rating"
+                v-model="object.rating"
                 required
               >
                 <option

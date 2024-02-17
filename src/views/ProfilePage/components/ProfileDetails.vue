@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { useUsersStore } from '../../../stores/usersStore';
@@ -15,6 +15,7 @@ const userStore = useUsersStore();
 const isLoading = ref(true);
 const object = ref({});
 const user = ref({});
+const userCanEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentUser?.id === object.value.user);
 
 onMounted (() => {
   watch(
@@ -108,7 +109,7 @@ onMounted (() => {
                       <label>Phone number:</label> {{ object.phone_number }}
                       <label>Email:</label> {{ user.email }}
                     </div>
-                    <div v-if="userStore.getCurrentUser?.id === object.user" class="form__foot">
+                    <div v-if="userCanEdit" class="form__foot">
                       <router-link
                         class="btn btn-warning"
                         :to="{ name: 'edit-profile', params: { id: object.user } }"

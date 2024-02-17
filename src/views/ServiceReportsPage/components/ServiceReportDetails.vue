@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { useUsersStore } from '../../../stores/usersStore';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
@@ -12,6 +12,7 @@ const userStore = useUsersStore();
 const tempObjStore = useTempObjectStore();
 
 const object = ref({});
+const userCanEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentUser.id === object.value.user);
 
 onMounted (() => {
   watch(
@@ -43,7 +44,7 @@ async function handleReviewCreation() {
         <div class="form-main form-main--filters">
           <div class="form__wrap">
             <div class="form__foot">
-              <template v-if="userStore.getCurrentUser.id === object.user">
+              <template v-if="userCanEdit">
                 <template v-if="object.report_status === 'Pending'">
                   <router-link class="btn btn-warning" :to="{ name: 'edit-service-report', params: { id: object.id } }">
                     Edit Report
@@ -166,6 +167,6 @@ async function handleReviewCreation() {
   </section>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

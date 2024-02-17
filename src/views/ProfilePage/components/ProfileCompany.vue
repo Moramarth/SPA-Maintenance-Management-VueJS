@@ -19,6 +19,7 @@ const isLoading = ref(true);
 const profileCompany = computed(() => {
   return userStore.getCurrentProfile.company;
 });
+const userCanEdit = computed(() => userStore.authenticationStatus && profileCompany.value === company.value.id);
 
 onMounted (async () => {
   company.value = await dataObjectMapping.company(props.profileObject.company);
@@ -51,7 +52,7 @@ onMounted (async () => {
           <label>Business Field:</label>
           {{ company.business_field }}
         </div>
-        <div v-if="profileCompany === company.id" class="form__label">
+        <div v-if="userCanEdit" class="form__label">
           <router-link
             class="btn btn-danger"
             :to="{ name: 'edit-company', params: { id: company.id } }"

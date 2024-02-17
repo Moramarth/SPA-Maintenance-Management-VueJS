@@ -1,7 +1,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, required } from '@vuelidate/validators';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
@@ -10,19 +10,17 @@ import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import { imageHandler } from '../../../constants/imageStateHandler';
+import { manageFile } from '../../../helpers/manageFile';
 
 const route = useRoute();
 const router = useRouter();
+
 const object = ref({
   title: '',
   description: '',
   file: null,
 });
-const uploadedImage = ref(false);
-const imageType = ref(null);
-const imageName = ref(null);
-const clearImageChecked = ref(false);
-const validationError = ref(false);
 const rules = {
   object: {
     title: { required, maxLength: maxLength(50) },
@@ -30,6 +28,7 @@ const rules = {
   },
 };
 const v$ = useVuelidate(rules, { object });
+const currentImageState = reactive(imageHandler);
 
 onMounted (() => {
   watch(
@@ -48,44 +47,27 @@ onMounted (() => {
 async function handleEdit() {
   const isValid = await v$.value.$validate();
   if (isValid) {
-    if (clearImageChecked.value)
+    if (currentImageState.clearImageIsChecked)
       object.value.file = null;
-    else if (uploadedImage.value)
-      object.value.file = uploadedImage.value;
+    else if (currentImageState.uploadedImage)
+      object.value.file = currentImageState.uploadedImage;
     const reportData = {
       title: object.value.title,
       description: object.value.description,
       file: object.value.file,
-      extension: imageType.value,
-      filename: imageName.value,
-
+      extension: currentImageState.imageType,
+      filename: currentImageState.imageName,
     };
     await editServiceReport(object.value.id, reportData);
     router.push({ name: 'service-report-details', params: { id: object.value.id } });
   }
 }
 function handleCheckboxChange() {
-  clearImageChecked.value = !clearImageChecked.value;
+  currentImageState.clearImageIsChecked = !currentImageState.clearImageIsChecked;
 }
 function handleFileUploaded(event) {
   const file = event.target.files[0];
-  validateImg(file);
-  if (file) {
-    imageName.value = file.name.slice(0, file.name.length / 2);
-    const reader = new FileReader();
-    const extension = file.type.replace('image/', '');
-    imageType.value = `.${extension}`;
-    reader.onload = () => {
-      uploadedImage.value = reader.result.split(',')[1];
-    };
-    reader.readAsDataURL(file);
-  }
-}
-function validateImg(file) {
-  if (file.size > MAX_FILE_SIZE_IN_MB * 1024 * 1024)
-    validationError.value = true;
-  else
-    validationError.value = false;
+  manageFile(file, currentImageState);
 }
 </script>
 
@@ -125,19 +107,19 @@ function validateImg(file) {
                   <input
                     id="file-clear"
                     type="checkbox"
-                    :disabled="uploadedImage"
+                    :disabled="currentImageState.uploadedImage"
                     @change="handleCheckboxChange"
                   >
                   <label class="clear-image" for="file-clear">Clear Current</label>
                 </p>
               </template>
-              <input type="file" :disabled="clearImageChecked" @change="handleFileUploaded">
+              <input type="file" :disabled="currentImageState.clearImageIsChecked" @change="handleFileUploaded">
 
-              <div v-if="validationError" class="error-msg">
-                The maximum file size that can be uploaded is{{ MAX_FILE_SIZE_IN_MB }} MB
+              <div v-if="currentImageState.hasValidationError" class="error-msg">
+                The maximum file size that can be uploaded is {{ MAX_FILE_SIZE_IN_MB }}MB
               </div>
             </div>
-            <template v-if="validationError">
+            <template v-if="currentImageState.hasValidationError">
               Please upload a new image
             </template>
             <CreateFormFooter

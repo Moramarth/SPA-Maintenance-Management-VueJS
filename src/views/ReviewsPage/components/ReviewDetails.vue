@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUsersStore } from '../../../stores/usersStore';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
@@ -10,7 +10,7 @@ const router = useRouter();
 const userStore = useUsersStore();
 
 const object = ref({});
-
+const userCanEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentUser.id === object.value.user);
 onMounted (() => {
   watch(
     () => route.params,
@@ -34,7 +34,7 @@ onMounted (() => {
       </div>
       <div class="section__body">
         <div class="form-main form-main--filters">
-          <div v-if="userStore.authenticationStatus && (userStore.getCurrentUser.id === object.user)" class="form__wrap">
+          <div v-if="userCanEdit" class="form__wrap">
             <div class="form__foot">
               <router-link class="btn btn-warning" :to="{ name: 'edit-review', params: { id: object.id } }">
                 Edit

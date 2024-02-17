@@ -1,32 +1,34 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, required } from '@vuelidate/validators';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { createServiceReport } from '../../../dataProviders/serviceReports';
 import { reportType } from '../../../constants/reportType';
+import { imageHandler } from '../../../constants/imageStateHandler';
+import { manageFile } from '../../../helpers/manageFile';
 
 const router = useRouter();
+
 const object = ref({
   title: '',
   description: '',
-  file: null,
   report_type: '',
-  imageType: 'null',
-  imageName: 'null',
 });
-const validationError = ref(false);
-const isLoading = ref(false);
 const rules = {
   object: {
     title: { required, maxLength: maxLength(50) },
     description: { required, maxLength: maxLength(500) },
+    report_type: { required },
   },
 };
 const v$ = useVuelidate(rules, { object });
+
+const currentImageState = reactive(imageHandler);
+const isLoading = ref(false);
 
 async function handleCreation() {
   const isValid = await v$.value.$validate();
@@ -35,10 +37,10 @@ async function handleCreation() {
     const reportData = {
       title: object.value.title,
       description: object.value.description,
-      file: object.value.file,
-      extension: object.value.imageType,
-      filename: object.value.imageName,
-      report_type: document.querySelector('#report-type').value,
+      file: currentImageState.uploadedImage ? currentImageState.uploadedImage : null,
+      extension: currentImageState.imageType,
+      filename: currentImageState.imageName,
+      report_type: object.value.report_type,
     };
     await createServiceReport(reportData);
     isLoading.value = false;
@@ -47,23 +49,7 @@ async function handleCreation() {
 }
 function handleFileUploaded(event) {
   const file = event.target.files[0];
-  validateImg(file);
-  if (file) {
-    object.value.imageName = file.name.slice(0, file.name.length / 2);
-    const reader = new FileReader();
-    const extension = file.type.replace('image/', '');
-    object.value.imageType = `.${extension}`;
-    reader.onload = () => {
-      object.value.file = reader.result.split(',')[1];
-    };
-    reader.readAsDataURL(file);
-  }
-}
-function validateImg(file) {
-  if (file.size > MAX_FILE_SIZE_IN_MB * 1024 * 1024)
-    validationError.value = true;
-  else
-    validationError.value = false;
+  manageFile(file, currentImageState);
 }
 </script>
 
@@ -107,7 +93,12 @@ function validateImg(file) {
               </div>
 
               <label for="report-type">Report Type:</label>
-              <select id="report-type" required :disabled="isLoading">
+              <select
+                id="report-type"
+                v-model="object.report_type"
+                required
+                :disabled="isLoading"
+              >
                 <option v-for="option in reportType" :key="option" :value="option">
                   {{ option }}
                 </option>

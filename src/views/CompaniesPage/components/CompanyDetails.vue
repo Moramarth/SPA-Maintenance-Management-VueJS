@@ -16,7 +16,7 @@ const userStore = useUsersStore();
 const object = ref({});
 const isLoading = ref(true);
 
-const canEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentProfile.company === object.value.id);
+const userCanEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentProfile.company === object.value.id);
 
 onMounted (() => {
   watch(
@@ -123,7 +123,7 @@ onMounted (() => {
                         Partner since: {{ formatDate(object.created_on) }}
                       </p>
 
-                      <router-link v-if="canEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
+                      <router-link v-if="userCanEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
                         Edit
                         Company Info
                       </router-link>

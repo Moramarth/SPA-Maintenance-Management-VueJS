@@ -1,7 +1,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, required } from '@vuelidate/validators';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import CreateFormFooter from '../../../components/form-footers/CreateFormFooter.vue';
@@ -9,23 +9,19 @@ import { editCompany } from '../../../dataProviders/companies';
 import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { MAX_FILE_SIZE_IN_MB } from '../../../helpers/formValidators';
-import { loadSingleObject, singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
+import { imageHandler } from '../../../constants/imageStateHandler';
+import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import { manageFile } from '../../../helpers/manageFile';
 
 const route = useRoute();
 const router = useRouter();
-
-const isLoading = ref(true);
-const imageName = ref(null);
-const imageType = ref(null);
-const uploadedImage = ref(false);
-const clearImageChecked = ref(false);
-const validationError = ref(false);
 
 const object = ref({
   name: '',
   business_field: '',
   additional_information: '',
-  file: '',
+  file: null,
 });
 const rules = {
   object: {
@@ -36,12 +32,15 @@ const rules = {
 };
 const v$ = useVuelidate(rules, { object });
 
+const isLoading = ref(true);
+const currentImageState = reactive(imageHandler);
+
 onMounted (() => {
   watch(
     () => route.params,
     async () => {
       if (route.name === 'edit-company')
-        object.value = await loadSingleObject(route.params.id, 'company');
+        object.value = await dataObjectMapping.company(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
       isLoading.value = false;
@@ -54,16 +53,17 @@ onMounted (() => {
 async function handleEdit() {
   const isValid = await v$.value.$validate();
   if (isValid) {
-    if (clearImageChecked.value)
-      object.value.file = null; else if (uploadedImage.value)
-      object.value.file = uploadedImage.value;
+    if (currentImageState.clearImageIsChecked)
+      object.value.file = null;
+    else if (currentImageState.uploadedImage)
+      object.value.file = currentImageState.uploadedImage;
     const companyData = {
       name: object.value.name,
       business_field: object.value.business_field,
       additional_information: object.value.additional_information,
       file: object.value.file,
-      extension: imageType.value,
-      filename: imageName.value,
+      extension: currentImageState.imageType,
+      filename: currentImageState.imageName,
     };
     await editCompany(object.value.id, companyData);
     router.push({ name: 'company-details', params: { id: object.value.id } });
@@ -71,27 +71,12 @@ async function handleEdit() {
 }
 
 function handleCheckboxChange() {
-  clearImageChecked.value = !clearImageChecked.value;
+  currentImageState.clearImageIsChecked = !currentImageState.clearImageIsChecked;
 }
+
 function handleFileUploaded(event) {
   const file = event.target.files[0];
-  validateImg(file);
-  if (file) {
-    imageName.value = file.name.slice(0, file.name.length / 2);
-    const reader = new FileReader();
-    const extension = file.type.replace('image/', '');
-    imageType.value = `.${extension}`;
-    reader.onload = () => {
-      uploadedImage.value = reader.result.split(',')[1];
-    };
-    reader.readAsDataURL(file);
-  }
-}
-function validateImg(file) {
-  if (file.size > MAX_FILE_SIZE_IN_MB * 1024 * 1024)
-    validationError.value = true;
-  else
-    validationError.value = false;
+  manageFile(file, currentImageState);
 }
 </script>
 
@@ -131,7 +116,7 @@ function validateImg(file) {
                   <input
                     id="file-clear"
                     type="checkbox"
-                    :disabled="uploadedImage"
+                    :disabled="currentImageState.uploadedImage"
                     @change="handleCheckboxChange"
                   >
                   <label
@@ -143,15 +128,15 @@ function validateImg(file) {
               <input
                 id="logo"
                 type="file"
-                :disabled="clearImageChecked"
+                :disabled="currentImageState.clearImageIsChecked"
                 @change="handleFileUploaded"
               >
 
-              <div v-if="validationError" class="error-msg">
+              <div v-if="currentImageState.hasValidationError" class="error-msg">
                 The maximum file size that can be uploaded is{{ MAX_FILE_SIZE_IN_MB }} MB
               </div>
             </div>
-            <template v-if="validationError">
+            <template v-if="currentImageState.hasValidationError">
               Please upload a new image
             </template>
             <CreateFormFooter
