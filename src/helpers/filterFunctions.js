@@ -1,3 +1,6 @@
+import { defaultPaginator } from '../constants/paginatorDefault';
+
+const defaultvalues = { ...defaultPaginator };
 const filterBy = {
   reportStatus: (array, filters) => array.filter(report => report.report_status === filters.reportStatus),
   reportType: (array, filters) => array.filter(report => report.report_type === filters.reportType),
@@ -24,7 +27,10 @@ function getQueryset(array, paginator) {
   return array.slice(startIndex, endIndex);
 };
 function calculateTotalPages(array, paginator) {
-  return Math.ceil(array.length / paginator.rowsPerPage);
+  const totalPages = Math.ceil(array.length / paginator.rowsPerPage);
+  if (totalPages === 0)
+    return 1;
+  return totalPages;
 };
 
 function clearFilters(applied, pagination) {
@@ -34,8 +40,8 @@ function clearFilters(applied, pagination) {
     else applied[filter] = '';
   }
 
-  pagination.rowsPerPage = 5;
-  pagination.currentPage = 1;
+  pagination.rowsPerPage = defaultvalues.rowsPerPage;
+  pagination.currentPage = defaultvalues.currentPage;
 }
 
 export {

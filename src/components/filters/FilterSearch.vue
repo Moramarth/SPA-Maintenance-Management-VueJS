@@ -4,9 +4,12 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  keyword: {
+    type: String,
+  },
 });
 const emit = defineEmits(['update:modelValue']);
-
+const placeholder = `Search by ${props.keyword}`;
 function handleSearch(event) {
   const searchedValue = event.target.value;
   emit('update:modelValue', searchedValue);
@@ -17,7 +20,7 @@ function handleSearch(event) {
   <input
     :value="props.modelValue"
     type="text"
-    placeholder="Search in titles"
+    :placeholder="props.keyword ? placeholder : 'Search'"
     @change="handleSearch"
   >
 </template>
