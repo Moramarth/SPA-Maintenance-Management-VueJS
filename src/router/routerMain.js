@@ -6,6 +6,7 @@ import { companiesRoutes } from './companiesRoutes';
 import { reviewsRoutes } from './reviewsRoutes';
 import { serviceReportsRoutes } from './serviceReportsRoutes';
 import { profileRoutes } from './profileRoutes';
+import { assignmentsRoutes } from './assignmentsRoutes';
 
 const routes = [
   ...commonRoutes,
@@ -14,6 +15,7 @@ const routes = [
   ...reviewsRoutes,
   ...serviceReportsRoutes,
   ...profileRoutes,
+  ...assignmentsRoutes,
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ];
 
