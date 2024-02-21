@@ -4,8 +4,10 @@ import { getCompanies, getCompanyAddress, getCompanyById, getCompanyEmployees } 
 import { getProfileById } from './profile.js';
 import { getReviewById, getReviews } from './reviews.js';
 import { getServiceReportById, getServiceReports } from './serviceReports.js';
+import { getAssignmentById, getAssignments } from './assignments.js';
 
 const dataArrayMapping = {
+  assignments: getAssignments,
   buildings: getBuildings,
   companies: getCompanies,
   companyEmployees: getCompanyEmployees,
@@ -14,6 +16,7 @@ const dataArrayMapping = {
 };
 
 const dataObjectMapping = {
+  assingment: getAssignmentById,
   building: getBuildingById,
   company: getCompanyById,
   companyAddress: getCompanyAddress,

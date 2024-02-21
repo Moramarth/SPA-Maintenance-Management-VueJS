@@ -3,7 +3,9 @@ import { axiosInstance } from './axiosInstance';
 
 const buildingsURLs = {
   allBuildings: 'estate/buildings/',
-  singleBuilding: id => `estate/buildings/${id}/`,
+  singleBuilding: {
+    details: id => `estate/buildings/${id}/`,
+  },
 };
 const errorFetchingMsg = 'Error fetching data:';
 
@@ -22,7 +24,7 @@ async function getBuildings() {
 
 async function getBuildingById(id) {
   try {
-    const response = await axiosInstance.get(buildingsURLs.singleBuilding(id), {
+    const response = await axiosInstance.get(buildingsURLs.singleBuilding.details(id), {
       headers: authHeaders(),
     });
     return response.data;
