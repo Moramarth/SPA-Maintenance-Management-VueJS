@@ -8,6 +8,9 @@ const assignmentsURL = {
     edit: id => `supervisor/assignments/${id}/`,
     delete: id => `supervisor/assignments/${id}/`,
   },
+  autoAssignServiceReports: 'supervisor/auto-assign/',
+  createAssignment: id => `supervisor/assign-report/${id}/`,
+  rejectServiceReport: id => `supervisor/reject-report/${id}/`,
 };
 const errorFetchingMsg = 'Error fetching data:';
 
@@ -63,4 +66,43 @@ async function deleteAssignment(id) {
   }
 }
 
-export { getAssignments, getAssignmentById, editAssignment, deleteAssignment };
+async function createAssignment(assignmentData) {
+  try {
+    const response = await axiosInstance.post(assignmentsURL.createAssignment(assignmentData.service_report), assignmentData, {
+      headers: authHeaders(),
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error(errorFetchingMsg, error);
+    return {};
+  }
+}
+
+async function autoAssignReports() {
+  try {
+    const response = await axiosInstance.post(assignmentsURL.autoAssignServiceReports, {
+      headers: authHeaders(),
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error(errorFetchingMsg, error);
+    return {};
+  }
+}
+
+async function rejectReport(id) {
+  try {
+    const response = await axiosInstance.post(assignmentsURL.rejectServiceReport(id), {
+      headers: authHeaders(),
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error(errorFetchingMsg, error);
+    return {};
+  }
+}
+
+export { getAssignments, getAssignmentById, editAssignment, deleteAssignment, createAssignment, autoAssignReports, rejectReport };
