@@ -1,8 +1,9 @@
 <script setup>
 import ListView from '../../../components/defaultViews/ListView.vue';
 import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { formatDate } from '../../../helpers/formatDate';
 
-const numberOfTableColumns = 8;
+const numberOfTableColumns = 9;
 const searchKeyword = 'name';
 
 const conditions = structuredClone(conditionalRendering);
@@ -41,14 +42,24 @@ conditions.desiredFilters.bySearch = true;
     </template>
 
     <template #object-data-row="{ ...object }">
-      <td>{{ object.service_report }} </td>
+      <td>{{ object.service_report_title }} </td>
 
       <td>{{ object.assigned_to_full_name }}</td>
       <td>{{ object.assigned_by_full_name }}</td>
-      <td>{{ object.status }}</td>
+      <td>{{ object.assignment_status }}</td>
       <td>{{ object.report_type }}</td>
-      <td>{{ object.meeting }}</td>
-      <td>{{ object.offer }}</td>
+      <td v-if="object.meeting">
+        <i class="fa-solid fa-circle-check" />
+      </td>
+      <td v-else>
+        <i class="fa-solid fa-circle-xmark" />
+      </td>
+      <td v-if="object.offer">
+        <i class="fa-solid fa-circle-check" />
+      </td>
+      <td v-else>
+        <i class="fa-solid fa-circle-xmark" />
+      </td>
       <td>{{ formatDate(object.last_updated) }}</td>
       <td>
         <router-link class="btn btn-outline-primary" :to="{ name: 'assignment-details', params: { id: object.id } }">

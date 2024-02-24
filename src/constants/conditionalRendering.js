@@ -1,5 +1,6 @@
 export const conditionalRendering = {
   typeOfList: {
+    assignments: 'assignments',
     buildings: 'buildings',
     companies: 'companies',
     reviews: 'reviews',
