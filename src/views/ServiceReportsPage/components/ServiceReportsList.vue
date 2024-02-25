@@ -1,10 +1,12 @@
 <script setup>
+import { useRouter } from 'vue-router';
 import ListView from '../../../components/defaultViews/ListView.vue';
 import { conditionalRendering } from '../../../constants/conditionalRendering';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
 
 const userStore = useUsersStore();
+const router = useRouter();
 const numberOfTableColumns = 8;
 const searchKeyword = 'title';
 
@@ -15,6 +17,10 @@ conditions.objectsListedAs.table = true;
 conditions.desiredFilters.byReportStatus = true;
 conditions.desiredFilters.byReportType = true;
 conditions.desiredFilters.bySearch = true;
+
+function autoAssignReports() {
+  router.push({ name: 'auto-assign-status' });
+}
 </script>
 
 <template>
@@ -27,6 +33,11 @@ conditions.desiredFilters.bySearch = true;
   >
     <template #page-header>
       Service Reports
+    </template>
+    <template #extra-functionality>
+      <button class="btn btn-outline-danger" @click="autoAssignReports">
+        Auto assign reports
+      </button>
     </template>
     <template #table-headers>
       <th>Title</th>

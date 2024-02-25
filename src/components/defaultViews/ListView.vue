@@ -71,6 +71,7 @@ function handlePageChange(newPage) {
       </div>
       <div class="section__body">
         <div class="section__body-group">
+          <slot name="extra-functionality" />
           <div class="form-main form-main--filters">
             <div class="form__wrap">
               <div v-if="props.desiredFilters.byBuilding" class="form__col">
