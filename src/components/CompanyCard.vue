@@ -7,7 +7,7 @@ const props = defineProps({
       return {
         id: -1,
         name: 'Company Name',
-        file: 'default_company_logo.jpg',
+        file: '../../public/default_company_logo.jpg',
         business_field: 'Compnay Business Field',
       };
     },
@@ -29,7 +29,7 @@ const props = defineProps({
       >
       <img
         v-else
-        src="default_company_logo.jpg"
+        src="../../public/default_company_logo.jpg"
         class="card-img-top"
         alt="No picture"
       >

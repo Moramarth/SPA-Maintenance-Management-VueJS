@@ -12,7 +12,8 @@ import { formatImageLink, formatShort } from '../../../helpers/formatImageLink';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { MAX_FILE_SIZE_IN_MB, phoneNumberValidator } from '../../../helpers/formValidators';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
-import { imageHandler, manageFile } from '../../../helpers/manageFile';
+import { manageFile } from '../../../helpers/manageFile';
+import { imageHandler } from '../../../constants/imageStateHandler';
 
 const userStore = useUsersStore();
 const router = useRouter();

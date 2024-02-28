@@ -29,7 +29,7 @@ const props = defineProps({
       >
       <img
         v-else
-        src="default_building_picture.png"
+        src="../../public/default_building_picture.png"
         class="card-img-top"
         alt="No picture"
       >
