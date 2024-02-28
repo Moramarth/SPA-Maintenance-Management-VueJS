@@ -13,6 +13,7 @@ const accountsURLs = {
     refresh: 'accounts/token/refresh/',
     verify: 'accounts/token/verify/',
   },
+  registerInvite: 'accounts/register-invite/',
 };
 
 const errorFetchingMsg = 'Error fetching data:';
@@ -82,4 +83,17 @@ async function refreshAPIToken(token) {
   }
 }
 
-export { getUserById, loginUser, testToken, getCurrentLoggedUser, refreshAPIToken };
+async function createRegisterInvitation(inviteData) {
+  try {
+    const response = await axiosInstance.post(accountsURLs.registerInvite, inviteData, {
+      headers: authHeaders(),
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error(errorFetchingMsg, error);
+    return {};
+  }
+}
+
+export { getUserById, loginUser, testToken, getCurrentLoggedUser, refreshAPIToken, createRegisterInvitation };
