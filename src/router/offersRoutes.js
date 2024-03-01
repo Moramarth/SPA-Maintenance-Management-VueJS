@@ -8,7 +8,7 @@ const EditOffer = () => import('../views/OffersPage/components/EditOffer.vue');
 const DeleteOffer = () => import('../views/OffersPage/components/DeleteOffer.vue');
 
 export const offersRoutes = [
-  { path: '/Offers', component: Offers, children: [
+  { path: '/offers', component: Offers, children: [
     { path: '', component: OffersList, name: 'show-all-offers', beforeEnter: validateUser },
     { path: 'create', component: CreateOffer, name: 'create-offer', beforeEnter: validateUser },
     { path: 'details/:id', component: OfferDetails, name: 'offer-details', beforeEnter: validateUser },

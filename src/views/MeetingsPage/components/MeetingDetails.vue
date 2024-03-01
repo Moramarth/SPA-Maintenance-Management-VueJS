@@ -65,7 +65,16 @@ onMounted (() => {
               <tbody>
                 <tr>
                   <th>For assignment:</th>
-                  <td>{{ object.assignment_as_string }}</td>
+                  <td>
+                    {{ object.assignment_as_string }}
+                    <router-link :to="{ name: 'assignment-details', params: { id: object.assignment } }">
+                      <i
+                        class="fa-solid fa-arrow-right-to-bracket"
+                        data-toggle="tooltip"
+                        title="Show Assignment"
+                      />
+                    </router-link>
+                  </td>
                 </tr>
                 <tr>
                   <th>Description:</th>

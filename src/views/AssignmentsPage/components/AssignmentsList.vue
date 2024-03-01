@@ -48,13 +48,13 @@ conditions.desiredFilters.bySearch = true;
       <td>{{ object.assigned_by_full_name }}</td>
       <td>{{ object.assignment_status }}</td>
       <td>{{ object.report_type }}</td>
-      <td v-if="object.meeting">
+      <td v-if="object.meeting_required">
         <i class="fa-solid fa-circle-check" />
       </td>
       <td v-else>
         <i class="fa-solid fa-circle-xmark" />
       </td>
-      <td v-if="object.offer">
+      <td v-if="object.expense_estimate_available">
         <i class="fa-solid fa-circle-check" />
       </td>
       <td v-else>

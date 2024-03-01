@@ -94,14 +94,26 @@ onMounted (() => {
                 <tr v-if="object.meeting_required">
                   <th>Meeting:</th>
                   <td>
-                    ToDo: Link to meeting
+                    <router-link :to="{ name: 'meeting-details', params: { id: object.meeting_id } }">
+                      <i
+                        class="fa-solid fa-arrow-right-to-bracket"
+                        data-toggle="tooltip"
+                        title="Show Meeting"
+                      />
+                    </router-link>
                   </td>
                 </tr>
 
                 <tr v-if="object.expense_estimate_available">
                   <th>Offer:</th>
                   <td>
-                    ToDo: Link to Offer
+                    <router-link :to="{ name: 'offer-details', params: { id: object.offer_id } }">
+                      <i
+                        class="fa-solid fa-arrow-right-to-bracket"
+                        data-toggle="tooltip"
+                        title="Show Offer"
+                      />
+                    </router-link>
                   </td>
                 </tr>
                 <tr>
