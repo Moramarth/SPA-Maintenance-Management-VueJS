@@ -5,6 +5,8 @@ export const conditionalRendering = {
     companies: 'companies',
     reviews: 'reviews',
     serviceReports: 'serviceReports',
+    meetings: 'meetings',
+    offers: 'offers',
   },
   objectsListedAs: {
     table: false,
