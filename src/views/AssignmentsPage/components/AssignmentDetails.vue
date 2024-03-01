@@ -15,7 +15,7 @@ onMounted (() => {
     () => route.params,
     async () => {
       if (route.name === 'assignment-details')
-        object.value = await dataObjectMapping.assingment(route.params.id);
+        object.value = await dataObjectMapping.assignment(route.params.id);
       if (!singleObjectIsValid(object.value))
         router.push({ name: 'NotFound' });
     },

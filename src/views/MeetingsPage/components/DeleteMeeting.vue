@@ -1,11 +1,23 @@
 <script setup>
-
+import DeleteView from '../../../components/defaultViews/DeleteView.vue';
+import { conditionalObjectRendering } from '../../../constants/conditionalRendering';
+import { formatDate } from '../../../helpers/formatDate';
 </script>
 
 <template>
-  <div />
+  <DeleteView
+    :object-type="conditionalObjectRendering.meeting"
+  >
+    <template #page-header>
+      Delete Meeting
+    </template>
+    <template #info-message="{ ...object }">
+      <h2>Are you sure you want to delete your scheduled meeting?</h2>
+      <p> {{ formatDate(object.meeting_date) }}</p>
+    </template>
+  </DeleteView>
 </template>
 
-<style lang="scss" scoped>
+<style  scoped>
 
 </style>

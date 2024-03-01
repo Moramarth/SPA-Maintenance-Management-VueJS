@@ -1,29 +1,22 @@
 <script setup>
-import DeleteFormFooter from '../../../components/form-footers/DeleteFormFooter.vue';
+import DeleteView from '../../../components/defaultViews/DeleteView.vue';
+import { conditionalObjectRendering } from '../../../constants/conditionalRendering';
+
+console.log(conditionalObjectRendering.assignment);
 </script>
 
 <template>
-  <section class="section">
-    <div class="container">
-      <div class="section__head">
-        <h1>Delete Assignment</h1>
-      </div>
-      <div class="section__body">
-        <div class="form-main form-main--login">
-          <form action="" method="post">
-            <div class="form__fields">
-              <h2>Are you sure you want to delete this Assignment?</h2>
-              <p> {{ object.service_report }} assigned to {{ object.user }}</p>
-            </div>
-            <DeleteFormFooter
-              :fallback-u-r-l="{ name: 'assignment-details', params: { id: object.id } }"
-              @confirm-delete="deleteObject"
-            />
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+  <DeleteView
+    :object-type="conditionalObjectRendering.assignment"
+  >
+    <template #page-header>
+      Delete Assignment
+    </template>
+    <template #info-message="{ ...object }">
+      <h2>Are you sure you want to delete this Assignment?</h2>
+      <p> {{ object.service_report_title }} assigned to {{ object.assigned_to_full_name }}</p>
+    </template>
+  </DeleteView>
 </template>
 
 <style  scoped>

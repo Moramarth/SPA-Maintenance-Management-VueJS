@@ -9,12 +9,12 @@ const DeleteAssignment = () => import('../views/AssignmentsPage/components/Delet
 const AutoAssignStatus = () => import('../views/AssignmentsPage/components/AutoAssignStatus.vue');
 
 export const assignmentsRoutes = [
-  { path: '/assignments', component: Assignments, children: [
-    { path: '', component: AssignmentsList, name: 'show-all-assignments', beforeEnter: validateUser },
-    { path: 'create', component: CreateAssignment, name: 'create-assignment', beforeEnter: validateUser },
-    { path: 'details/:id', component: AssignmentDetails, name: 'assignment-details', beforeEnter: validateUser },
-    { path: 'edit/:id', component: EditAssignment, name: 'edit-assignment', beforeEnter: validateUser },
-    { path: 'delete/:id', component: DeleteAssignment, name: 'delete-assignment', beforeEnter: validateUser },
-    { path: 'auto-assign-status/', component: AutoAssignStatus, name: 'auto-assign-status', beforeEnter: validateUser },
-  ] },
+  { path: '/assignments',component: Assignments,children: [
+      { path: '', component: AssignmentsList, name: 'show-all-assignments', beforeEnter: validateUser },
+      { path: 'create', component: CreateAssignment, name: 'create-assignment', beforeEnter: validateUser },
+      { path: 'details/:id', component: AssignmentDetails, name: 'assignment-details', beforeEnter: validateUser },
+      { path: 'edit/:id', component: EditAssignment, name: 'edit-assignment', beforeEnter: validateUser },
+      { path: 'delete/:id', component: DeleteAssignment, name: 'delete-assignment', beforeEnter: validateUser },
+      { path: 'auto-assign-status/', component: AutoAssignStatus, name: 'auto-assign-status', beforeEnter: validateUser },
+    ] },
 ];

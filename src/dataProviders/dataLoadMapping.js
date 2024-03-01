@@ -2,11 +2,11 @@ import { getUserById } from './auth.js';
 import { getBuildingById, getBuildings } from './buildings.js';
 import { getCompanies, getCompanyAddress, getCompanyById, getCompanyEmployees } from './companies.js';
 import { getProfileById } from './profile.js';
-import { getReviewById, getReviews } from './reviews.js';
-import { getServiceReportById, getServiceReports } from './serviceReports.js';
-import { getAssignmentById, getAssignments } from './assignments.js';
-import { getOfferById, getOffers } from './offers.js';
-import { getMeetingById, getMeetings } from './meetings.js';
+import { deleteReview, getReviewById, getReviews } from './reviews.js';
+import { deleteServiceReport, getServiceReportById, getServiceReports } from './serviceReports.js';
+import { deleteAssignment, getAssignmentById, getAssignments } from './assignments.js';
+import { deleteOffer, getOfferById, getOffers } from './offers.js';
+import { deleteMeeting, getMeetingById, getMeetings } from './meetings.js';
 
 const dataArrayMapping = {
   assignments: getAssignments,
@@ -20,7 +20,7 @@ const dataArrayMapping = {
 };
 
 const dataObjectMapping = {
-  assingment: getAssignmentById,
+  assignment: getAssignmentById,
   building: getBuildingById,
   company: getCompanyById,
   companyAddress: getCompanyAddress,
@@ -32,4 +32,12 @@ const dataObjectMapping = {
   user: getUserById,
 };
 
-export { dataArrayMapping, dataObjectMapping };
+const deleteObjectMapping = {
+  assignment: deleteAssignment,
+  meeting: deleteMeeting,
+  offer: deleteOffer,
+  review: deleteReview,
+  serviceReport: deleteServiceReport,
+};
+
+export { dataArrayMapping, dataObjectMapping, deleteObjectMapping };

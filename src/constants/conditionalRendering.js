@@ -1,4 +1,4 @@
-export const conditionalRendering = {
+const conditionalRendering = {
   typeOfList: {
     assignments: 'assignments',
     buildings: 'buildings',
@@ -21,3 +21,15 @@ export const conditionalRendering = {
     bySearch: false,
   },
 };
+
+const conditionalObjectRendering = {
+  assignment: 'assignment',
+  building: 'building',
+  company: 'company',
+  review: 'review',
+  serviceReport: 'serviceReport',
+  meeting: 'meeting',
+  offer: 'offer',
+};
+
+export { conditionalObjectRendering, conditionalRendering };
