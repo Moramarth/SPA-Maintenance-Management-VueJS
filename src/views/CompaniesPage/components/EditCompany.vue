@@ -13,6 +13,7 @@ import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { imageHandler } from '../../../constants/imageStateHandler';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import { manageFile } from '../../../helpers/manageFile';
+import {commonRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -39,10 +40,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'edit-company')
+      if (route.name === editRouteNames.company)
         object.value = await dataObjectMapping.company(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
       isLoading.value = false;
     },
 
@@ -66,7 +67,7 @@ async function handleEdit() {
       filename: currentImageState.imageName,
     };
     await editCompany(object.value.id, companyData);
-    router.push({ name: 'company-details', params: { id: object.value.id } });
+    router.push({ name: detailsRouteNames.company, params: { id: object.value.id } });
   }
 }
 
@@ -142,7 +143,7 @@ function handleFileUploaded(event) {
             <CreateFormFooter
               v-else
               :is-editing="true"
-              :fallback-u-r-l="{ name: 'company-details', params: { id: object.id } }"
+              :fallback-u-r-l="{ name: detailsRouteNames.company, params: { id: object.id } }"
               @is-edited="handleEdit"
             />
           </form>

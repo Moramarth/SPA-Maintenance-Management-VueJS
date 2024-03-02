@@ -1,5 +1,6 @@
 <script setup>
 import { formatDate } from '../helpers/formatDate';
+import {detailsRouteNames} from "../router/routeNames.js";
 
 const props = defineProps({
   testimonial: {
@@ -49,7 +50,7 @@ const props = defineProps({
           class="text-muted"
         > Submitted at {{ formatDate(props.testimonial.submitted) }}</small>
       </p>
-      <router-link :to="{ name: 'review-details', params: { id: props.testimonial.id } }">
+      <router-link :to="{ name: detailsRouteNames.review, params: { id: props.testimonial.id } }">
         <i
           class="fa-solid fa-arrow-right-to-bracket"
           data-toggle="tooltip"

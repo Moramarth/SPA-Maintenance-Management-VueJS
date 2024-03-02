@@ -1,14 +1,15 @@
 <script setup>
+import {createRouteNames, listRouteNames} from "../../../router/routeNames.js";
 </script>
 
 <template>
   <li>
-    <router-link class="nav-link" :to="{ name: 'create-service-report' }">
+    <router-link class="nav-link" :to="{ name: createRouteNames.serviceReport }">
       Create Report
     </router-link>
   </li>
   <li>
-    <router-link class="nav-link" :to="{ name: 'show-all-service-reports' }">
+    <router-link class="nav-link" :to="{ name: listRouteNames.serviceReport }">
       Show My Reports
     </router-link>
   </li>

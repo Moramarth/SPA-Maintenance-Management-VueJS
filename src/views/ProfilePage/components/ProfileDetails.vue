@@ -7,6 +7,7 @@ import ProfileCompany from '../components/ProfileCompany.vue';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import ProfileAddress from './profileAddress.vue';
+import {commonRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -21,10 +22,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'profile-details')
+      if (route.name === detailsRouteNames.profile)
         object.value = await dataObjectMapping.profile(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
 
       isLoading.value = false;
       user.value = await dataObjectMapping.user(route.params.id);
@@ -112,7 +113,7 @@ onMounted (() => {
                     <div v-if="userCanEdit" class="form__foot">
                       <router-link
                         class="btn btn-warning"
-                        :to="{ name: 'edit-profile', params: { id: object.user } }"
+                        :to="{ name: editRouteNames.profile, params: { id: object.user } }"
                       >
                         Edit
                         Profile

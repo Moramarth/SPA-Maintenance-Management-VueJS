@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {detailsRouteNames} from "../../../router/routeNames.js";
 
 const props = defineProps({
   companyId: {
@@ -33,7 +34,7 @@ onMounted (async () => {
         <label>Building:</label>
       </div>
       {{ building.name }}
-      <router-link :to="{ name: 'building-details', params: { id: building.id } }" target="_blank">
+      <router-link :to="{ name: detailsRouteNames.building, params: { id: building.id } }" target="_blank">
         <i
           class="fa-solid fa-arrow-right-to-bracket"
           data-toggle="tooltip"

@@ -9,6 +9,7 @@ import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import { rating } from '../../../constants/reviewRating';
+import {commonRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -31,10 +32,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'edit-review')
+      if (route.name === editRouteNames.review)
         object.value = await dataObjectMapping.review(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
       const reportId = object.value.service_report ?? null;
       if (reportId)
         serviceReport.value = await dataObjectMapping.serviceReport(reportId);
@@ -52,7 +53,7 @@ async function handleEdit() {
       comment: object.value.comment,
     };
     await editReview(object.value.id, reviewData);
-    router.push({ name: 'review-details', params: { id: object.value.id } });
+    router.push({ name: detailsRouteNames.review, params: { id: object.value.id } });
   }
 }
 </script>
@@ -96,7 +97,7 @@ async function handleEdit() {
             </div>
             <CreateFormFooter
               :is-editing="true"
-              :fallback-u-r-l="{ name: 'review-details', params: { id: object.id } }"
+              :fallback-u-r-l="{ name: detailsRouteNames.review, params: { id: object.id } }"
               @is-edited="handleEdit"
             />
           </form>

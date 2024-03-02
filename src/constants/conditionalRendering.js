@@ -1,4 +1,4 @@
-const conditionalRendering = {
+const conditionalArrayRendering = {
   typeOfList: {
     assignments: 'assignments',
     buildings: 'buildings',
@@ -32,4 +32,4 @@ const conditionalObjectRendering = {
   offer: 'offer',
 };
 
-export { conditionalObjectRendering, conditionalRendering };
+export { conditionalObjectRendering, conditionalArrayRendering };

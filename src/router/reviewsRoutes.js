@@ -1,4 +1,5 @@
 import { validateUser } from '../helpers/authValidation';
+import { createRouteNames, deleteRouteNames, detailsRouteNames, editRouteNames, listRouteNames } from './routeNames.js';
 
 const Reviews = () => import('../views/ReviewsPage/Reviews.vue');
 const ReviewsList = () => import('../views/ReviewsPage/components/ReviewsList.vue');
@@ -9,10 +10,10 @@ const DeleteReview = () => import('../views/ReviewsPage/components/DeleteReview.
 
 export const reviewsRoutes = [
   { path: '/reviews', component: Reviews, children: [
-    { path: '', component: ReviewsList, name: 'show-all-reviews' },
-    { path: 'create', component: CreateReview, name: 'create-review', beforeEnter: validateUser },
-    { path: 'details/:id', component: ReviewDetails, name: 'review-details', beforeEnter: validateUser },
-    { path: 'edit/:id', component: EditReview, name: 'edit-review', beforeEnter: validateUser },
-    { path: 'delete/:id', component: DeleteReview, name: 'delete-review', beforeEnter: validateUser },
+    { path: '', component: ReviewsList, name: listRouteNames.review },
+    { path: 'create', component: CreateReview, name: createRouteNames.review, beforeEnter: validateUser },
+    { path: 'details/:id', component: ReviewDetails, name: detailsRouteNames.review, beforeEnter: validateUser },
+    { path: 'edit/:id', component: EditReview, name: editRouteNames.review, beforeEnter: validateUser },
+    { path: 'delete/:id', component: DeleteReview, name: deleteRouteNames.review, beforeEnter: validateUser },
   ] },
 ];

@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { autoAssignReports } from '../../../dataProviders/assignments';
+import {listRouteNames} from "../../../router/routeNames.js";
 
 const isLoading = ref(true);
 const statusMessage = ref('');
@@ -29,7 +30,7 @@ onMounted(async () => {
           <div class="section__body-group">
             <h2>{{ statusMessage }}</h2>
             <div class="form__foot">
-              <router-link :to="{ name: 'show-all-assignments' }">
+              <router-link :to="{ name: listRouteNames.assignment }">
                 Back to reports
               </router-link>
             </div>

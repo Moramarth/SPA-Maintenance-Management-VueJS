@@ -1,4 +1,6 @@
 <script setup>
+import {detailsRouteNames} from "../router/routeNames.js";
+
 const props = defineProps({
   building: {
     type: Object,
@@ -18,7 +20,7 @@ const props = defineProps({
 <template>
   <div class="col">
     <div class="card card--box">
-      <router-link :to="{ name: 'building-details', params: { id: props.building.id } }">
+      <router-link :to="{ name: detailsRouteNames.building, params: { id: props.building.id } }">
         See Details
       </router-link>
       <img

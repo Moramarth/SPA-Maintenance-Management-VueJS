@@ -12,6 +12,7 @@ import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import { imageHandler } from '../../../constants/imageStateHandler';
 import { manageFile } from '../../../helpers/manageFile';
+import {commonRouteNames, detailsRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -37,7 +38,7 @@ onMounted (() => {
       if (route.name === 'edit-report-details')
         object.value = await dataObjectMapping.serviceReport(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
     },
 
     { immediate: true },
@@ -59,7 +60,7 @@ async function handleEdit() {
       filename: currentImageState.imageName,
     };
     await editServiceReport(object.value.id, reportData);
-    router.push({ name: 'service-report-details', params: { id: object.value.id } });
+    router.push({ name: detailsRouteNames.serviceReport, params: { id: object.value.id } });
   }
 }
 function handleCheckboxChange() {
@@ -125,7 +126,7 @@ function handleFileUploaded(event) {
             <CreateFormFooter
               v-else
               :is-editing="true"
-              :fallback-u-r-l="{ name: 'service-report-details', params: { id: object.id } }"
+              :fallback-u-r-l="{ name: detailsRouteNames.serviceReport, params: { id: object.id } }"
               @is-edited="handleEdit"
             />
           </form>

@@ -9,6 +9,7 @@ import { profileRoutes } from './profileRoutes';
 import { assignmentsRoutes } from './assignmentsRoutes';
 import { meetingsRoutes } from './meetingsRoutes';
 import { offersRoutes } from './offersRoutes';
+import { commonRouteNames } from './routeNames';
 
 const routes = [
   ...commonRoutes,
@@ -20,7 +21,7 @@ const routes = [
   ...assignmentsRoutes,
   ...meetingsRoutes,
   ...offersRoutes,
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+  { path: '/:pathMatch(.*)*', name: commonRouteNames.pageNotFound, component: NotFound },
 ];
 
 const router = createRouter({

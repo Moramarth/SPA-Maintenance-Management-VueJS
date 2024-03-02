@@ -1,4 +1,6 @@
 <script setup>
+import {detailsRouteNames} from "../router/routeNames.js";
+
 const props = defineProps({
   company: {
     type: Object,
@@ -18,7 +20,7 @@ const props = defineProps({
 <template>
   <div class="col">
     <div class="card card--box">
-      <router-link :to="{ name: 'company-details', params: { id: props.company.id } }">
+      <router-link :to="{ name: detailsRouteNames.company, params: { id: props.company.id } }">
         See Details
       </router-link>
       <img

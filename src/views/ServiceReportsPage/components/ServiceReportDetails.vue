@@ -6,6 +6,13 @@ import { useUsersStore } from '../../../stores/usersStore';
 import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { formatDate } from '../../../helpers/formatDate';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {
+  commonRouteNames,
+  createRouteNames, deleteRouteNames,
+  detailsRouteNames,
+  editRouteNames,
+  listRouteNames
+} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -19,10 +26,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'service-report-details')
+      if (route.name === detailsRouteNames.serviceReport)
         object.value = await dataObjectMapping.serviceReport(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
     },
 
     { immediate: true },
@@ -31,7 +38,7 @@ onMounted (() => {
 
 async function handleReviewCreation() {
   await tempObjStore.setTempObject(object.value.id);
-  router.push({ name: 'create-review' });
+  router.push({ name: createRouteNames.review });
 }
 </script>
 
@@ -47,23 +54,23 @@ async function handleReviewCreation() {
             <div class="form__foot">
               <template v-if="userCanEdit">
                 <template v-if="object.report_status === 'Pending'">
-                  <router-link class="btn btn-warning" :to="{ name: 'edit-service-report', params: { id: object.id } }">
+                  <router-link class="btn btn-warning" :to="{ name: editRouteNames.serviceReport, params: { id: object.id } }">
                     Edit Report
                   </router-link>
-                  <router-link class="btn btn-danger" :to="{ name: 'delete-service-report', params: { id: object.id } }">
+                  <router-link class="btn btn-danger" :to="{ name: deleteRouteNames.serviceReport, params: { id: object.id } }">
                     Delete Report
                   </router-link>
                 </template>
                 <template v-else>
-                  <router-link class="btn btn-warning disabled" :to="{ name: 'edit-service-report', params: { id: object.id } }">
+                  <router-link class="btn btn-warning disabled" :to="{ name: editRouteNames.serviceReport, params: { id: object.id } }">
                     Edit Report
                   </router-link>
-                  <router-link class="btn btn-danger disabled" :to="{ name: 'delete-service-report', params: { id: object.id } }">
+                  <router-link class="btn btn-danger disabled" :to="{ name: deleteRouteNames.serviceReport, params: { id: object.id } }">
                     Delete Report
                   </router-link>
                 </template>
               </template>
-              <router-link class="btn btn-primary" :to="{ name: 'show-all-service-reports' }">
+              <router-link class="btn btn-primary" :to="{ name: listRouteNames.serviceReport }">
                 View Service Reports
               </router-link>
             </div>
@@ -95,7 +102,7 @@ async function handleReviewCreation() {
                     Employee at
                     {{ object.user_company_name }}
 
-                    <router-link :to="{ name: 'profile-details', params: { id: object.user } }">
+                    <router-link :to="{ name: detailsRouteNames.profile, params: { id: object.user } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"
@@ -132,7 +139,7 @@ async function handleReviewCreation() {
                     Employee at
                     {{ object.assigned_to_company_name }}
 
-                    <router-link :to="{ name: 'profile-details', params: { id: object.assigned_to } }">
+                    <router-link :to="{ name: detailsRouteNames.profile, params: { id: object.assigned_to } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"

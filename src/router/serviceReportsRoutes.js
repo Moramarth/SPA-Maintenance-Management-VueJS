@@ -1,4 +1,5 @@
 import { validateUser } from '../helpers/authValidation';
+import { createRouteNames, deleteRouteNames, detailsRouteNames, editRouteNames, listRouteNames } from './routeNames';
 
 const ServiceReports = () => import('../views/ServiceReportsPage/ServiceReports.vue');
 const ServiceReportsList = () => import('../views/ServiceReportsPage/components/ServiceReportsList.vue');
@@ -9,10 +10,10 @@ const DeleteServiceReport = () => import('../views/ServiceReportsPage/components
 
 export const serviceReportsRoutes = [
   { path: '/service-reports', component: ServiceReports, children: [
-    { path: '', component: ServiceReportsList, name: 'show-all-service-reports', beforeEnter: validateUser },
-    { path: 'create', component: CreateServiceReport, name: 'create-service-report', beforeEnter: validateUser },
-    { path: 'details/:id', component: ServiceReportDetails, name: 'service-report-details', beforeEnter: validateUser },
-    { path: 'edit/:id', component: EditServiceReport, name: 'edit-service-report', beforeEnter: validateUser },
-    { path: 'delete/:id', component: DeleteServiceReport, name: 'delete-service-report', beforeEnter: validateUser },
+    { path: '', component: ServiceReportsList, name: listRouteNames.serviceReport, beforeEnter: validateUser },
+    { path: 'create', component: CreateServiceReport, name: createRouteNames.serviceReport, beforeEnter: validateUser },
+    { path: 'details/:id', component: ServiceReportDetails, name: detailsRouteNames.serviceReport, beforeEnter: validateUser },
+    { path: 'edit/:id', component: EditServiceReport, name: editRouteNames.serviceReport, beforeEnter: validateUser },
+    { path: 'delete/:id', component: DeleteServiceReport, name: deleteRouteNames.serviceReport, beforeEnter: validateUser },
   ] },
 ];

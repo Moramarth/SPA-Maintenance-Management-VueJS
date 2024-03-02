@@ -1,12 +1,13 @@
 <script setup>
 import ListView from '../../../components/defaultViews/ListView.vue';
-import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { conditionalArrayRendering } from '../../../constants/conditionalRendering';
 import { formatDate } from '../../../helpers/formatDate';
+import {detailsRouteNames} from "../../../router/routeNames.js";
 
 const numberOfTableColumns = 9;
 const searchKeyword = 'name';
 
-const conditions = structuredClone(conditionalRendering);
+const conditions = structuredClone(conditionalArrayRendering);
 
 conditions.objectsListedAs.table = true;
 
@@ -62,7 +63,7 @@ conditions.desiredFilters.bySearch = true;
       </td>
       <td>{{ formatDate(object.last_updated) }}</td>
       <td>
-        <router-link class="btn btn-outline-primary" :to="{ name: 'assignment-details', params: { id: object.id } }">
+        <router-link class="btn btn-outline-primary" :to="{ name: detailsRouteNames.assignment, params: { id: object.id } }">
           See
           Details
         </router-link>

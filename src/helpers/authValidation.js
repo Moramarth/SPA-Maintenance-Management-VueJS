@@ -1,6 +1,7 @@
 import { refreshAPIToken, testToken } from '../dataProviders/auth';
 import { useUsersStore } from '../stores/usersStore';
 import { tokenKeyword } from '../constants/tokenKeyword';
+import {commonRouteNames} from "../router/routeNames.js";
 
 async function validateUser() {
   const userStore = useUsersStore();
@@ -14,7 +15,7 @@ async function validateUser() {
     }
     catch (error) {
       userStore.storeLogoutUser();
-      return { name: 'login-page' };
+      return { name: commonRouteNames.login };
     }
   }
   return true;

@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const props = defineProps({
   profileObject: {
@@ -39,7 +40,7 @@ onMounted (async () => {
     <div class="block__content">
       <h1>
         {{ company.name }}
-        <router-link :to="{ name: 'company-details', params: { id: company.id } }">
+        <router-link :to="{ name: detailsRouteNames.company, params: { id: company.id } }">
           <i
             class="fa-solid fa-arrow-right-to-bracket"
             data-toggle="tooltip"
@@ -55,7 +56,7 @@ onMounted (async () => {
         <div v-if="userCanEdit" class="form__label">
           <router-link
             class="btn btn-danger"
-            :to="{ name: 'edit-company', params: { id: company.id } }"
+            :to="{ name: editRouteNames.company, params: { id: company.id } }"
           >
             Edit
             Company

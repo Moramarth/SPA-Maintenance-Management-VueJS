@@ -5,6 +5,13 @@ import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { useUsersStore } from '../../../stores/usersStore';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import { formatDate } from '../../../helpers/formatDate';
+import {
+  commonRouteNames,
+  deleteRouteNames,
+  detailsRouteNames,
+  editRouteNames,
+  listRouteNames
+} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -17,10 +24,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'meeting-details')
+      if (route.name === detailsRouteNames.meeting)
         object.value = await dataObjectMapping.meeting(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
     },
 
     { immediate: true },
@@ -39,14 +46,14 @@ onMounted (() => {
           <div class="form__wrap">
             <div class="form__foot">
               <template v-if="userCanEdit">
-                <router-link class="btn btn-warning" :to="{ name: 'edit-meeting', params: { id: object.id } }">
+                <router-link class="btn btn-warning" :to="{ name: editRouteNames.meeting, params: { id: object.id } }">
                   Edit Meeting
                 </router-link>
-                <router-link class="btn btn-danger" :to="{ name: 'delete-meeting', params: { id: object.id } }">
+                <router-link class="btn btn-danger" :to="{ name: deleteRouteNames.meeting, params: { id: object.id } }">
                   Delete Meeting
                 </router-link>
               </template>
-              <router-link class="btn btn-primary" :to="{ name: 'show-all-meetings' }">
+              <router-link class="btn btn-primary" :to="{ name: listRouteNames.meeting }">
                 Back To Meetings
               </router-link>
             </div>
@@ -67,7 +74,7 @@ onMounted (() => {
                   <th>For assignment:</th>
                   <td>
                     {{ object.assignment_as_string }}
-                    <router-link :to="{ name: 'assignment-details', params: { id: object.assignment } }">
+                    <router-link :to="{ name: detailsRouteNames.assignment, params: { id: object.assignment } }">
                       <i
                         class="fa-solid fa-arrow-right-to-bracket"
                         data-toggle="tooltip"
@@ -91,7 +98,7 @@ onMounted (() => {
                   <th>Created by:</th>
                   <td>
                     {{ object.created_by_full_name }}
-                    <router-link :to="{ name: 'profile-details', params: { id: object.created_by } }">
+                    <router-link :to="{ name: detailsRouteNames.profile, params: { id: object.created_by } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"

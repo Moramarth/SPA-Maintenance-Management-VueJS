@@ -1,16 +1,17 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import ListView from '../../../components/defaultViews/ListView.vue';
-import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { conditionalArrayRendering } from '../../../constants/conditionalRendering';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
+import {detailsRouteNames, otherRouteNames} from "../../../router/routeNames.js";
 
 const userStore = useUsersStore();
 const router = useRouter();
 const numberOfTableColumns = 8;
 const searchKeyword = 'title';
 
-const conditions = structuredClone(conditionalRendering);
+const conditions = structuredClone(conditionalArrayRendering);
 
 conditions.objectsListedAs.table = true;
 
@@ -19,7 +20,7 @@ conditions.desiredFilters.byReportType = true;
 conditions.desiredFilters.bySearch = true;
 
 function autoAssignReports() {
-  router.push({ name: 'auto-assign-status' });
+  router.push({ name: otherRouteNames.autoAssignStatus });
 }
 </script>
 
@@ -73,7 +74,7 @@ function autoAssignReports() {
       </td>
 
       <td>
-        <router-link class="btn btn-outline-primary" :to="{ name: 'service-report-details', params: { id: object.id } }">
+        <router-link class="btn btn-outline-primary" :to="{ name: detailsRouteNames.serviceReport, params: { id: object.id } }">
           See
           Details
         </router-link>

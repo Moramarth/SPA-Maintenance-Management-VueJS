@@ -1,9 +1,9 @@
 <script setup>
 import ListView from '../../../components/defaultViews/ListView.vue';
-import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { conditionalArrayRendering } from '../../../constants/conditionalRendering';
 import CompanyCard from '../../../components/CompanyCard.vue';
 
-const conditions = structuredClone(conditionalRendering);
+const conditions = structuredClone(conditionalArrayRendering);
 
 conditions.objectsListedAs.cards = true;
 const searchKeyword = 'name';

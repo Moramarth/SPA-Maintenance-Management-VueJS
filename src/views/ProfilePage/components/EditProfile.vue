@@ -14,6 +14,7 @@ import { MAX_FILE_SIZE_IN_MB, phoneNumberValidator } from '../../../helpers/form
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import { manageFile } from '../../../helpers/manageFile';
 import { imageHandler } from '../../../constants/imageStateHandler';
+import {detailsRouteNames} from "../../../router/routeNames.js";
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -58,7 +59,7 @@ async function handleEdit() {
     };
     await editProfile(object.value.user, profileData);
 
-    router.push({ name: 'profile-details', params: { id: object.value.id } });
+    router.push({ name: detailsRouteNames.profile, params: { id: object.value.id } });
   }
 }
 function handleCheckboxChange() {
@@ -141,7 +142,7 @@ function handleFileUploaded(event) {
             <CreateFormFooter
               v-else
               :is-editing="true"
-              :fallback-u-r-l="{ name: 'profile-details', params: { id: object.id } }"
+              :fallback-u-r-l="{ name: detailsRouteNames.profile, params: { id: object.id } }"
               @is-edited="handleEdit"
             />
           </form>

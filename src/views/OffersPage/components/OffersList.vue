@@ -1,8 +1,9 @@
 <script setup>
 import ListView from '../../../components/defaultViews/ListView.vue';
-import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { conditionalArrayRendering } from '../../../constants/conditionalRendering';
+import {detailsRouteNames} from "../../../router/routeNames.js";
 
-const conditions = structuredClone(conditionalRendering);
+const conditions = structuredClone(conditionalArrayRendering);
 const numberOfTableColumns = 5;
 
 conditions.objectsListedAs.table = true;
@@ -34,7 +35,7 @@ conditions.objectsListedAs.table = true;
       <td>{{ object.additional_information }}</td>
       <td>{{ object.assignment_as_string }}</td>
       <td>
-        <router-link class="btn btn-outline-primary" :to="{ name: 'offer-details', params: { id: object.id } }">
+        <router-link class="btn btn-outline-primary" :to="{ name: detailsRouteNames.offer, params: { id: object.id } }">
           See
           Details
         </router-link>

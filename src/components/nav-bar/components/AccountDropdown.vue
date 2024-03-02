@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { useUsersStore } from '../../../stores/usersStore';
 import LoadSpinner from '../../LoadSpinner.vue';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {commonRouteNames, detailsRouteNames} from "../../../router/routeNames.js";
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -19,7 +20,7 @@ onMounted(async () => {
 
 function handleLogout() {
   userStore.storeLogoutUser();
-  router.push({ name: 'login-page' });
+  router.push({ name: commonRouteNames.login });
 }
 </script>
 
@@ -38,7 +39,7 @@ function handleLogout() {
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
       <li>
-        <router-link class="nav-link" :to="{ name: 'profile-details', params: { id: profile.user } }">
+        <router-link class="nav-link" :to="{ name: detailsRouteNames.profile, params: { id: profile.user } }">
           Profile
         </router-link>
       </li>
@@ -46,7 +47,7 @@ function handleLogout() {
         <router-link
           v-if="company"
           class="nav-link"
-          :to="{ name: 'company-details', params: { id: company.id } }"
+          :to="{ name: detailsRouteNames.company, params: { id: company.id } }"
         >
           Company
         </router-link>

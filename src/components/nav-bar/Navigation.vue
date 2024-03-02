@@ -2,6 +2,7 @@
 import { useUsersStore } from '../../stores/usersStore';
 import AccountDropdown from './components/AccountDropdown.vue';
 import ClientActions from './components/ClientActions.vue';
+import {commonRouteNames, listRouteNames} from "../../router/routeNames.js";
 
 const userStore = useUsersStore();
 </script>
@@ -40,17 +41,17 @@ const userStore = useUsersStore();
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <router-link class="nav-link" :to="{ name: 'show-all-buildings' }">
+                <router-link class="nav-link" :to="{ name: listRouteNames.building }">
                   Show Buildings
                 </router-link>
               </li>
               <li>
-                <router-link class="nav-link" :to="{ name: 'show-all-companies' }">
+                <router-link class="nav-link" :to="{ name: listRouteNames.company }">
                   Show Partners
                 </router-link>
               </li>
               <li>
-                <router-link class="nav-link" :to="{ name: 'show-all-reviews' }">
+                <router-link class="nav-link" :to="{ name: listRouteNames.review }">
                   Show Reviews
                 </router-link>
               </li>
@@ -64,14 +65,14 @@ const userStore = useUsersStore();
 
         <template v-else>
           <li>
-            <router-link class="nav-link" :to="{ name: 'login-page' }">
+            <router-link class="nav-link" :to="{ name: commonRouteNames.login }">
               Login
             </router-link>
           </li>
           <li>
             <router-link
               class="nav-link"
-              :to="{ name: 'register-info-page' }"
+              :to="{ name: commonRouteNames.registerInfo }"
             >
               Registration
             </router-link>

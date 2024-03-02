@@ -1,11 +1,12 @@
 <script setup>
 import Navigation from './nav-bar/Navigation.vue';
+import {commonRouteNames} from "../router/routeNames.js";
 </script>
 
 <template>
   <header class="header fixed-top bg-light">
     <div class="container">
-      <router-link class="logo" :to="{ name: 'login-page' }">
+      <router-link class="logo" :to="{ name: commonRouteNames.login }">
         <img
           src="../../public/navbar_logo.png"
           alt="logo"

@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useUsersStore } from '../../../stores/usersStore';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {commonRouteNames, deleteRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -15,10 +16,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'review-details')
+      if (route.name === detailsRouteNames.review)
         object.value = await dataObjectMapping.review(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
     },
 
     { immediate: true },
@@ -36,10 +37,10 @@ onMounted (() => {
         <div class="form-main form-main--filters">
           <div v-if="userCanEdit" class="form__wrap">
             <div class="form__foot">
-              <router-link class="btn btn-warning" :to="{ name: 'edit-review', params: { id: object.id } }">
+              <router-link class="btn btn-warning" :to="{ name: editRouteNames.review, params: { id: object.id } }">
                 Edit
               </router-link>
-              <router-link class="btn btn-danger" :to="{ name: 'delete-review', params: { id: object.id } }">
+              <router-link class="btn btn-danger" :to="{ name: deleteRouteNames.review, params: { id: object.id } }">
                 Delete
               </router-link>
             </div>

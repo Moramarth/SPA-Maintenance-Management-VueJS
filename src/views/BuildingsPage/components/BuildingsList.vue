@@ -1,9 +1,9 @@
 <script setup>
 import ListView from '../../../components/defaultViews/ListView.vue';
 import BuildingCard from '../../../components/BuildingCard.vue';
-import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { conditionalArrayRendering } from '../../../constants/conditionalRendering';
 
-const conditions = structuredClone(conditionalRendering);
+const conditions = structuredClone(conditionalArrayRendering);
 
 conditions.objectsListedAs.cards = true;
 

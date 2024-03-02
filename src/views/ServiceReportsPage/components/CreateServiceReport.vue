@@ -10,6 +10,7 @@ import { createServiceReport } from '../../../dataProviders/serviceReports';
 import { reportType } from '../../../constants/reportType';
 import { imageHandler } from '../../../constants/imageStateHandler';
 import { manageFile } from '../../../helpers/manageFile';
+import {commonRouteNames, listRouteNames} from "../../../router/routeNames.js";
 
 const router = useRouter();
 
@@ -44,7 +45,7 @@ async function handleCreation() {
     };
     await createServiceReport(reportData);
     isLoading.value = false;
-    router.push({ name: 'show-all-service-reports' });
+    router.push({ name: listRouteNames.serviceReport });
   }
 }
 function handleFileUploaded(event) {
@@ -110,7 +111,7 @@ function handleFileUploaded(event) {
             <CreateFormFooter
               v-else
               :is-editing="false"
-              :fallback-u-r-l="{ name: 'login-page' }"
+              :fallback-u-r-l="{ name: commonRouteNames.login }"
               @is-created="handleCreation"
             />
           </form>

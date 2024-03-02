@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
+import {detailsRouteNames} from "../../../router/routeNames.js";
 
 const props = defineProps({
   companyId: {
@@ -25,7 +26,7 @@ onMounted (async () => {
       <template v-else>
         <div v-for="profile in employees" :key="profile.user">
           {{ profile.first_name }} {{ profile.last_name }}
-          <router-link :to="{ name: 'profile-details', params: { id: profile.user } }">
+          <router-link :to="{ name: detailsRouteNames.profile, params: { id: profile.user } }">
             <i
               class="fa-solid fa-circle-info"
               data-toggle="tooltip"

@@ -1,9 +1,10 @@
 <script setup>
 import ListView from '../../../components/defaultViews/ListView.vue';
-import { conditionalRendering } from '../../../constants/conditionalRendering';
+import { conditionalArrayRendering } from '../../../constants/conditionalRendering';
 import { formatDate } from '../../../helpers/formatDate';
+import {detailsRouteNames} from "../../../router/routeNames.js";
 
-const conditions = structuredClone(conditionalRendering);
+const conditions = structuredClone(conditionalArrayRendering);
 const numberOfTableColumns = 5;
 
 conditions.objectsListedAs.table = true;
@@ -35,7 +36,7 @@ conditions.objectsListedAs.table = true;
       <td>{{ object.description }}</td>
       <td>{{ formatDate(object.meeting_date) }}</td>
       <td>
-        <router-link class="btn btn-outline-primary" :to="{ name: 'meeting-details', params: { id: object.id } }">
+        <router-link class="btn btn-outline-primary" :to="{ name: detailsRouteNames.meeting, params: { id: object.id } }">
           See
           Details
         </router-link>

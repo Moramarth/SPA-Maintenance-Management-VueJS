@@ -8,6 +8,7 @@ import { useTempObjectStore } from '../../../stores/tempObjectsStore';
 import { createReview } from '../../../dataProviders/reviews';
 import ValidationMessege from '../../../components/ValidationMessege.vue';
 import { rating } from '../../../constants/reviewRating';
+import {listRouteNames} from "../../../router/routeNames.js";
 
 const router = useRouter();
 const tempObjStore = useTempObjectStore();
@@ -36,7 +37,7 @@ async function handleCreation() {
     };
     await createReview(reviewData);
     tempObjStore.clearTempObject();
-    router.push({ name: 'show-all-reviews' });
+    router.push({ name: listRouteNames.review });
   }
 }
 </script>
@@ -73,7 +74,7 @@ async function handleCreation() {
             </div>
             <CreateFormFooter
               :is-editing="false"
-              :fallback-u-r-l="{ name: 'show-all-reviews' }"
+              :fallback-u-r-l="{ name: listRouteNames.review }"
               @is-created="handleCreation"
             />
           </form>

@@ -4,6 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { formatDate } from '../../../helpers/formatDate';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {commonRouteNames, detailsRouteNames, listRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -14,10 +15,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'assignment-details')
+      if (route.name === detailsRouteNames.assignment)
         object.value = await dataObjectMapping.assignment(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
     },
 
     { immediate: true },
@@ -35,7 +36,7 @@ onMounted (() => {
         <div class="form-main form-main--filters">
           <div class="form__wrap">
             <div class="form__foot">
-              <router-link class="btn btn-primary" :to="{ name: 'show-all-assignments' }">
+              <router-link class="btn btn-primary" :to="{ name: listRouteNames.assignment }">
                 Back to assignments
               </router-link>
             </div>
@@ -65,7 +66,7 @@ onMounted (() => {
                   <td>
                     {{ object.assigned_by_full_name }}
 
-                    <router-link :to="{ name: 'profile-details', params: { id: object.assigned_by } }">
+                    <router-link :to="{ name: detailsRouteNames.profile, params: { id: object.assigned_by } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"
@@ -78,7 +79,7 @@ onMounted (() => {
                   <th>Assigned to:</th>
                   <td>
                     {{ object.assigned_to_full_name }}
-                    <router-link :to="{ name: 'profile-details', params: { id: object.user } }">
+                    <router-link :to="{ name: detailsRouteNames.profile, params: { id: object.user } }">
                       <i
                         class="fa-solid fa-circle-info"
                         data-toggle="tooltip"
@@ -94,7 +95,7 @@ onMounted (() => {
                 <tr v-if="object.meeting_required">
                   <th>Meeting:</th>
                   <td>
-                    <router-link :to="{ name: 'meeting-details', params: { id: object.meeting_id } }">
+                    <router-link :to="{ name: detailsRouteNames.meeting, params: { id: object.meeting_id } }">
                       <i
                         class="fa-solid fa-arrow-right-to-bracket"
                         data-toggle="tooltip"
@@ -107,7 +108,7 @@ onMounted (() => {
                 <tr v-if="object.expense_estimate_available">
                   <th>Offer:</th>
                   <td>
-                    <router-link :to="{ name: 'offer-details', params: { id: object.offer_id } }">
+                    <router-link :to="{ name: detailsRouteNames.offer, params: { id: object.offer_id } }">
                       <i
                         class="fa-solid fa-arrow-right-to-bracket"
                         data-toggle="tooltip"

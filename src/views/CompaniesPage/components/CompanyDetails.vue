@@ -8,6 +8,7 @@ import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import CompanyAddress from './CompanyAddress.vue';
 import CompanyEmployees from './CompanyEmployees.vue';
+import {commonRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const router = useRouter();
 const route = useRoute();
@@ -22,10 +23,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'company-details')
+      if (route.name === detailsRouteNames.company)
         object.value = await dataObjectMapping.company(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
       isLoading.value = false;
     },
 
@@ -123,7 +124,7 @@ onMounted (() => {
                         Partner since: {{ formatDate(object.created_on) }}
                       </p>
 
-                      <router-link v-if="userCanEdit" class="btn btn-danger" :to="{ name: 'edit-company', params: { id: object.id } }">
+                      <router-link v-if="userCanEdit" class="btn btn-danger" :to="{ name: editRouteNames.company, params: { id: object.id } }">
                         Edit
                         Company Info
                       </router-link>

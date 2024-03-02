@@ -1,4 +1,5 @@
 import { validateUser } from '../helpers/authValidation';
+import { detailsRouteNames, editRouteNames, listRouteNames } from './routeNames';
 
 const Companies = () => import('../views/CompaniesPage/Companies.vue');
 const CompaniesList = () => import('../views/CompaniesPage/components/CompaniesList.vue');
@@ -7,8 +8,8 @@ const EditCompany = () => import('../views/CompaniesPage/components/EditCompany.
 
 export const companiesRoutes = [
   { path: '/partners', component: Companies, children: [
-    { path: '', component: CompaniesList, name: 'show-all-companies', beforeEnter: validateUser },
-    { path: 'details/:id', component: CompanyDetails, name: 'company-details', beforeEnter: validateUser },
-    { path: 'edit/:id', component: EditCompany, name: 'edit-company', beforeEnter: validateUser },
+    { path: '', component: CompaniesList, name: listRouteNames.company, beforeEnter: validateUser },
+    { path: 'details/:id', component: CompanyDetails, name: detailsRouteNames.company, beforeEnter: validateUser },
+    { path: 'edit/:id', component: EditCompany, name: editRouteNames.company, beforeEnter: validateUser },
   ] },
 ];

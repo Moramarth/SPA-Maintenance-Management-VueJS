@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import {commonRouteNames, detailsRouteNames} from "../../../router/routeNames.js";
 
 const router = useRouter();
 const route = useRoute();
@@ -22,10 +23,10 @@ onMounted (() => {
   watch(
     () => route.params,
     async () => {
-      if (route.name === 'building-details')
+      if (route.name === detailsRouteNames.building)
         object.value = await dataObjectMapping.building(route.params.id);
       if (!singleObjectIsValid(object.value))
-        router.push({ name: 'NotFound' });
+        router.push({ name: commonRouteNames.pageNotFound });
     },
 
     { immediate: true },

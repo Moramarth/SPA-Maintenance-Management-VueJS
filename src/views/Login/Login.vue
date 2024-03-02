@@ -7,6 +7,7 @@ import LoadSpinner from '../../components/LoadSpinner.vue';
 import { loginUser } from '../../dataProviders/auth';
 import { useUsersStore } from '../../stores/usersStore';
 import ValidationMessege from '../../components/ValidationMessege.vue';
+import {detailsRouteNames} from "../../router/routeNames.js";
 
 const userStore = useUsersStore();
 const router = useRouter();
@@ -44,7 +45,7 @@ async function handleSubmit() {
     await userStore.storeLoginUser(response.refresh, response.access);
     isLoading.value = false;
     if (userStore.authenticationStatus)
-      router.push({ name: 'profile-details', params: { id: userStore.getCurrentUser.id } });
+      router.push({ name: detailsRouteNames.profile, params: { id: userStore.getCurrentUser.id } });
   }
 }
 </script>
