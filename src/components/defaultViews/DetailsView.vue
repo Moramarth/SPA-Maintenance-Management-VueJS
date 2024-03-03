@@ -83,6 +83,7 @@ onMounted(() => {
             </thead>
           </table>
         </div>
+        <slot name="extra-functions-footer" v-bind="object" />
       </div>
     </div>
   </section>
