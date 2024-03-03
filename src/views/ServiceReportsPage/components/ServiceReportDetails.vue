@@ -8,11 +8,12 @@ import { formatDate } from '../../../helpers/formatDate';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
 import {
   commonRouteNames,
-  createRouteNames, deleteRouteNames,
+  createRouteNames,
+  deleteRouteNames,
   detailsRouteNames,
   editRouteNames,
-  listRouteNames
-} from "../../../router/routeNames.js";
+  listRouteNames,
+} from '../../../router/routeNames.js';
 
 const route = useRoute();
 const router = useRouter();

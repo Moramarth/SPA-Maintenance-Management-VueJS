@@ -4,7 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { formatDate } from '../../../helpers/formatDate';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
-import {commonRouteNames, detailsRouteNames, listRouteNames} from "../../../router/routeNames.js";
+import { commonRouteNames, detailsRouteNames, listRouteNames } from '../../../router/routeNames.js';
 
 const route = useRoute();
 const router = useRouter();

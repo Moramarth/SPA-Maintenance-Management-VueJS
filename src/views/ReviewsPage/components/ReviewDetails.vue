@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useUsersStore } from '../../../stores/usersStore';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
-import {commonRouteNames, deleteRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
+import { commonRouteNames, deleteRouteNames, detailsRouteNames, editRouteNames } from '../../../router/routeNames.js';
 
 const route = useRoute();
 const router = useRouter();

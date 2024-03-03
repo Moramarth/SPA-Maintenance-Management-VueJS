@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
-import {commonRouteNames, detailsRouteNames} from "../../../router/routeNames.js";
+import { commonRouteNames, detailsRouteNames } from '../../../router/routeNames.js';
 
 const router = useRouter();
 const route = useRoute();

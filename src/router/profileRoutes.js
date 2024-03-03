@@ -8,6 +8,6 @@ const EditProfile = () => import('../views/ProfilePage/components/EditProfile.vu
 export const profileRoutes = [
   { path: '/profile/:id',component: Profile,children: [
       { path: '', component: ProfileDetails, name: detailsRouteNames.profile, beforeEnter: validateUser },
-      { path: 'edit/:id', component: EditProfile, name: editRouteNames.profile, beforeEnter: validateUser },
+      { path: 'edit', component: EditProfile, name: editRouteNames.profile, beforeEnter: validateUser },
     ] },
 ];

@@ -23,6 +23,7 @@ const conditionalArrayRendering = {
 };
 
 const conditionalObjectRendering = {
+// ToDO: Edit object structure
   assignment: 'assignment',
   building: 'building',
   company: 'company',
@@ -30,6 +31,9 @@ const conditionalObjectRendering = {
   serviceReport: 'serviceReport',
   meeting: 'meeting',
   offer: 'offer',
+  representedAs: {
+    table: false,
+  },
 };
 
 export { conditionalObjectRendering, conditionalArrayRendering };

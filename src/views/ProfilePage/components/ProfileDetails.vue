@@ -6,8 +6,8 @@ import { useUsersStore } from '../../../stores/usersStore';
 import ProfileCompany from '../components/ProfileCompany.vue';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import { commonRouteNames, detailsRouteNames, editRouteNames } from '../../../router/routeNames.js';
 import ProfileAddress from './profileAddress.vue';
-import {commonRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const route = useRoute();
 const router = useRouter();

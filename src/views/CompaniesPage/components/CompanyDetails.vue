@@ -6,9 +6,9 @@ import { formatDate } from '../../../helpers/formatDate';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
+import { commonRouteNames, detailsRouteNames, editRouteNames } from '../../../router/routeNames.js';
 import CompanyAddress from './CompanyAddress.vue';
 import CompanyEmployees from './CompanyEmployees.vue';
-import {commonRouteNames, detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
 
 const router = useRouter();
 const route = useRoute();
