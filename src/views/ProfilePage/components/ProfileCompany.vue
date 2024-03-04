@@ -1,9 +1,9 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import LoadSpinner from '../../../components/LoadSpinner.vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
-import {detailsRouteNames, editRouteNames} from "../../../router/routeNames.js";
+import { detailsRouteNames, editRouteNames } from '../../../router/routeNames.js';
 
 const props = defineProps({
   profileObject: {
@@ -23,8 +23,10 @@ const profileCompany = computed(() => {
 const userCanEdit = computed(() => userStore.authenticationStatus && profileCompany.value === company.value.id);
 
 onMounted (async () => {
-  company.value = await dataObjectMapping.company(props.profileObject.company);
-  isLoading.value = false;
+  watch(() => props.profileObject, async (newProfileObject) => {
+    company.value = await dataObjectMapping.company(newProfileObject.company);
+    isLoading.value = false;
+  });
 });
 </script>
 

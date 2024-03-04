@@ -31,8 +31,11 @@ const conditionalObjectRendering = {
   serviceReport: 'serviceReport',
   meeting: 'meeting',
   offer: 'offer',
+  profile: 'profile',
   representedAs: {
     table: false,
+    tabList: false,
+    customPage: false,
   },
 };
 

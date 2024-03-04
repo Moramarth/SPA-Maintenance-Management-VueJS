@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { dataArrayMapping } from '../../../dataProviders/dataLoadMapping';
-import {detailsRouteNames} from "../../../router/routeNames.js";
+import { detailsRouteNames } from '../../../router/routeNames.js';
 
 const props = defineProps({
   companyId: {
@@ -13,7 +13,9 @@ const props = defineProps({
 const employees = ref([]);
 
 onMounted (async () => {
-  employees.value = await dataArrayMapping.companyEmployees(props.companyId);
+  watch(() => props.companyId, async (newCompanyId) => {
+    employees.value = await dataArrayMapping.companyEmployees(newCompanyId);
+  });
 });
 </script>
 

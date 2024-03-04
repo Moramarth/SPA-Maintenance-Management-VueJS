@@ -1,163 +1,77 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
-import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 import { useUsersStore } from '../../../stores/usersStore';
 import { formatDate } from '../../../helpers/formatDate';
-import LoadSpinner from '../../../components/LoadSpinner.vue';
-import { singleObjectIsValid } from '../../../helpers/loadSingleObject';
-import { dataObjectMapping } from '../../../dataProviders/dataLoadMapping';
-import { commonRouteNames, detailsRouteNames, editRouteNames } from '../../../router/routeNames.js';
+import { editRouteNames } from '../../../router/routeNames.js';
+import DetailsView from '../../../components/defaultViews/DetailsView.vue';
+import { conditionalObjectRendering } from '../../../constants/conditionalRendering.js';
 import CompanyAddress from './CompanyAddress.vue';
 import CompanyEmployees from './CompanyEmployees.vue';
 
-const router = useRouter();
 const route = useRoute();
 const userStore = useUsersStore();
+const conditions = structuredClone(conditionalObjectRendering);
+conditions.representedAs.tabList = true;
 
-const object = ref({});
-const isLoading = ref(true);
-
-const userCanEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentProfile.company === object.value.id);
-
-onMounted (() => {
-  watch(
-    () => route.params,
-    async () => {
-      if (route.name === detailsRouteNames.company)
-        object.value = await dataObjectMapping.company(route.params.id);
-      if (!singleObjectIsValid(object.value))
-        router.push({ name: commonRouteNames.pageNotFound });
-      isLoading.value = false;
-    },
-
-    { immediate: true },
-  );
-});
+const userCanEdit = computed(() => userStore.authenticationStatus && userStore.getCurrentProfile.company === Number(route.params.id));
 </script>
 
 <template>
-  <LoadSpinner v-if="isLoading" />
-  <section v-else class="section">
-    <div class="container">
-      <div class="section__head">
-        <h1>Company Details</h1>
-      </div>
-      <div class="section__body">
-        <ul id="myTab" class="nav nav-tabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button
-              id="home-tab"
-              class="nav-link active"
-              data-bs-toggle="tab"
-              data-bs-target="#home"
-              type="button"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-            >
-              Company Info
-            </button>
-          </li>
+  <DetailsView
+    :object-type="conditions.company"
+    :object-represented-as="conditions.representedAs"
+  >
+    <template #page-header>
+      Company Details
+    </template>
+    <template #main-tab-text>
+      Company Info
+    </template>
+    <template #secondary-tab-text>
+      Address
+    </template>
+    <template #tetriary-tab-text>
+      Employees
+    </template>
+    <template #main-tab-block-image="{ ...object }">
+      <img v-if="object.file" :src="object.file" alt="Company Logo">
 
-          <template v-if="userStore.authenticationStatus">
-            <li class="nav-item" role="presentation">
-              <button
-                id="profile-tab"
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#profile"
-                type="button"
-                role="tab"
-                aria-controls="profile"
-                aria-selected="false"
-              >
-                Address
-              </button>
-            </li>
-
-            <li class="nav-item" role="presentation">
-              <button
-                id="contact-tab"
-                class="nav-link"
-                data-bs-toggle="tab"
-                data-bs-target="#contact"
-                type="button"
-                role="tab"
-                aria-controls="contact"
-                aria-selected="false"
-              >
-                Employees
-              </button>
-            </li>
+      <img v-else src="../../../../public/default_company_logo.jpg" alt="Default Company logo">
+    </template>
+    <template #main-tab-block-content="{ ...object }">
+      <h1>{{ object.name }}</h1>
+      <div class="form-main form-main--filters">
+        <div class="form__label">
+          <template v-if="object.business_field">
+            <label>Business Field:</label>
+            {{ object.business_field }}
           </template>
-        </ul>
-        <div class="section__body-group">
-          <div id="myTabContent" class="tab-content">
-            <div
-              id="home"
-              class="tab-pane fade show active"
-              role="tabpanel"
-              aria-labelledby="home-tab"
-            >
-              <div class="block-testimonial">
-                <div class="block__image">
-                  <img v-if="object.file" :src="object.file" alt="Company Logo">
 
-                  <img v-else src="../../../../public/default_company_logo.jpg" alt="Default Company logo">
-                </div>
-                <div class="block__content">
-                  <h1>{{ object.name }}</h1>
-                  <div class="form-main form-main--filters">
-                    <div class="form__label">
-                      <template v-if="object.business_field">
-                        <label>Business Field:</label>
-                        {{ object.business_field }}
-                      </template>
+          <template v-if="object.additional_information">
+            <label>About us:</label>
+            {{ object.additional_information }}
+          </template>
+        </div>
+        <div class="form__label">
+          <p class="text-muted">
+            Partner since: {{ formatDate(object.created_on) }}
+          </p>
 
-                      <template v-if="object.additional_information">
-                        <label>About us:</label>
-                        {{ object.additional_information }}
-                      </template>
-                    </div>
-                    <div class="form__label">
-                      <p class="text-muted">
-                        Partner since: {{ formatDate(object.created_on) }}
-                      </p>
-
-                      <router-link v-if="userCanEdit" class="btn btn-danger" :to="{ name: editRouteNames.company, params: { id: object.id } }">
-                        Edit
-                        Company Info
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <template v-if="userStore.authenticationStatus">
-              <div
-                id="profile"
-                class="tab-pane fade"
-                role="tabpanel"
-                aria-labelledby="profile-tab"
-              >
-                <CompanyAddress :company-id="object.id" />
-              </div>
-
-              <div
-                id="contact"
-                class="tab-pane fade"
-                role="tabpanel"
-                aria-labelledby="contact-tab"
-              >
-                <CompanyEmployees :company-id="object.id" />
-              </div>
-            </template>
-          </div>
+          <router-link v-if="userCanEdit" class="btn btn-danger" :to="{ name: editRouteNames.company, params: { id: object.id } }">
+            Edit
+            Company Info
+          </router-link>
         </div>
       </div>
-    </div>
-  </section>
+    </template>
+    <template #secondary-tab-component="{ ...object }">
+      <CompanyAddress :company-id="Number(object.id)" />
+    </template>
+    <template #tetriary-tab-component="{ ...object }">
+      <CompanyEmployees :company-id="Number(object.id)" />
+    </template>
+  </DetailsView>
 </template>
 
 <style scoped>
