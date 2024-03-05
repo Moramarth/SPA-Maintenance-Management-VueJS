@@ -19,7 +19,7 @@ const userCanEdit = computed(() => userStore.authenticationStatus && userStore.g
 
 <template>
   <DetailsView
-    :object-type="conditions.company"
+    :object-type="conditions.typeOfObject.company"
     :object-represented-as="conditions.representedAs"
   >
     <template #page-header>

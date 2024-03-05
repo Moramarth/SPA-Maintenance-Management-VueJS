@@ -12,7 +12,7 @@ conditions.representedAs.customPage = true;
 
 <template>
   <DetailsView
-    :object-type="conditions.review"
+    :object-type="conditions.typeOfObject.review"
     :object-represented-as="conditions.representedAs"
   >
     <template #page-header>

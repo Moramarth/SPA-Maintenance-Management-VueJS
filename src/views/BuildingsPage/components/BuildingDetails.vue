@@ -8,7 +8,7 @@ conditions.representedAs.customPage = true;
 
 <template>
   <DetailsView
-    :object-type="conditions.building"
+    :object-type="conditions.typeOfObject.building"
     :object-represented-as="conditions.representedAs"
   >
     <template #page-header>

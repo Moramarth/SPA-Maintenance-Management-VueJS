@@ -21,7 +21,7 @@ async function handleReviewCreation(object) {
 
 <template>
   <DetailsView
-    :object-type="conditions.serviceReport"
+    :object-type="conditions.typeOfObject.serviceReport"
     :object-represented-as="conditions.representedAs"
   >
     <template #page-header>

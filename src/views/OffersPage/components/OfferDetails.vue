@@ -9,7 +9,7 @@ conditions.representedAs.table = true;
 
 <template>
   <DetailsView
-    :object-type="conditions.offer"
+    :object-type="conditions.typeOfObject.offer"
     :object-represented-as="conditions.representedAs"
   >
     <template #page-header>

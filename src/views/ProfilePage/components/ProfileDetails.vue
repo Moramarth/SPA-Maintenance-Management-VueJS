@@ -31,7 +31,7 @@ const passwordChangeUrl = computed(() => `http://127.0.0.1:8000/accounts/passwor
 
 <template>
   <DetailsView
-    :object-type="conditions.profile"
+    :object-type="conditions.typeOfObject.profile"
     :object-represented-as="conditions.representedAs"
   >
     <template #page-header>
