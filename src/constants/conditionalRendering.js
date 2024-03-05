@@ -23,15 +23,16 @@ const conditionalArrayRendering = {
 };
 
 const conditionalObjectRendering = {
-// ToDO: Edit object structure
-  assignment: 'assignment',
-  building: 'building',
-  company: 'company',
-  review: 'review',
-  serviceReport: 'serviceReport',
-  meeting: 'meeting',
-  offer: 'offer',
-  profile: 'profile',
+  typeOfObject: {
+    assignment: 'assignment',
+    building: 'building',
+    company: 'company',
+    review: 'review',
+    serviceReport: 'serviceReport',
+    meeting: 'meeting',
+    offer: 'offer',
+    profile: 'profile',
+  },
   representedAs: {
     table: false,
     tabList: false,

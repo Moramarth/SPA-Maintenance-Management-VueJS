@@ -6,7 +6,7 @@ import { formatDate } from '../../../helpers/formatDate';
 
 <template>
   <DeleteView
-    :object-type="conditionalObjectRendering.serviceReport"
+    :object-type="conditionalObjectRendering.typeOfObject.serviceReport"
   >
     <template #page-header>
       Delete Service Report

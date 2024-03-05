@@ -5,7 +5,7 @@ import { conditionalObjectRendering } from '../../../constants/conditionalRender
 
 <template>
   <DeleteView
-    :object-type="conditionalObjectRendering.review"
+    :object-type="conditionalObjectRendering.typeOfObject.review"
   >
     <template #page-header>
       Delete Review

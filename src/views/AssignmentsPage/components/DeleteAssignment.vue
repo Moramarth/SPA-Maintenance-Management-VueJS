@@ -2,12 +2,12 @@
 import DeleteView from '../../../components/defaultViews/DeleteView.vue';
 import { conditionalObjectRendering } from '../../../constants/conditionalRendering';
 
-console.log(conditionalObjectRendering.assignment);
+console.log(conditionalObjectRendering.typeOfObject.assignment);
 </script>
 
 <template>
   <DeleteView
-    :object-type="conditionalObjectRendering.assignment"
+    :object-type="conditionalObjectRendering.typeOfObject.assignment"
   >
     <template #page-header>
       Delete Assignment

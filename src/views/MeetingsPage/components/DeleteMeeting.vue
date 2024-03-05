@@ -6,7 +6,7 @@ import { formatDate } from '../../../helpers/formatDate';
 
 <template>
   <DeleteView
-    :object-type="conditionalObjectRendering.meeting"
+    :object-type="conditionalObjectRendering.typeOfObject.meeting"
   >
     <template #page-header>
       Delete Meeting

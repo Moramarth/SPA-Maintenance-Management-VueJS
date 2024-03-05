@@ -5,7 +5,7 @@ import { conditionalObjectRendering } from '../../../constants/conditionalRender
 
 <template>
   <DeleteView
-    :object-type="conditionalObjectRendering.offer"
+    :object-type="conditionalObjectRendering.typeOfObject.offer"
   >
     <template #page-header>
       Delete Offer

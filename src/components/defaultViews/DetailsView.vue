@@ -168,6 +168,9 @@ onMounted(() => {
             </div>
           </div>
         </template>
+        <template v-else-if="props.objectRepresentedAs.customPage">
+          <slot name="custom-page-body" v-bind="object" />
+        </template>
       </div>
     </div>
   </section>
